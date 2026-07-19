@@ -1,4 +1,5 @@
 import type { ClassDef } from '../lib/types'
+import { pickL, useLocale } from '../lib/i18n'
 
 type Props = {
   classDef?: ClassDef
@@ -6,13 +7,15 @@ type Props = {
 }
 
 export function UpgradeTree({ classDef, monthsCompleted = 0 }: Props) {
+  const { locale, t } = useLocale()
   if (!classDef) {
-    return <p className="opacity-70">Árvore de upgrades indisponível.</p>
+    return <p className="opacity-70">{t('treeUnavailable')}</p>
   }
+  const className = pickL(classDef as Record<string, unknown>, 'name', locale)
   return (
     <div className="panel p-4">
       <h3 className="mb-3 font-display text-sm text-[var(--color-gold)]">
-        Árvore — {classDef.name}
+        {t('upgradeTree')} — {className}
       </h3>
       <ol className="space-y-2">
         {classDef.upgrades.map((u) => {
@@ -26,8 +29,12 @@ export function UpgradeTree({ classDef, monthsCompleted = 0 }: Props) {
             >
               <span className="font-display text-xs text-[var(--color-gold)]">M{u.month}</span>
               <div>
-                <div className="font-body font-semibold">{u.name}</div>
-                <div className="text-sm opacity-75">{u.description}</div>
+                <div className="font-body font-semibold">
+                  {pickL(u as Record<string, unknown>, 'name', locale)}
+                </div>
+                <div className="text-sm opacity-75">
+                  {pickL(u as Record<string, unknown>, 'description', locale)}
+                </div>
               </div>
             </li>
           )

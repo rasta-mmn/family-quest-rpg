@@ -1,54 +1,54 @@
-# Family Quest — Mecânicas
+# Family Quest — Mechanics
 
-## Constantes (fonte: `docs/config/game-config.md`)
+## Constants (source: `docs/config/game-config.md`)
 
-| Chave | Valor |
+| Key | Value |
 |---|---|
 | Classes | guerreiro, bardo, mago, ladino |
-| Pontos / objetivo diário | 30 |
-| Pontos / extra | 2.5 |
-| BOSS coletivo / semana | 30 (todos os heróis) |
-| Meta semanal | 100 |
-| XP mensal (barra) | 400 (≈ 4 × 100) |
-| Upgrades / ano | 12 (1 por mês completado) |
-| € / semana atingida | 10 (recompensa real, redactada no jogo) |
+| Points / daily objective | 30 |
+| Points / extra | 2.5 |
+| Collective BOSS / week | 30 (all heroes) |
+| Weekly target | 100 |
+| Monthly XP (bar) | 400 (≈ 4 × 100) |
+| Upgrades / year | 12 (1 per completed month) |
+| € / week hit | 10 (real reward, redacted in-game) |
 
-## Cálculo semanal
+## Weekly calculation
 
 ```
 base = count(obj true) × 30
 extras = sum(extras) × 2.5
-boss = 30 se boss.completed else 0
+boss = 30 if boss.completed else 0
 total = base + extras + boss
 ```
 
-Máx. teórico sem extras: `7×3×30 + 30 = 660`. Meta prática: preencher ≥100 pts → 1 quadrado XP.
+Theoretical max without extras: `7×3×30 + 30 = 660`. Practical target: fill ≥100 pts → 1 XP square.
 
-## XP e level-up
+## XP and level-up
 
-- 1 quadrado XP = 100 pts na semana (espelho PDF ↔ frontend).
-- Mês completo ≈ 400 XP → level-up: aplicar upgrade `month N` da classe em `docs/config/classes.md`.
-- Atualizar: `profile.md`, `skills.md` (se type skill), `appearance.md` (se weapon/armor), `rewards.md`.
+- 1 XP square = 100 pts in the week (PDF ↔ frontend mirror).
+- Full month ≈ 400 XP → level-up: apply class upgrade `month N` from `docs/config/classes.md`.
+- Update: `profile.md`, `skills.md` (if type skill), `appearance.md` (if weapon/armor), `rewards.md`.
 
-## BOSS por tema
+## BOSS by theme
 
-ADM define tema dominante do mês → `bossSelector` puxa 4 inimigos de `docs/config/bestiary.md` (1/semana). ADM pode trocar.
+ADM sets month's dominant theme → `bossSelector` pulls 4 enemies from `docs/config/bestiary.md` (1/week). ADM may swap.
 
-Temas: `alimentacao`, `treino`, `estudo`, `organizacao`, `saude`, `financas`.
+Themes: `alimentacao`, `treino`, `estudo`, `organizacao`, `saude`, `financas`.
 
-## Ciclo operacional
+## Operational cycle
 
-1. **Início mês (ADM):** semanas + objetivos/herói + tema → `months/YYYY-MM.md` → gerar PDFs
-2. **Semana (papel):** marcar 3 obj/dia + extras + BOSS coletivo
-3. **Fim semana:** transferir para `docs/[Heroi]/weekly/YYYY-WXX.md`
-4. **Fim mês (400 XP):** upgrade + recompensa
+1. **Month start (ADM):** weeks + objectives/hero + theme → `months/YYYY-MM.md` → generate PDFs
+2. **Week (paper):** mark 3 obj/day + extras + collective BOSS
+3. **Week end:** transfer to `docs/[Heroi]/weekly/YYYY-WXX.md`
+4. **Month end (400 XP):** upgrade + reward
 
-## Ficheiros críticos
+## Critical files
 
-| Ficheiro | Papel |
+| File | Role |
 |---|---|
-| `docs/config/game-config.md` | players, PIN ADM, pontos, mês/semana atual |
-| `docs/config/classes.md` | árvore 4×12 upgrades |
-| `docs/config/bestiary.md` | inimigos + paletas por tema |
-| `docs/config/months/YYYY-MM.md` | setup do mês |
-| `docs/[Heroi]/weekly/YYYY-WXX.md` | registo transferido do PDF |
+| `docs/config/game-config.md` | players, ADM PIN, points, current month/week |
+| `docs/config/classes.md` | 4×12 upgrade tree |
+| `docs/config/bestiary.md` | enemies + palettes by theme |
+| `docs/config/months/YYYY-MM.md` | month setup |
+| `docs/[Heroi]/weekly/YYYY-WXX.md` | record transferred from PDF |
