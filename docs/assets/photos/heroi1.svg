@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" role="img" aria-label="heroi1">
+  <rect width="120" height="150" fill="#2a2218"/>
+  <rect x="4" y="4" width="112" height="142" fill="none" stroke="#D4A945" stroke-width="2"/>
+  <circle cx="60" cy="55" r="28" fill="#3d3428" stroke="#D4A945" stroke-width="1.5"/>
+  <ellipse cx="60" cy="120" rx="40" ry="28" fill="#3d3428" stroke="#D4A945" stroke-width="1.5"/>
+  <text x="60" y="145" text-anchor="middle" fill="#D4A945" font-family="serif" font-size="11">H1</text>
+</svg>

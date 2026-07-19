@@ -39,8 +39,8 @@ level: 1
 xp_total: 0
 xp_this_month: 0
 months_completed: 0
-photo: "docs/assets/photos/{hid_lower}.jpg"
-avatar: "docs/assets/avatars/{cls}.png"
+photo: "docs/assets/photos/{hid_lower}.svg"
+avatar: "docs/assets/avatars/{cls}.svg"
 avatar_description: "{avatar_desc}"
 stats:
   forca: 10

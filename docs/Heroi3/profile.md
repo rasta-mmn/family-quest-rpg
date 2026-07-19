@@ -6,8 +6,8 @@ level: 1
 xp_total: 0
 xp_this_month: 0
 months_completed: 0
-photo: "docs/assets/photos/heroi3.jpg"
-avatar: "docs/assets/avatars/mago.png"
+photo: "docs/assets/photos/heroi3.svg"
+avatar: "docs/assets/avatars/mago.svg"
 avatar_description: "Mago de túnica azul-noite estrelada com cajado de aprendiz"
 stats:
   forca: 10

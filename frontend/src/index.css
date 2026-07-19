@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cinzel", serif;
+  --font-decorative: "Cinzel Decorative", serif;
+  --font-body: "Crimson Pro", serif;
+  --color-gold: oklch(0.75 0.12 85);
+  --color-gold-dim: oklch(0.55 0.1 85);
+  --color-ink: oklch(0.92 0.02 75);
+  --color-charcoal: oklch(0.16 0.015 60);
+  --color-parchment: oklch(0.28 0.02 75);
+  --color-parchment-deep: oklch(0.22 0.018 65);
+  --color-warrior: #b2453b;
+  --color-bard: #2f9e62;
+  --color-mage: #3b6fb2;
+  --color-rogue: #7c4db2;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-body);
+    font-size: 17px;
+    color: var(--color-ink);
+    background:
+      radial-gradient(ellipse at 20% 0%, oklch(0.22 0.03 60) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, oklch(0.2 0.025 50) 0%, transparent 45%),
+      var(--color-charcoal);
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  a {
+    color: var(--color-gold);
+    text-decoration: none;
+  }
+  a:hover {
+    color: oklch(0.85 0.12 85);
+  }
+}
+
+@layer utilities {
+  .panel {
+    background: color-mix(in oklch, var(--color-parchment) 92%, black);
+    border: 1px solid color-mix(in oklch, var(--color-gold) 45%, transparent);
+    box-shadow: inset 0 0 40px oklch(0.12 0.02 60 / 0.5);
+  }
+  .flourish {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-gold-dim);
+    font-size: 0.85rem;
+  }
+  .flourish::before,
+  .flourish::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold-dim), transparent);
+  }
+  .page-enter {
+    animation: page-in 250ms ease-out both;
+  }
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes gold-fill {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  .xp-fill {
+    transform-origin: left;
+    animation: gold-fill 600ms ease-out both;
+  }
+}

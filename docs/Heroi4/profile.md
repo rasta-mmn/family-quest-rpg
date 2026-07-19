@@ -6,8 +6,8 @@ level: 1
 xp_total: 0
 xp_this_month: 0
 months_completed: 0
-photo: "docs/assets/photos/heroi4.jpg"
-avatar: "docs/assets/avatars/ladino.png"
+photo: "docs/assets/photos/heroi4.svg"
+avatar: "docs/assets/avatars/ladino.svg"
 avatar_description: "Ladino de capuz roxo-escuro com adagas gêmeas na cintura"
 stats:
   forca: 10

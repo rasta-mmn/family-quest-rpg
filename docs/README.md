@@ -2,6 +2,16 @@
 
 Esta pasta é a **base de dados do jogo**. Todos os dados vivem em arquivos `.md` com um bloco de **frontmatter YAML** no topo (entre `---`). O frontend lê estes arquivos e monta o painel automaticamente.
 
+Planejamento (fora do runtime do jogo):
+
+| Arquivo | Conteúdo |
+|---|---|
+| `planning/plan.md` | Plano de implementação (fases 1–5) |
+| `planning/ideas.md` | Design visual escolhido (Grimório de Pergaminho) |
+| `planning/webdev-skill.md` | Guia do template React/Tailwind (frontend) |
+
+Agente Cursor: `.cursor/skills/family-quest-game/` — invocar ao continuar o jogo (PDF, frontend, assets, mecânicas).
+
 ## Regras Gerais de Edição
 
 1. **Nunca apague o bloco `---` ... `---`** no topo dos arquivos — é onde os dados estruturados vivem.
