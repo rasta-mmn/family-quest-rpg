@@ -8,7 +8,7 @@ xp_total: 0
 xp_this_month: 0
 months_completed: 0
 photo: "docs/assets/photos/heroi1.svg"
-avatar: "docs/assets/avatars/guerreiro.svg"
+avatar: "docs/assets/avatars/guerreiro.png"
 avatar_description: "Warrior in iron armor with a crimson cloak and sword at the shoulder"
 avatar_description_pt: "Guerreiro de armadura de ferro com capa carmesim e espada ao ombro"
 stats:

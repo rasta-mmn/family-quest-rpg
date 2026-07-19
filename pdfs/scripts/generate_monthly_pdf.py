@@ -305,15 +305,44 @@ def _hex(c: str):
     return HexColor(c)
 
 
+def _rasterize_svg(path: Path) -> Path | None:
+    """SVG → PNG cache next to asset (ReportLab cannot draw SVG)."""
+    cache = path.with_suffix(path.suffix + ".raster.png")
+    if cache.exists() and cache.stat().st_mtime >= path.stat().st_mtime:
+        return cache
+    try:
+        import cairosvg  # type: ignore
+
+        cairosvg.svg2png(url=str(path), write_to=str(cache), output_width=512)
+        return cache
+    except Exception:
+        pass
+    try:
+        from svglib.svglib import svg2rlg
+        from reportlab.graphics import renderPM
+
+        drawing = svg2rlg(str(path))
+        if drawing is None:
+            return None
+        renderPM.drawToFile(drawing, str(cache), fmt="PNG")
+        return cache
+    except Exception:
+        return None
+
+
 def _try_image(path: Path, w: float, h: float):
-    """Return Image flowable or None. PNG/JPG/JPEG OK; ReportLab skips SVG (WeasyPrint renders all)."""
+    """Return Image flowable or None. PNG/JPG OK; SVG rasterized via cairosvg/svglib when available."""
     if not path.exists():
         return None
+    use = path
     if path.suffix.lower() == ".svg":
-        return None
+        raster = _rasterize_svg(path)
+        if not raster:
+            return None
+        use = raster
     try:
         from reportlab.platypus import Image
-        return Image(str(path), width=w, height=h, kind="proportional")
+        return Image(str(use), width=w, height=h, kind="proportional")
     except Exception:
         return None
 

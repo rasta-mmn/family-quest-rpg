@@ -14,6 +14,8 @@ import { pickL, useLocale } from '../lib/i18n'
 import { patchPlayerHeroEdit } from '../lib/editsStore'
 import { emptyWeekly } from '../lib/localHeroes'
 import { downloadPlayerExports } from '../lib/exportMarkdown'
+import { commitPlayerSheet } from '../lib/commitDocs'
+import { hasGithubToken } from '../lib/githubApi'
 import { fileToPhotoDataUrl } from '../lib/photoUpload'
 import type { DayLog, Objective, WeeklyLog } from '../lib/types'
 
@@ -31,6 +33,7 @@ export function Player() {
   const [photo, setPhoto] = useState('')
   const [savedMsg, setSavedMsg] = useState('')
   const [ready, setReady] = useState(false)
+  const [busy, setBusy] = useState(false)
 
   const hero = data?.heroes.find((h) => h.id === id)
 
@@ -311,13 +314,54 @@ export function Player() {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
+              disabled={busy}
               onClick={() => persist()}
-              className="border border-[var(--color-gold)] bg-[var(--color-parchment-deep)] px-4 py-2 font-display text-xs tracking-widest text-[var(--color-gold)]"
+              className="border border-[var(--color-gold)] bg-[var(--color-parchment-deep)] px-4 py-2 font-display text-xs tracking-widest text-[var(--color-gold)] disabled:opacity-50"
             >
               {t('saveSheet')}
             </button>
             <button
               type="button"
+              disabled={busy}
+              onClick={() => {
+                void (async () => {
+                  persist()
+                  if (!hasGithubToken()) {
+                    setSavedMsg(t('needToken'))
+                    return
+                  }
+                  setBusy(true)
+                  try {
+                    const files = await commitPlayerSheet({
+                      heroId: hero.id,
+                      characterName: nameEn,
+                      month: data.config.current_month,
+                      theme,
+                      daily: missions,
+                      weekly,
+                      profile: {
+                        ...profile,
+                        character_name: nameEn,
+                        character_name_pt: namePt,
+                        photo,
+                      },
+                    })
+                    setSavedMsg(`${t('committed')} ${files.join(', ')}`)
+                    reload()
+                  } catch (e) {
+                    setSavedMsg(String(e))
+                  } finally {
+                    setBusy(false)
+                  }
+                })()
+              }}
+              className="border border-[var(--color-gold)] px-4 py-2 font-display text-xs tracking-widest text-[var(--color-gold)] disabled:opacity-50"
+            >
+              {t('commitGithub')}
+            </button>
+            <button
+              type="button"
+              disabled={busy}
               onClick={() =>
                 downloadPlayerExports({
                   heroId: hero.id,
@@ -334,7 +378,7 @@ export function Player() {
                   },
                 })
               }
-              className="border border-[var(--color-gold-dim)] px-4 py-2 font-display text-xs tracking-widest text-[var(--color-gold)]"
+              className="border border-[var(--color-gold-dim)] px-4 py-2 font-display text-xs tracking-widest text-[var(--color-gold)] disabled:opacity-50"
             >
               {t('downloadSheet')}
             </button>

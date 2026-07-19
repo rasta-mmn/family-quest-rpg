@@ -62,7 +62,7 @@ export function Home() {
                 image:
                   bossMeta.image ||
                   enemy?.image ||
-                  `docs/assets/enemies/${bossMeta.type}.svg`,
+                  `docs/assets/enemies/${bossMeta.type}.png`,
               }}
             />
           )}
