@@ -4,30 +4,32 @@ import { BossCard } from '../components/BossCard'
 import { XPGrid } from '../components/XPGrid'
 import { filledSquares } from '../lib/gameLogic'
 import { useGameData } from '../hooks/useGameData'
+import { pickL, useLocale } from '../lib/i18n'
 
 export function Home() {
   const { data, error, loading } = useGameData()
+  const { locale, t } = useLocale()
 
   if (loading) {
     return (
       <Layout>
-        <p className="opacity-70">Abrindo o grimório…</p>
+        <p className="opacity-70">{t('opening')}</p>
       </Layout>
     )
   }
   if (error || !data) {
     return (
-      <Layout title="Erro">
-        <p className="text-red-300">{error || 'Sem dados'}</p>
+      <Layout title={t('error')}>
+        <p className="text-red-300">{error || t('noData')}</p>
       </Layout>
     )
   }
 
-  const { config, month, heroes, themes } = data
+  const { config, month, heroes, themes, classes } = data
   const week = config.current_week
   const bossMeta = month.bosses?.find((b) => b.week === week) || month.bosses?.[0]
   const theme = themes[month.theme]
-  const bossDesc = theme?.enemies?.find((e) => e.id === bossMeta?.id)?.description
+  const enemy = theme?.enemies?.find((e) => e.id === bossMeta?.id)
   const bossCompleted = heroes.every((h) => h.weekly?.boss?.completed)
   const sampleSquares = filledSquares(
     heroes[0] ? [heroes[0].weekPoints] : [],
@@ -41,7 +43,7 @@ export function Home() {
           Family Quest
         </p>
         <p className="mt-2 max-w-xl text-lg opacity-90">
-          A jornada desta semana aguarda, heróis. Semana {week} · {month.month}
+          {t('journeyWeek')} {t('week')} {week} · {month.month}
         </p>
         <div className="flourish mt-3">❦</div>
       </header>
@@ -54,30 +56,38 @@ export function Home() {
               completed={bossCompleted}
               boss={{
                 ...bossMeta,
-                description: bossDesc,
+                description: enemy?.description ?? bossMeta.description,
+                description_pt: enemy?.description_pt ?? bossMeta.description_pt,
+                name_pt: bossMeta.name_pt || enemy?.name_pt,
                 image:
                   bossMeta.image ||
-                  theme?.enemies?.find((e) => e.id === bossMeta.id)?.image ||
+                  enemy?.image ||
                   `docs/assets/enemies/${bossMeta.type}.svg`,
               }}
             />
           )}
           <div className="panel p-4">
-            <XPGrid filled={sampleSquares} label="Espelho XP (semana atual · herói 1)" />
+            <XPGrid filled={sampleSquares} label={t('xpMirror')} />
             <p className="mt-2 text-sm opacity-70">
-              Tema do mês: {theme?.name || month.theme}. Meta semanal:{' '}
-              {config.points.weekly_target} pts.
+              {t('monthTheme')}:{' '}
+              {pickL((theme || {}) as Record<string, unknown>, 'name', locale) || month.theme}.{' '}
+              {t('weeklyTarget')}: {config.points.weekly_target} pts.
             </p>
           </div>
         </div>
         <div className="space-y-3">
-          <h2 className="font-display text-sm text-[var(--color-gold)]">Heróis</h2>
+          <h2 className="font-display text-sm text-[var(--color-gold)]">{t('heroes')}</h2>
           {heroes.map((h) => (
             <AvatarCard
               key={h.id}
               profile={h.profile}
               weekPoints={h.weekPoints}
               href={`/player/${h.id}`}
+              classLabel={pickL(
+                (classes[h.profile.class] || {}) as Record<string, unknown>,
+                'name',
+                locale,
+              )}
             />
           ))}
         </div>

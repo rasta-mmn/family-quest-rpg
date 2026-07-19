@@ -6,28 +6,28 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 HEROES = {
     "Heroi1": {
-        "name": "Brasa de Ferro", "cls": "guerreiro", "cls_name": "Guerreiro",
+        "name": "Iron Ember", "cls": "guerreiro", "cls_name": "Warrior",
         "theme": "treino",
-        "daily": ["Missão Alpha", "Missão Beta", "Missão Gama"],
-        "avatar_desc": "Guerreiro de armadura de ferro com capa carmesim e espada ao ombro",
+        "daily": ["Mission Alpha", "Mission Beta", "Mission Gamma"],
+        "avatar_desc": "Warrior in iron armor with a crimson cloak and sword at the shoulder",
     },
     "Heroi2": {
-        "name": "Melodia Errante", "cls": "bardo", "cls_name": "Bardo",
+        "name": "Wandering Melody", "cls": "bardo", "cls_name": "Bard",
         "theme": "alimentacao",
-        "daily": ["Missão Delta", "Missão Épsilon", "Missão Zeta"],
-        "avatar_desc": "Bardo de gibão verde com alaúde às costas e chapéu emplumado",
+        "daily": ["Mission Delta", "Mission Epsilon", "Mission Zeta"],
+        "avatar_desc": "Bard in a green doublet with a lute on the back and a plumed hat",
     },
     "Heroi3": {
-        "name": "Véu Arcano", "cls": "mago", "cls_name": "Mago",
+        "name": "Arcane Veil", "cls": "mago", "cls_name": "Mage",
         "theme": "estudo",
-        "daily": ["Missão Eta", "Missão Teta", "Missão Iota"],
-        "avatar_desc": "Mago de túnica azul-noite estrelada com cajado de aprendiz",
+        "daily": ["Mission Eta", "Mission Theta", "Mission Iota"],
+        "avatar_desc": "Mage in a starry midnight-blue robe with an apprentice staff",
     },
     "Heroi4": {
-        "name": "Sombra Ligeira", "cls": "ladino", "cls_name": "Ladino",
+        "name": "Swift Shade", "cls": "ladino", "cls_name": "Rogue",
         "theme": "organizacao",
-        "daily": ["Missão Kapa", "Missão Lambda", "Missão Mi"],
-        "avatar_desc": "Ladino de capuz roxo-escuro com adagas gêmeas na cintura",
+        "daily": ["Mission Kappa", "Mission Lambda", "Mission Mu"],
+        "avatar_desc": "Rogue in a dark purple hood with twin daggers at the belt",
     },
 }
 
@@ -51,15 +51,15 @@ level_history:
   - {{ level: 1, xp: 0, date: "2026-08-01" }}
 ---
 
-# {name} — Perfil
+# {name} — Profile
 
-**Classe:** {cls_name} | **Nível:** 1 | **XP Total:** 0
+**Class:** {cls_name} | **Level:** 1 | **Total XP:** 0
 
-A jornada de {name} começou em agosto de 2026. Esta página é a crônica viva do herói: cada level-up, cada mês completado e cada façanha ficam registados aqui.
+{name}'s journey began in August 2026. This page is the hero's living chronicle: every level-up, every completed month, and every deed is recorded here.
 
-## Histórico de Níveis
+## Level History
 
-| Nível | XP Acumulado | Data |
+| Level | Cumulative XP | Date |
 |---|---|---|
 | 1 | 0 | 2026-08-01 |
 """
@@ -75,35 +75,35 @@ extras_allowed: true
 extras_points: 2.5
 ---
 
-# Objetivos de {name} — Agosto 2026
+# {name} Objectives — August 2026
 
-Os 3 objetivos diários deste mês (redactados). O significado real de cada missão é conhecido apenas pela família.
+This month's 3 daily objectives (redacted). The real meaning of each mission is known only to the family.
 
-| Objetivo | Pontos | Frequência |
+| Objective | Points | Frequency |
 |---|---|---|
-| {o1} | 30 | Diária (seg–dom) |
-| {o2} | 30 | Diária (seg–dom) |
-| {o3} | 30 | Diária (seg–dom) |
-| Extras | 2,5 cada | Livre |
+| {o1} | 30 | Daily (Mon–Sun) |
+| {o2} | 30 | Daily (Mon–Sun) |
+| {o3} | 30 | Daily (Mon–Sun) |
+| Extras | 2.5 each | Free |
 
-> **Editável pelo jogador:** no início de cada mês, atualize os nomes das missões e o tema junto com o ADM.
+> **Editable by the player:** at the start of each month, update mission names and theme together with ADM.
 """
 
 SKILLS = """---
 skills: []
 ---
 
-# Skills de {name}
+# {name} Skills
 
-Nenhuma skill desbloqueada ainda. As skills são ganhas ao completar meses (400 XP) cujo upgrade da classe {cls_name} seja do tipo `skill`.
+No skills unlocked yet. Skills are earned by completing months (400 XP) whose {cls_name} class upgrade is type `skill`.
 
-## Como registar uma skill
+## How to record a skill
 
-Adicione ao frontmatter `skills:` um item como:
+Add an item to the `skills:` frontmatter like:
 
 ```yaml
 skills:
-  - {{ id: skill_001, name: "Golpe Poderoso", month: 3, unlocked_date: "2026-10-31", description: "Um ataque devastador que rompe qualquer preguiça.", real_benefit_redacted: "Vantagem Real I" }}
+  - {{ id: skill_001, name: "Power Strike", month: 3, unlocked_date: "2026-10-31", description: "A devastating attack that shatters any laziness.", real_benefit_redacted: "Real Perk I" }}
 ```
 """
 
@@ -118,19 +118,19 @@ slots:
 unlocked_appearances: []
 ---
 
-# Aparência de {name}
+# {name} Appearance
 
-O avatar de {name}: *{avatar_desc}*.
+{name}'s avatar: *{avatar_desc}*.
 
-Os equipamentos são desbloqueados ao completar meses (400 XP) conforme a árvore de upgrades da classe {cls_name} em `docs/config/classes.md`.
+Equipment unlocks on completing months (400 XP) per the {cls_name} upgrade tree in `docs/config/classes.md`.
 
-## Como registar um equipamento
+## How to record equipment
 
-Preencha o slot correspondente no frontmatter:
+Fill the matching slot in the frontmatter:
 
 ```yaml
 slots:
-  weapon: {{ name: "Espada de Ferro", month: 1, unlocked_date: "2026-08-31" }}
+  weapon: {{ name: "Iron Sword", month: 1, unlocked_date: "2026-08-31" }}
 ```
 """
 
@@ -138,29 +138,29 @@ REWARDS = """---
 rewards: []
 ---
 
-# Recompensas de {name}
+# {name} Rewards
 
-Histórico de prémios semanais e mensais (redactados). Nenhuma recompensa registada ainda.
+History of weekly and monthly prizes (redacted). No rewards recorded yet.
 
-## Como registar
+## How to record
 
 ```yaml
 rewards:
-  - {{ type: weekly, week: "2026-W32", points_earned: 120, reward_redacted: "Recompensa Lendária I", status: received, date: "2026-08-09" }}
-  - {{ type: monthly, month: "2026-08", xp_earned: 400, reward_redacted: "Tesouro do Mês I", real_value_euros: 40, status: pending }}
+  - {{ type: weekly, week: "2026-W32", points_earned: 120, prize_redacted: "Legendary Reward I", status: received, date: "2026-08-09" }}
+  - {{ type: monthly, month: "2026-08", xp_earned: 400, prize_redacted: "Month Treasure I", real_value_euros: 40, status: pending }}
 ```
 
-| Tipo | Regra |
+| Type | Rule |
 |---|---|
-| Semanal | Ganho ao atingir 100 pontos na semana |
-| Mensal | Ganho ao completar 400 XP no mês — upgrade do avatar + 10 € por semana atingida |
+| Weekly | Earned on reaching 100 points in the week |
+| Monthly | Earned on completing 400 XP in the month — avatar upgrade + €10 per week hit |
 """
 
 WEEKLY = """---
 week: "2026-W32"
 player: {hid}
 month: "2026-08"
-boss: {{ id: dragao_preguica, name: "Dragão da Preguiça", completed: false, points: 30 }}
+boss: {{ id: dragao_preguica, name: "Dragon of Laziness", completed: false, points: 30 }}
 days:
   seg: {{ obj1: false, obj2: false, obj3: false, extras: 0 }}
   ter: {{ obj1: false, obj2: false, obj3: false, extras: 0 }}
@@ -173,11 +173,11 @@ total_points: 0
 reward_status: pending
 ---
 
-# Semana 2026-W32 — {name}
+# Week 2026-W32 — {name}
 
-Registo da primeira semana da jornada (3 a 9 de agosto de 2026). Transfira as marcações do PDF impresso para o bloco `days:` acima: `true` para objetivo cumprido, e o número de extras realizadas em `extras`.
+Record of the first journey week (3–9 August 2026). Transfer marks from the printed PDF into the `days:` block above: `true` for a completed objective, and the count of extras done in `extras`.
 
-O `total_points` é calculado automaticamente pelo painel; preencha manualmente apenas se quiser sobrepor o cálculo.
+`total_points` is calculated automatically by the panel; fill it manually only if you want to override the calculation.
 """
 
 

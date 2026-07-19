@@ -10,7 +10,13 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
-DAYS_LABELS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"]
+DAYS_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+CLASS_DISPLAY = {
+    "guerreiro": "Warrior",
+    "bardo": "Bard",
+    "mago": "Mage",
+    "ladino": "Rogue",
+}
 
 
 def parse_md(path: Path) -> tuple[dict, str]:
@@ -88,7 +94,7 @@ def hero_page_html(hero, month, game, themes, points) -> str:
     profile = hero["profile"]
     objs = list(hero["objectives"].get("daily_objectives") or [])
     while len(objs) < 3:
-        objs.append({"name": f"Missão {len(objs) + 1}", "points": points.get("per_task", 30)})
+        objs.append({"name": f"Mission {len(objs) + 1}", "points": points.get("per_task", 30)})
 
     theme_key = month.get("theme") or "treino"
     palette = theme_palette(themes, theme_key)
@@ -98,11 +104,12 @@ def hero_page_html(hero, month, game, themes, points) -> str:
     avatar = profile.get("avatar") or f"docs/assets/avatars/{profile.get('class', 'guerreiro')}.svg"
     bosses = month.get("bosses") or []
     weeks = month.get("weeks") or []
-    cls = (profile.get("class") or "?").title()
+    cls_key = profile.get("class") or "?"
+    cls = CLASS_DISPLAY.get(cls_key, str(cls_key).title())
     name = profile.get("character_name") or hero["id"]
     level = profile.get("level", 1)
     skills = hero["skills"]
-    skill_txt = " · ".join(s.get("name", "?") for s in skills) if skills else "Nenhuma skill ainda"
+    skill_txt = " · ".join(s.get("name", "?") for s in skills) if skills else "No skills yet"
 
     obj_list = "".join(
         f'<li><strong>{o.get("name")}</strong> <span class="muted">({o.get("points", 30)} pts)</span></li>'
@@ -119,7 +126,7 @@ def hero_page_html(hero, month, game, themes, points) -> str:
               <img src="{asset_uri(img)}" class="boss-img"/>
               <div><div class="week-label">{week}</div>
               <div class="boss-name">{boss.get("name", "BOSS")}</div>
-              <div class="muted">{boss.get("mission_redacted", "Missão Coletiva")} · +{boss.get("points", 30)} pts</div></div>
+              <div class="muted">{boss.get("mission_redacted", "Collective Mission")} · +{boss.get("points", 30)} pts</div></div>
               <span class="box big"></span></div></div>'''
         )
 
@@ -150,22 +157,22 @@ def hero_page_html(hero, month, game, themes, points) -> str:
         <div class="meta">
           <div class="game">{game.get("game_name", "Family Quest RPG")}</div>
           <h1>{name}</h1>
-          <p class="subtitle">{cls} · Nível {level} · Mês {month.get("month")} · Tema {theme_meta.get("name", theme_key)}</p>
+          <p class="subtitle">{cls} · Level {level} · Month {month.get("month")} · Theme {theme_meta.get("name", theme_key)}</p>
           <p class="skills">Skills: <span class="skill">{skill_txt}</span></p>
         </div>
         <div class="xp-panel">
           <div class="xp-label">XP ({points.get("monthly_xp", 400)})</div>
           <div class="xp-row">{xp_squares}</div>
-          <div class="muted">1 □ = {points.get("weekly_target", 100)} pts/semana</div>
+          <div class="muted">1 □ = {points.get("weekly_target", 100)} pts/week</div>
         </div>
       </header>
       <div class="cols">
-        <div class="panel"><h3>Objetivos Diários</h3><ol class="objs">{obj_list}</ol>
-          <p class="muted">Extras: +{points.get("per_extra", 2.5)} pts cada</p></div>
-        <div class="panel bosses"><h3>BOSS Coletivo</h3>{"".join(boss_blocks)}</div>
+        <div class="panel"><h3>Daily Objectives</h3><ol class="objs">{obj_list}</ol>
+          <p class="muted">Extras: +{points.get("per_extra", 2.5)} pts each</p></div>
+        <div class="panel bosses"><h3>Collective BOSS</h3>{"".join(boss_blocks)}</div>
       </div>
       <div class="grids">{"".join(week_grids)}</div>
-      <footer>Family Quest — marque no papel; transfira para docs/{hero["id"]}/weekly/ no fim da semana.</footer>
+      <footer>Family Quest — mark on paper; transfer to docs/{hero["id"]}/weekly/ at week end.</footer>
     </section>'''
 
 
@@ -214,7 +221,7 @@ def full_html(pages: list[str], title: str) -> str:
     footer { position: absolute; bottom: 8px; left: 14px; right: 14px; font-size: 8px; opacity: 0.7;
       border-top: 1px solid rgba(212,169,69,0.3); padding-top: 4px; }
     """
-    return f"""<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"/>
+    return f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 <title>{title}</title><style>{css}</style></head><body>{"".join(pages)}</body></html>"""
 
 
@@ -278,7 +285,8 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         c.rect(10 * mm, 10 * mm, w - 20 * mm, h - 20 * mm, fill=0, stroke=1)
 
         name = profile.get("character_name") or hero["id"]
-        cls = (profile.get("class") or "?").title()
+        cls_key = profile.get("class") or "?"
+        cls = CLASS_DISPLAY.get(cls_key, str(cls_key).title())
         level = profile.get("level", 1)
 
         # Photo / avatar placeholders (SVG not drawn by reportlab — gold frames)
@@ -292,7 +300,7 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
             c.rect(14 * mm, h - 48 * mm, 22 * mm, 28 * mm, fill=1, stroke=1)
             c.setFillColor(_hex(gold))
             c.setFont("Times-Roman", 8)
-            c.drawCentredString(25 * mm, h - 34 * mm, "foto")
+            c.drawCentredString(25 * mm, h - 34 * mm, "photo")
 
         img_a = _try_image(avatar, 18 * mm, 18 * mm)
         if img_a:
@@ -314,10 +322,10 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         c.drawString(
             62 * mm,
             h - 34 * mm,
-            f"{cls} · Nível {level} · {month.get('month')} · {theme_meta.get('name', theme_key)}",
+            f"{cls} · Level {level} · {month.get('month')} · {theme_meta.get('name', theme_key)}",
         )
         skills = hero["skills"]
-        skill_txt = ", ".join(s.get("name", "?") for s in skills) if skills else "Nenhuma skill ainda"
+        skill_txt = ", ".join(s.get("name", "?") for s in skills) if skills else "No skills yet"
         c.setFont("Times-Italic", 9)
         c.drawString(62 * mm, h - 39 * mm, f"Skills: {skill_txt}")
 
@@ -341,23 +349,23 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         c.rect(14 * mm, y - 32 * mm, 85 * mm, 38 * mm, fill=1, stroke=1)
         c.setFillColor(_hex(gold))
         c.setFont("Times-Bold", 10)
-        c.drawString(16 * mm, y, "OBJETIVOS DIÁRIOS")
+        c.drawString(16 * mm, y, "DAILY OBJECTIVES")
         objs = list(hero["objectives"].get("daily_objectives") or [])
         while len(objs) < 3:
-            objs.append({"name": f"Missão {len(objs)+1}", "points": 30})
+            objs.append({"name": f"Mission {len(objs)+1}", "points": 30})
         c.setFillColor(_hex(cream))
         c.setFont("Times-Roman", 9)
         for i, o in enumerate(objs[:3]):
             c.drawString(18 * mm, y - 8 * mm - i * 6 * mm, f"• {o.get('name')} ({o.get('points', 30)} pts)")
         c.setFont("Times-Italic", 8)
-        c.drawString(18 * mm, y - 28 * mm, f"Extras: +{points.get('per_extra', 2.5)} pts cada")
+        c.drawString(18 * mm, y - 28 * mm, f"Extras: +{points.get('per_extra', 2.5)} pts each")
 
         # Bosses
         c.setFillColor(_hex("#1a1410"))
         c.rect(104 * mm, y - 32 * mm, w - 118 * mm, 38 * mm, fill=1, stroke=1)
         c.setFillColor(_hex(gold))
         c.setFont("Times-Bold", 10)
-        c.drawString(106 * mm, y, "BOSS COLETIVO")
+        c.drawString(106 * mm, y, "COLLECTIVE BOSS")
         bosses = month.get("bosses") or []
         weeks = month.get("weeks") or []
         c.setFillColor(_hex(cream))
@@ -410,7 +418,7 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         c.drawString(
             14 * mm,
             12 * mm,
-            f"Family Quest — marque no papel; transfira para docs/{hero['id']}/weekly/ no fim da semana.",
+            f"Family Quest — mark on paper; transfer to docs/{hero['id']}/weekly/ at week end.",
         )
         c.showPage()
 

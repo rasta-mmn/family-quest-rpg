@@ -13,7 +13,8 @@ export function selectBosses(
     week: weeks[i],
     collective: true,
     points: 30,
-    mission_redacted: `Missão Coletiva ${['I', 'II', 'III', 'IV'][i] ?? i + 1}`,
+    mission_redacted: `Collective Mission ${['I', 'II', 'III', 'IV'][i] ?? i + 1}`,
+    mission_redacted_pt: `Missão Coletiva ${['I', 'II', 'III', 'IV'][i] ?? i + 1}`,
   }))
 }
 

@@ -1,210 +1,210 @@
-# Plano de Implementação — "Family Quest RPG" (RPG da Vida Real)
+# Implementation Plan — "Family Quest RPG" (Real-Life RPG)
 
-## Objetivo
+## Goal
 
-Criar um sistema completo de gamificação familiar composto por:
+Build a complete family gamification system made of:
 
-1. **Repositório GitHub** com base de dados exclusivamente em **arquivos `.md`** (pasta `docs/`)
-2. **Frontend web** (React + Tailwind) que lê os `.md` e exibe o jogo: avatares, XP, bosses, ranking
-3. **Gerador mensal de PDFs** — uma ficha imprimível por herói para marcação manual na vida real (o "sistema manual" que alimenta o "sistema digital")
-4. **Painel ADM** para o setup mensal: objetivos de cada herói, BOSS coletivo semanal e calendário
+1. **GitHub repository** with a database exclusively in **`.md` files** (`docs/` folder)
+2. **Web frontend** (React + Tailwind) that reads the `.md` files and shows the game: avatars, XP, bosses, leaderboard
+3. **Monthly PDF generator** — one printable sheet per hero for hand-marking in real life (the "manual system" that feeds the "digital system")
+4. **ADM panel** for monthly setup: each hero's objectives, weekly collective BOSS, and calendar
 
-> **Filosofia do sistema:** O PDF impresso é preenchido à mão durante o mês. No fim de cada semana, o utilizador transfere os dados do papel para os arquivos `.md` no GitHub (diretamente ou via painel ADM), e o frontend reflete a evolução dos personagens.
+> **System philosophy:** The printed PDF is filled by hand during the month. At the end of each week, the user transfers paper data into the `.md` files on GitHub (directly or via the ADM panel), and the frontend reflects character progress.
 
 ---
 
-## Mecânica do Jogo (Consolidada)
+## Game Mechanics (Consolidated)
 
-| Elemento | Regra |
+| Element | Rule |
 |---|---|
-| Classes | **Guerreiro, Bardo, Mago, Ladino** |
-| Objetivos diários | 3 objetivos fixos por dia (seg–dom), configuráveis por herói a cada mês |
-| Pontos por objetivo | 30 pontos |
-| Atividades extras | +2,5 pontos por extra realizada (espaço livre no PDF) |
-| BOSS semanal | **1 por semana, COLETIVO** — a família cumpre junta; +30 pontos para todos |
-| Tipo de BOSS | Dragões, monstros, demônios, reis maus, magos malignos, liches, mortos-vivos — **selecionado automaticamente conforme o tema dos objetivos do mês** |
-| Meta semanal | 100 pontos |
-| Barra de XP mensal | 400 pontos (4 semanas × 100; ajustável conforme o calendário do mês) |
-| Upgrades | **12 por ano (1 por mês completado)**, específicos por classe |
-| Recompensa semanal | Prémio pessoal real (redactado no jogo) |
-| Recompensa mensal (400 XP) | Upgrade do avatar (equipamento/aparência/skill da classe) + vantagem real (10 €/semana) |
-| ADM | Papel de administrador que faz o setup mês a mês |
+| Classes | **Warrior, Bard, Mage, Rogue** |
+| Daily objectives | 3 fixed objectives per day (Mon–Sun), configurable per hero each month |
+| Points per objective | 30 points |
+| Extra activities | +2.5 points per extra done (free space on the PDF) |
+| Weekly BOSS | **1 per week, COLLECTIVE** — the family completes it together; +30 points for everyone |
+| BOSS type | Dragons, monsters, demons, evil kings, evil mages, liches, undead — **auto-selected from the month's objective theme** |
+| Weekly target | 100 points |
+| Monthly XP bar | 400 points (4 weeks × 100; adjustable to the month's calendar) |
+| Upgrades | **12 per year (1 per completed month)**, class-specific |
+| Weekly reward | Real personal prize (redacted in-game) |
+| Monthly reward (400 XP) | Avatar upgrade (class equipment/appearance/skill) + real perk (€10/week) |
+| ADM | Admin role that runs month-to-month setup |
 
-### Sistema de Upgrades por Classe (12/ano)
+### Class Upgrade System (12/year)
 
-Cada classe tem uma árvore de 12 upgrades (1 por mês), misturando equipamento, aparência e skill. Exemplos:
+Each class has a tree of 12 upgrades (1 per month), mixing equipment, appearance, and skill. Examples:
 
-| Mês | Guerreiro | Bardo | Mago | Ladino |
+| Month | Warrior | Bard | Mage | Rogue |
 |---|---|---|---|---|
-| 1 | Espada de Ferro | Alaúde Simples | Cajado de Aprendiz | Adaga Curta |
-| 2 | Escudo de Carvalho | Canção Inspiradora (skill) | Grimório Básico | Capa de Sombras |
-| 3 | Armadura de Placas | Flauta Élfica | Bola de Fogo (skill) | Passo Furtivo (skill) |
+| 1 | Iron Sword | Simple Lute | Apprentice Staff | Short Dagger |
+| 2 | Oak Shield | Inspiring Song (skill) | Basic Grimoire | Shadow Cloak |
+| 3 | Plate Armor | Elven Flute | Fireball (skill) | Stealth Step (skill) |
 | ... | ... | ... | ... | ... |
-| 12 | Lâmina Lendária | Hino dos Heróis | Arquimago | Mestre das Sombras |
+| 12 | Legendary Blade | Hymn of Heroes | Archmage | Shadow Master |
 
-*(A árvore completa de 4 classes × 12 upgrades será definida na base de dados `.md` na implementação.)*
+*(The full 4 classes × 12 upgrades tree is defined in the `.md` database during implementation.)*
 
-### Seleção Automática de BOSS por Tema
+### Auto BOSS Selection by Theme
 
-No setup mensal, o ADM marca o **tema dominante dos objetivos** do mês; o sistema seleciona automaticamente os inimigos das 4 semanas a partir de um bestiário temático em `.md`:
+In monthly setup, ADM marks the month's **dominant objective theme**; the system auto-selects the 4 weeks' enemies from a thematic bestiary in `.md`:
 
-| Tema dos objetivos | Exemplos de inimigos |
+| Objective theme | Example enemies |
 |---|---|
-| Alimentação | Demônio da Gula, Hidra do Açúcar, Rei Glutão |
-| Treino / Exercício | Dragão da Preguiça, Golem Sedentário, Lich da Fadiga |
-| Estudo / Leitura | Mago Maligno da Ignorância, Espectro da Distração |
-| Organização / Casa | Rei Mau do Caos, Mortos-Vivos da Bagunça |
-| Sono / Saúde | Vampiro da Insônia, Necromante do Cansaço |
-| Finanças | Dragão Avarento, Demônio do Desperdício |
+| Nutrition | Demon of Gluttony, Sugar Hydra, Glutton King |
+| Training / Exercise | Dragon of Laziness, Sedentary Golem, Lich of Fatigue |
+| Study / Reading | Evil Mage of Ignorance, Specter of Distraction |
+| Organization / Home | Chaos Evil King, Undead of Mess |
+| Sleep / Health | Vampire of Insomnia, Necromancer of Exhaustion |
+| Finances | Miser Dragon, Demon of Waste |
 
 ---
 
-## Estrutura do Repositório GitHub
+## GitHub Repository Structure
 
 ```
 family-quest-rpg/
 │
-├── README.md                            ← Regras do jogo + link do frontend
+├── README.md                            ← Game rules + frontend link
 │
-├── docs/                                ← BASE DE DADOS (arquivos .md)
-│   ├── README.md                        ← Guia de preenchimento
+├── docs/                                ← DATABASE (.md files)
+│   ├── README.md                        ← Editing guide
 │   │
 │   ├── config/
-│   │   ├── game-config.md               ← Jogadores, classes, mês/semana atual, calendário
-│   │   ├── classes.md                   ← 4 classes com árvore de 12 upgrades cada
-│   │   ├── bestiary.md                  ← Bestiário: inimigos por tema (para seleção automática)
+│   │   ├── game-config.md               ← Players, classes, current month/week, calendar
+│   │   ├── classes.md                   ← 4 classes with 12-upgrade trees each
+│   │   ├── bestiary.md                  ← Bestiary: enemies by theme (auto-selection)
 │   │   └── months/
-│   │       ├── 2026-07.md               ← Setup do mês: tema, objetivos por herói, 4 BOSS, semanas
+│   │       ├── 2026-07.md               ← Month setup: theme, per-hero objectives, 4 BOSSes, weeks
 │   │       └── 2026-08.md
 │   │
 │   ├── Heroi1/
-│   │   ├── profile.md                   ← Nome, classe, nível, XP, foto real (link), avatar
-│   │   ├── objectives.md               ← Objetivos ativos do mês (3 fixos/dia) — editável pelo jogador
-│   │   ├── skills.md                    ← Skills/upgrades ganhos (por mês completado)
-│   │   ├── appearance.md                ← Equipamentos por slot conforme classe
-│   │   ├── rewards.md                   ← Histórico de recompensas semanais/mensais
+│   │   ├── profile.md                   ← Name, class, level, XP, real photo (link), avatar
+│   │   ├── objectives.md               ← Active month objectives (3 fixed/day) — player-editable
+│   │   ├── skills.md                    ← Skills/upgrades earned (per completed month)
+│   │   ├── appearance.md                ← Equipment by slot per class
+│   │   ├── rewards.md                   ← Weekly/monthly reward history
 │   │   └── weekly/
-│   │       └── 2026-W29.md              ← Registo semanal (transferido do PDF manual)
+│   │       └── 2026-W29.md              ← Weekly record (transferred from manual PDF)
 │   │
-│   ├── Heroi2/ ... Heroi4/              ← Mesma estrutura por herói
+│   ├── Heroi2/ ... Heroi4/              ← Same structure per hero
 │   │
 │   └── assets/
-│       ├── photos/                      ← Fotos reais dos jogadores (para o PDF)
-│       └── avatars/                     ← Avatares gerados por classe/nível
+│       ├── photos/                      ← Real player photos (for the PDF)
+│       └── avatars/                     ← Avatars generated by class/level
 │
-├── pdfs/                                ← PDFs mensais gerados (1 página por herói)
+├── pdfs/                                ← Generated monthly PDFs (1 page per hero)
 │   ├── 2026-07/
 │   │   ├── Heroi1.pdf
 │   │   ├── Heroi2.pdf
-│   │   └── family-quest-2026-07.pdf    ← PDF combinado da família
+│   │   └── family-quest-2026-07.pdf    ← Combined family PDF
 │   └── scripts/
-│       └── generate_monthly_pdf.py     ← Gerador de PDF (lê os .md e monta as fichas)
+│       └── generate_monthly_pdf.py     ← PDF generator (reads .md and builds sheets)
 │
-└── frontend/                            ← Projeto WebDev (React + Tailwind)
+└── frontend/                            ← WebDev project (React + Tailwind)
     └── client/src/
         ├── pages/
-        │   ├── Home.tsx                 ← Dashboard da família + BOSS coletivo da semana
-        │   ├── Player.tsx               ← Perfil individual (avatar, XP, skills, objetivos)
-        │   ├── Weekly.tsx               ← Semana atual: objetivos, extras, pontos
-        │   ├── Leaderboard.tsx          ← Ranking familiar
-        │   └── Admin.tsx                ← Painel ADM: setup mensal
+        │   ├── Home.tsx                 ← Family dashboard + week's collective BOSS
+        │   ├── Player.tsx               ← Individual profile (avatar, XP, skills, objectives)
+        │   ├── Weekly.tsx               ← Current week: objectives, extras, points
+        │   ├── Leaderboard.tsx          ← Family ranking
+        │   └── Admin.tsx                ← ADM panel: monthly setup
         ├── components/
-        │   ├── AvatarCard.tsx           ← Avatar da classe com equipamentos
-        │   ├── XPBar.tsx                ← Barra 0–400 com quadrados de 100 pts
-        │   ├── XPGrid.tsx               ← Quadro de quadrados (espelho do PDF)
-        │   ├── TaskList.tsx             ← 3 objetivos/dia + extras
-        │   ├── BossCard.tsx             ← BOSS coletivo com progresso da família
-        │   ├── ClassBadge.tsx           ← Insígnia da classe
-        │   └── UpgradeTree.tsx          ← Árvore de 12 upgrades da classe
+        │   ├── AvatarCard.tsx           ← Class avatar with equipment
+        │   ├── XPBar.tsx                ← 0–400 bar with 100-pt squares
+        │   ├── XPGrid.tsx               ← Square grid (PDF mirror)
+        │   ├── TaskList.tsx             ← 3 objectives/day + extras
+        │   ├── BossCard.tsx             ← Collective BOSS with family progress
+        │   ├── ClassBadge.tsx           ← Class insignia
+        │   └── UpgradeTree.tsx          ← Class 12-upgrade tree
         └── lib/
-            ├── mdParser.ts              ← Parser frontmatter YAML + Markdown
-            ├── githubApi.ts             ← Leitura/escrita dos .md via GitHub API
-            ├── gameLogic.ts             ← Pontos, XP, level-up, seleção de BOSS
-            └── bossSelector.ts          ← Seleção automática de inimigos por tema
+            ├── mdParser.ts              ← YAML frontmatter + Markdown parser
+            ├── githubApi.ts             ← Read/write .md via GitHub API
+            ├── gameLogic.ts             ← Points, XP, level-up, BOSS selection
+            └── bossSelector.ts          ← Auto enemy selection by theme
 ```
 
 ---
 
-## O PDF Mensal (Ficha de Herói Imprimível)
+## The Monthly PDF (Printable Hero Sheet)
 
-**Gerado todo início de mês, 1 página por herói.** É o instrumento de marcação manual da família. Layout da página:
+**Generated at the start of every month, 1 page per hero.** The family's hand-marking tool. Page layout:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  [TEMA VISUAL DO MÊS: cores/ambiente conforme objetivo] │
+│  [MONTH VISUAL THEME: colors/environment by objective]  │
 │                                                         │
-│  ┌────────┐   NOME DO JOGADOR        ┌────────┐        │
-│  │ FOTO   │   Classe: Mago           │ AVATAR │        │
-│  │ REAL   │   Level: 3               │ (arte) │        │
+│  ┌────────┐   PLAYER NAME            ┌────────┐        │
+│  │ REAL   │   Class: Mage            │ AVATAR │        │
+│  │ PHOTO  │   Level: 3               │ (art)  │        │
 │  └────────┘   Skills: ✦ ✦ ✦          └────────┘        │
 │                                                         │
-│  OBJETIVOS DO MÊS (tema: ex. Alimentação)               │
-│  1. Missão Alpha   2. Missão Beta   3. Missão Gama     │
+│  MONTH OBJECTIVES (theme: e.g. Nutrition)               │
+│  1. Mission Alpha  2. Mission Beta  3. Mission Gamma    │
 │                                                         │
-│  BOSS DA SEMANA (coletivo): [Nome do inimigo + arte]    │
+│  WEEK BOSS (collective): [Enemy name + art]             │
 │                                                         │
-│  QUADRO DE EXPERIÊNCIA (1 quadrado = 100 pts)           │
-│  Semana 1: □   Semana 2: □   Semana 3: □   Semana 4: □ │
+│  EXPERIENCE BOARD (1 square = 100 pts)                  │
+│  Week 1: □   Week 2: □   Week 3: □   Week 4: □         │
 │                                                         │
-│  ATIVIDADES DIÁRIAS (7 dias)                            │
+│  DAILY ACTIVITIES (7 days)                              │
 │  ┌────┬─────────┬─────────┬─────────┬────────────────┐ │
-│  │Dia │ Obj. 1  │ Obj. 2  │ Obj. 3  │ Extras (2,5pt) │ │
+│  │Day │ Obj. 1  │ Obj. 2  │ Obj. 3  │ Extras (2.5pt) │ │
 │  ├────┼─────────┼─────────┼─────────┼────────────────┤ │
-│  │Seg │   ☐     │   ☐     │   ☐     │ ______________ │ │
-│  │Ter │   ☐     │   ☐     │   ☐     │ ______________ │ │
+│  │Mon │   ☐     │   ☐     │   ☐     │ ______________ │ │
+│  │Tue │   ☐     │   ☐     │   ☐     │ ______________ │ │
 │  │ ...│         │         │         │                │ │
-│  │Dom │   ☐     │   ☐     │   ☐     │ ______________ │ │
+│  │Sun │   ☐     │   ☐     │   ☐     │ ______________ │ │
 │  └────┴─────────┴─────────┴─────────┴────────────────┘ │
-│  (4 grades semanais, uma por semana do mês)             │
+│  (4 weekly grids, one per week of the month)            │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Tema visual dinâmico:** o gerador de PDF lê o tema do mês no setup (`docs/config/months/YYYY-MM.md`) e aplica paleta de cores, ilustrações de fundo e arte do BOSS coerentes:
+**Dynamic visual theme:** the PDF generator reads the month theme from setup (`docs/config/months/YYYY-MM.md`) and applies a matching color palette, background art, and BOSS art:
 
-| Tema | Paleta / Ambiente |
+| Theme | Palette / Environment |
 |---|---|
-| Alimentação | Tons quentes (laranja/verde), taverna medieval, banquetes |
-| Treino | Vermelho/bronze, arena de batalha, ferraria |
-| Estudo | Azul/roxo, biblioteca arcana, torre de mago |
-| Organização | Dourado/cinza, castelo, salão real |
-| Sono/Saúde | Azul-noite/prata, floresta encantada ao luar |
+| Nutrition | Warm tones (orange/green), medieval tavern, banquets |
+| Training | Red/bronze, battle arena, forge |
+| Study | Blue/purple, arcane library, mage tower |
+| Organization | Gold/gray, castle, royal hall |
+| Sleep/Health | Midnight blue/silver, enchanted moonlit forest |
 
-**Ciclo semanal:** todas as semanas o utilizador envia o PDF preenchido (foto/scan) e o ADM (ou Manus em tarefas futuras) transfere as marcações para o `weekly/YYYY-WXX.md` correspondente — atualizando o sistema digital.
-
----
-
-## Painel ADM (Setup Mensal)
-
-Página `Admin.tsx` protegida por senha simples (definida em `game-config.md`), com os passos do setup:
-
-1. **Definir o mês:** selecionar mês e número de semanas (4 normalmente, ajustável conforme calendário e início da jornada)
-2. **Objetivos por herói:** para cada herói, definir os 3 objetivos fixos diários do mês (redactados) e o tema dominante
-3. **Seleção de BOSS:** ao marcar o tema, o sistema sugere automaticamente 4 inimigos do bestiário (1 por semana) — o ADM pode aceitar ou trocar
-4. **Gerar arquivo de setup:** o painel produz o conteúdo do `docs/config/months/YYYY-MM.md` pronto para commit (download do .md ou commit via GitHub API com token)
-5. **Gerar PDFs:** disparar o script de geração dos PDFs mensais de todos os heróis
-
-> **Nota técnica:** como a base de dados são arquivos `.md` no GitHub, a escrita a partir do painel ADM usa a GitHub Contents API com um token de acesso pessoal configurado pelo ADM (guardado apenas no localStorage do navegador). Alternativa sem token: o painel gera os arquivos `.md` prontos para o ADM copiar/colar ou fazer upload manual no GitHub.
+**Weekly cycle:** every week the user sends the filled PDF (photo/scan) and ADM (or Manus in future tasks) transfers marks into the matching `weekly/YYYY-WXX.md` — updating the digital system.
 
 ---
 
-## Esquemas dos Arquivos `.md` (Base de Dados)
+## ADM Panel (Monthly Setup)
+
+`Admin.tsx` page protected by a simple password (set in `game-config.md`), with setup steps:
+
+1. **Set the month:** pick month and week count (usually 4; adjustable to calendar and journey start)
+2. **Objectives per hero:** for each hero, set the 3 fixed daily objectives for the month (redacted) and the dominant theme
+3. **BOSS selection:** on marking the theme, the system suggests 4 bestiary enemies (1 per week) — ADM can accept or swap
+4. **Generate setup file:** panel produces `docs/config/months/YYYY-MM.md` ready to commit (download `.md` or commit via GitHub API with token)
+5. **Generate PDFs:** trigger the monthly PDF generation script for all heroes
+
+> **Technical note:** because the database is `.md` files on GitHub, writes from the ADM panel use the GitHub Contents API with a personal access token configured by ADM (stored only in the browser's localStorage). Token-free alternative: the panel generates ready `.md` files for ADM to copy/paste or upload manually on GitHub.
+
+---
+
+## `.md` File Schemas (Database)
 
 ### `docs/config/game-config.md`
 ```markdown
 ---
-admin_pin: "0000"                      # PIN do painel ADM (trocar)
-journey_start: "2026-08-01"            # Início da jornada dos heróis
+admin_pin: "0000"                      # ADM panel PIN (change it)
+journey_start: "2026-08-01"            # Hero journey start
 current_month: "2026-08"
 players:
   - id: Heroi1
-    character_name: "Dragão de Fogo"
+    character_name: "Fire Dragon"
     class: guerreiro
-    real_name_redacted: "Pai"
+    real_name_redacted: "Dad"
     photo: "docs/assets/photos/heroi1.jpg"
   - id: Heroi2
-    character_name: "Melodia Errante"
+    character_name: "Wandering Melody"
     class: bardo
-    real_name_redacted: "Mãe"
+    real_name_redacted: "Mom"
     photo: "docs/assets/photos/heroi2.jpg"
 points:
   per_task: 30
@@ -221,13 +221,13 @@ points:
 ---
 classes:
   guerreiro:
-    name: "Guerreiro"
-    description: "Força e disciplina"
-    upgrades:                          # 12 upgrades = 12 meses
-      - { month: 1, type: weapon, name: "Espada de Ferro" }
-      - { month: 2, type: armor, name: "Escudo de Carvalho" }
-      - { month: 3, type: skill, name: "Golpe Poderoso" }
-      # ... até month: 12
+    name: "Warrior"
+    description: "Strength and discipline"
+    upgrades:                          # 12 upgrades = 12 months
+      - { month: 1, type: weapon, name: "Iron Sword" }
+      - { month: 2, type: armor, name: "Oak Shield" }
+      - { month: 3, type: skill, name: "Power Strike" }
+      # ... through month: 12
   bardo:    { ... }
   mago:     { ... }
   ladino:   { ... }
@@ -240,20 +240,20 @@ classes:
 themes:
   alimentacao:
     palette: ["#E8590C", "#2F9E44"]
-    environment: "taverna medieval"
+    environment: "medieval tavern"
     enemies:
-      - { name: "Demônio da Gula", type: demonio }
-      - { name: "Hidra do Açúcar", type: monstro }
-      - { name: "Rei Glutão", type: rei_mau }
-      - { name: "Zumbi Faminto", type: morto_vivo }
+      - { name: "Demon of Gluttony", type: demonio }
+      - { name: "Sugar Hydra", type: monstro }
+      - { name: "Glutton King", type: rei_mau }
+      - { name: "Hungry Zombie", type: morto_vivo }
   treino:
     palette: ["#C92A2A", "#A87900"]
-    environment: "arena de batalha"
+    environment: "battle arena"
     enemies:
-      - { name: "Dragão da Preguiça", type: dragao }
-      - { name: "Golem Sedentário", type: monstro }
-      - { name: "Lich da Fadiga", type: lich }
-      - { name: "Cavaleiro Negro do Cansaço", type: rei_mau }
+      - { name: "Dragon of Laziness", type: dragao }
+      - { name: "Sedentary Golem", type: monstro }
+      - { name: "Lich of Fatigue", type: lich }
+      - { name: "Dark Knight of Exhaustion", type: rei_mau }
   estudo:       { ... }
   organizacao:  { ... }
   saude:        { ... }
@@ -261,46 +261,46 @@ themes:
 ---
 ```
 
-### `docs/config/months/2026-08.md` (gerado pelo painel ADM)
+### `docs/config/months/2026-08.md` (generated by ADM panel)
 ```markdown
 ---
 month: "2026-08"
 weeks: ["2026-W32", "2026-W33", "2026-W34", "2026-W35"]
-theme: treino                          # tema dominante do mês
-bosses:                                # selecionados automaticamente pelo tema
-  - { week: "2026-W32", name: "Dragão da Preguiça", collective: true, points: 30 }
-  - { week: "2026-W33", name: "Golem Sedentário", collective: true, points: 30 }
-  - { week: "2026-W34", name: "Lich da Fadiga", collective: true, points: 30 }
-  - { week: "2026-W35", name: "Cavaleiro Negro do Cansaço", collective: true, points: 30 }
-objectives:                            # 3 objetivos fixos/dia por herói
+theme: treino                          # month's dominant theme
+bosses:                                # auto-selected by theme
+  - { week: "2026-W32", name: "Dragon of Laziness", collective: true, points: 30 }
+  - { week: "2026-W33", name: "Sedentary Golem", collective: true, points: 30 }
+  - { week: "2026-W34", name: "Lich of Fatigue", collective: true, points: 30 }
+  - { week: "2026-W35", name: "Dark Knight of Exhaustion", collective: true, points: 30 }
+objectives:                            # 3 fixed daily objectives per hero
   Heroi1:
     theme: treino
-    daily: ["Missão Alpha", "Missão Beta", "Missão Gama"]
+    daily: ["Mission Alpha", "Mission Beta", "Mission Gamma"]
   Heroi2:
     theme: alimentacao
-    daily: ["Missão Delta", "Missão Épsilon", "Missão Zeta"]
+    daily: ["Mission Delta", "Mission Epsilon", "Mission Zeta"]
 ---
 ```
 
-### `docs/[Heroi]/objectives.md` (editável pelo jogador)
+### `docs/[Heroi]/objectives.md` (player-editable)
 ```markdown
 ---
 month: "2026-08"
 theme: treino
 daily_objectives:
-  - { id: obj1, name: "Missão Alpha", points: 30, real_meaning_redacted: true }
-  - { id: obj2, name: "Missão Beta", points: 30, real_meaning_redacted: true }
-  - { id: obj3, name: "Missão Gama", points: 30, real_meaning_redacted: true }
+  - { id: obj1, name: "Mission Alpha", points: 30, real_meaning_redacted: true }
+  - { id: obj2, name: "Mission Beta", points: 30, real_meaning_redacted: true }
+  - { id: obj3, name: "Mission Gamma", points: 30, real_meaning_redacted: true }
 extras_allowed: true
 ---
 ```
 
-### `docs/[Heroi]/weekly/2026-W32.md` (transferido do PDF manual)
+### `docs/[Heroi]/weekly/2026-W32.md` (transferred from manual PDF)
 ```markdown
 ---
 week: "2026-W32"
 player: Heroi1
-boss: { name: "Dragão da Preguiça", completed: true, points: 30 }
+boss: { name: "Dragon of Laziness", completed: true, points: 30 }
 days:
   seg: { obj1: true, obj2: true, obj3: true, extras: 2 }
   ter: { obj1: true, obj2: true, obj3: false, extras: 0 }
@@ -310,120 +310,120 @@ days:
   sab: { obj1: true, obj2: true, obj3: true, extras: 0 }
   dom: { obj1: true, obj2: true, obj3: true, extras: 0 }
 total_points: 130
-xp_squares_filled: 1                   # quadrados de 100 pts preenchidos
+xp_squares_filled: 1                   # 100-pt squares filled
 reward_status: pending
 ---
 ```
 
-*(Os arquivos `profile.md`, `skills.md`, `appearance.md` e `rewards.md` seguem os esquemas já definidos, agora vinculados à classe e à árvore de upgrades.)*
+*(Files `profile.md`, `skills.md`, `appearance.md`, and `rewards.md` follow the schemas already defined, now linked to class and upgrade tree.)*
 
 ---
 
-## Fases de Implementação
+## Implementation Phases
 
-### Fase 1 — Repositório GitHub e Base de Dados `.md`
-1. Criar repositório privado `family-quest-rpg`
-2. Criar estrutura `docs/` completa: `config/` (game-config, classes com 4×12 upgrades, bestiário com 6 temas), pastas de heróis com todos os templates, `assets/`
-3. Escrever `README.md` com regras completas e `docs/README.md` com guia de edição
-4. Popular com dados de exemplo (2 heróis placeholder, mês de exemplo com setup completo)
-5. Commit inicial
+### Phase 1 — GitHub Repository and `.md` Database
+1. Create private repo `family-quest-rpg`
+2. Create full `docs/` structure: `config/` (game-config, classes with 4×12 upgrades, bestiary with 6 themes), hero folders with all templates, `assets/`
+3. Write `README.md` with full rules and `docs/README.md` with editing guide
+4. Populate with sample data (2 placeholder heroes, sample month with full setup)
+5. Initial commit
 
-### Fase 2 — Assets Visuais (Geração de Imagens)
-1. **4 avatares base** (Guerreiro, Bardo, Mago, Ladino) em estilo fantasy consistente
-2. **Evoluções visuais dos avatares** (versões nível baixo/médio/alto por classe)
-3. **Artes de inimigos** do bestiário (dragão, demônio, lich, golem, rei mau, morto-vivo — 1 por tipo)
-4. **Fundos temáticos** para os 6 temas de PDF (taverna, arena, biblioteca arcana, castelo, floresta, tesouraria)
-5. Ícones de equipamento, badges de semana/mês completo, molduras decorativas
-6. Guardar em `docs/assets/avatars/` e upload para o frontend
+### Phase 2 — Visual Assets (Image Generation)
+1. **4 base avatars** (Warrior, Bard, Mage, Rogue) in consistent fantasy style
+2. **Avatar visual evolutions** (low/mid/high level versions per class)
+3. **Enemy art** for the bestiary (dragon, demon, lich, golem, evil king, undead — 1 per type)
+4. **Thematic backgrounds** for the 6 PDF themes (tavern, arena, arcane library, castle, forest, treasury)
+5. Equipment icons, week/month-complete badges, decorative frames
+6. Store in `docs/assets/avatars/` and upload for the frontend
 
-### Fase 3 — Gerador de PDF Mensal (Python)
-1. Script `generate_monthly_pdf.py` que lê `game-config.md`, `months/YYYY-MM.md`, `profile.md`, `skills.md` de cada herói
-2. Layout de 1 página por herói: foto real + avatar + classe + level + skills + objetivos do mês + BOSS coletivo semanal + quadro de XP em quadrados (1 quadrado = 100 pts) + grade de atividades diárias (7 dias × 3 objetivos + coluna de extras), repetida por semana
-3. **Tema visual dinâmico** conforme o tema do mês (paleta e fundo do bestiário)
-4. Saída: PDF individual por herói + PDF combinado da família em `pdfs/YYYY-MM/`
-5. Testar com o mês de exemplo e validar visualmente
+### Phase 3 — Monthly PDF Generator (Python)
+1. Script `generate_monthly_pdf.py` that reads `game-config.md`, `months/YYYY-MM.md`, each hero's `profile.md`, `skills.md`
+2. Layout of 1 page per hero: real photo + avatar + class + level + skills + month objectives + weekly collective BOSS + XP square board (1 square = 100 pts) + daily activity grid (7 days × 3 objectives + extras column), repeated per week
+3. **Dynamic visual theme** from month theme (bestiary palette and background)
+4. Output: individual PDF per hero + combined family PDF in `pdfs/YYYY-MM/`
+5. Test with the sample month and validate visually
 
-### Fase 4 — Frontend React
-1. Inicializar projeto WebDev `web-static` em `frontend/`, estilo dark fantasy
-2. `lib/`: mdParser (frontmatter YAML), githubApi (leitura Raw + escrita Contents API), gameLogic (pontos/XP/level), bossSelector (tema → inimigos)
-3. Componentes: XPBar/XPGrid (quadrados de 100 pts, espelho do PDF), AvatarCard, BossCard coletivo (progresso da família), TaskList, ClassBadge, UpgradeTree (12 upgrades da classe)
-4. Páginas: Home (dashboard + BOSS coletivo), Player (perfil completo), Weekly (semana atual), Leaderboard (ranking)
-5. **Painel ADM** (`/admin`, PIN): setup mensal — semanas do mês, objetivos por herói, tema, seleção automática de BOSS (com opção de troca), geração do arquivo `months/YYYY-MM.md` (commit via API ou download)
+### Phase 4 — React Frontend
+1. Initialize WebDev `web-static` project in `frontend/`, dark fantasy style
+2. `lib/`: mdParser (YAML frontmatter), githubApi (Raw read + Contents API write), gameLogic (points/XP/level), bossSelector (theme → enemies)
+3. Components: XPBar/XPGrid (100-pt squares, PDF mirror), AvatarCard, collective BossCard (family progress), TaskList, ClassBadge, UpgradeTree (12 class upgrades)
+4. Pages: Home (dashboard + collective BOSS), Player (full profile), Weekly (current week), Leaderboard (ranking)
+5. **ADM panel** (`/admin`, PIN): monthly setup — month weeks, per-hero objectives, theme, auto BOSS selection (with swap option), generate `months/YYYY-MM.md` (API commit or download)
 
-### Fase 5 — Integração, Teste e Deploy
-1. Integrar frontend ↔ GitHub (leitura dos `.md`; escrita opcional via token)
-2. Testar fluxo completo: setup ADM → geração de PDF → preenchimento simulado → registo semanal → XP → upgrade mensal
-3. Verificar cálculos (90 base + 30 boss + extras; 400 XP/mês; 12 upgrades/ano)
-4. Publicar frontend via WebDev Publish e adicionar link no `README.md`
-5. Entregar: repositório completo + frontend publicado + PDFs do primeiro mês de exemplo
+### Phase 5 — Integration, Test, and Deploy
+1. Integrate frontend ↔ GitHub (read `.md`; optional write via token)
+2. Test full flow: ADM setup → PDF generation → simulated fill → weekly record → XP → monthly upgrade
+3. Verify calculations (90 base + 30 boss + extras; 400 XP/month; 12 upgrades/year)
+4. Publish frontend via WebDev Publish and add link in `README.md`
+5. Deliver: complete repo + published frontend + sample first-month PDFs
 
 ---
 
-## Fluxo Operacional Mensal (Sistema Manual → Sistema Digital)
+## Monthly Operational Flow (Manual → Digital)
 
 ```
-INÍCIO DO MÊS (ADM)
-  1. Painel ADM: definir semanas do mês, objetivos de cada herói e tema
-  2. Sistema seleciona automaticamente os 4 BOSS coletivos do bestiário
-  3. Commit do setup em docs/config/months/YYYY-MM.md
-  4. Gerar PDFs mensais (1 página/herói, tema visual do mês)
-  5. Imprimir e entregar às crianças/família
+MONTH START (ADM)
+  1. ADM panel: set month weeks, each hero's objectives, and theme
+  2. System auto-selects 4 collective BOSSes from the bestiary
+  3. Commit setup to docs/config/months/YYYY-MM.md
+  4. Generate monthly PDFs (1 page/hero, month visual theme)
+  5. Print and hand out to kids/family
 
-DURANTE A SEMANA (papel)
-  └─ Cada herói marca ☑ nos 3 objetivos diários e anota extras no PDF
-  └─ Família enfrenta o BOSS coletivo juntos
+DURING THE WEEK (paper)
+  └─ Each hero marks ☑ on 3 daily objectives and notes extras on the PDF
+  └─ Family faces the collective BOSS together
 
-FIM DA SEMANA (utilizador → Manus/ADM)
-  └─ Enviar foto/scan do PDF preenchido
-  └─ Transferir marcações para docs/[Heroi]/weekly/YYYY-WXX.md
-  └─ Frontend atualiza XP, quadrados e ranking automaticamente
+WEEK END (user → Manus/ADM)
+  └─ Send photo/scan of filled PDF
+  └─ Transfer marks to docs/[Heroi]/weekly/YYYY-WXX.md
+  └─ Frontend updates XP, squares, and ranking automatically
 
-FIM DO MÊS (400 XP)
-  └─ Level-up: aplicar upgrade do mês da classe (equipamento/skill/aparência)
-  └─ Atualizar profile.md, skills.md, appearance.md, rewards.md
-  └─ Registar recompensa real (10 €/semana atingida)
+MONTH END (400 XP)
+  └─ Level-up: apply class month upgrade (equipment/skill/appearance)
+  └─ Update profile.md, skills.md, appearance.md, rewards.md
+  └─ Record real reward (€10 per week hit)
 ```
 
 ---
 
-## Tecnologias
+## Technologies
 
-| Camada | Tecnologia |
+| Layer | Technology |
 |---|---|
-| Repositório | GitHub (privado) |
-| **Base de Dados** | **Arquivos `.md` com frontmatter YAML** (docs/) |
+| Repository | GitHub (private) |
+| **Database** | **`.md` files with YAML frontmatter** (docs/) |
 | Frontend | React 19 + Tailwind 4 + shadcn/ui |
-| Leitura/Escrita de dados | GitHub Raw API (leitura) + Contents API (escrita opcional com token) |
-| Gerador de PDF | Python (reportlab/weasyprint) lendo os `.md` |
-| Assets visuais | Manus built-in image generation |
+| Data read/write | GitHub Raw API (read) + Contents API (optional write with token) |
+| PDF generator | Python (reportlab/weasyprint) reading the `.md` files |
+| Visual assets | Manus built-in image generation |
 | Deploy | Manus WebDev Publish (`*.manus.space`) |
 
 ---
 
-## Pressupostos e Pontos em Aberto
+## Assumptions and Open Points
 
-| Item | Detalhe |
+| Item | Detail |
 |---|---|
-| Nomes e fotos dos jogadores | Placeholders iniciais; o utilizador substituirá nomes e adicionará fotos reais em `docs/assets/photos/` |
-| Número de heróis | Estrutura preparada para 2–6; exemplos com 4 (um por classe) |
-| Objetivos e prémios reais | Sempre redactados nos `.md` ("Missão Alpha", "Recompensa Lendária") |
-| Semanas por mês | 4 por padrão, ajustável no setup ADM conforme calendário/início da jornada |
-| Escrita no GitHub pelo painel ADM | Requer token pessoal do utilizador; alternativa: painel gera o `.md` para upload manual |
-| Atualização semanal via PDF enviado | O utilizador envia o PDF preenchido em tarefas futuras; a transferência para os `.md` pode ser feita por mim (leitura da imagem) ou manualmente |
-| Repositório privado | Frontend lê repos privados apenas com token; se preferir leitura sem token, o repositório precisará ser público (dados já estão redactados) |
+| Player names and photos | Initial placeholders; user will replace names and add real photos in `docs/assets/photos/` |
+| Hero count | Structure ready for 2–6; samples with 4 (one per class) |
+| Real objectives and prizes | Always redacted in `.md` ("Mission Alpha", "Legendary Reward") |
+| Weeks per month | 4 by default, adjustable in ADM setup per calendar/journey start |
+| GitHub writes from ADM panel | Needs user's personal token; alternative: panel generates `.md` for manual upload |
+| Weekly update via sent PDF | User sends filled PDF in future tasks; transfer into `.md` can be done by me (image read) or manually |
+| Private repository | Frontend reads private repos only with a token; for token-free reads, repo must be public (data is already redacted) |
 
 ---
 
-## Revisão Jul 2026
+## July 2026 revision
 
-Pipeline local fechado sem Manus WebDev:
+Local pipeline closed without Manus WebDev:
 
-| Fase | Status | Nota |
+| Phase | Status | Note |
 |---|---|---|
-| 1 — DB `.md` | Feita | `docs/` com 4 heróis + config |
-| 2a — Assets placeholder | Feita | SVG em `docs/assets/` (2b artes IA depois) |
-| 3 — PDF | Feita | `pdfs/scripts/generate_monthly_pdf.py` (WeasyPrint → reportlab fallback) |
-| 4 — Frontend | Feita | `frontend/` grimório Vite/React/Tailwind/Wouter |
-| 5 — Deploy | Feita | GitHub Raw + Pages workflow; ADM = download `.md` (Contents API opcional depois) |
+| 1 — DB `.md` | Done | `docs/` with 4 heroes + config |
+| 2a — Placeholder assets | Done | SVG in `docs/assets/` (2b AI art later) |
+| 3 — PDF | Done | `pdfs/scripts/generate_monthly_pdf.py` (WeasyPrint → reportlab fallback) |
+| 4 — Frontend | Done | `frontend/` grimoire Vite/React/Tailwind/Wouter |
+| 5 — Deploy | Done | GitHub Raw + Pages workflow; ADM = download `.md` (Contents API optional later) |
 
-Stack local: Vite em `frontend/` (não Manus). Deploy: GitHub Pages a partir de `frontend/dist`.
+Local stack: Vite in `frontend/` (not Manus). Deploy: GitHub Pages from `frontend/dist`.

@@ -1,58 +1,76 @@
-# Guia da Base de Dados (`docs/`)
+# Database Guide (`docs/`)
 
-Esta pasta é a **base de dados do jogo**. Todos os dados vivem em arquivos `.md` com um bloco de **frontmatter YAML** no topo (entre `---`). O frontend lê estes arquivos e monta o painel automaticamente.
+This folder is the **game database**. All data lives in Markdown files with a **YAML frontmatter** block at the top (between `---`). The frontend reads these files and builds the panel automatically.
 
-Planejamento (fora do runtime do jogo):
+## Bilingual game content (EN + PT)
 
-| Arquivo | Conteúdo |
+Display strings for the game are stored in **both English and Portuguese**:
+
+| English field | Portuguese field |
 |---|---|
-| `planning/plan.md` | Plano de implementação (fases 1–5) |
-| `planning/ideas.md` | Design visual escolhido (Grimório de Pergaminho) |
-| `planning/webdev-skill.md` | Guia do template React/Tailwind (frontend) |
+| `name` | `name_pt` |
+| `description` | `description_pt` |
+| `character_name` | `character_name_pt` |
+| `mission_redacted` | `mission_redacted_pt` |
+| `daily` (list) | `daily_pt` (list) |
 
-Agente Cursor: `.cursor/skills/family-quest-game/` — invocar ao continuar o jogo (PDF, frontend, assets, mecânicas).
+The UI has an **EN | PT** toggle (saved in `localStorage`). It picks `*_pt` when locale is `pt`, otherwise the English field. Keys/IDs (`Heroi1`, `guerreiro`, `seg`, theme keys) stay language-neutral.
 
-## Regras Gerais de Edição
+Contributor docs (README, planning) stay primarily English; in-game labels stay bilingual.
 
-1. **Nunca apague o bloco `---` ... `---`** no topo dos arquivos — é onde os dados estruturados vivem.
-2. Edite os valores mantendo a indentação YAML (2 espaços).
-3. Texto após o segundo `---` é livre: use para notas, histórias e crônicas da família.
-4. Datas no formato `YYYY-MM-DD`; semanas no formato ISO `YYYY-WXX`.
-5. Faça commit após cada atualização — o histórico do git é o "livro de crônicas" do jogo.
+Planning (not runtime game data):
 
-## Quem Edita o Quê
+| File | Contents |
+|---|---|
+| `planning/plan.md` | Implementation plan (phases 1–5) |
+| `planning/ideas.md` | Chosen visual design (Parchment Grimoire) |
+| `planning/webdev-skill.md` | React/Tailwind template guide (frontend) |
 
-| Arquivo | Quem edita | Quando |
+Cursor agent skill: `.cursor/skills/family-quest-game/` — use when continuing the game (PDF, frontend, assets, mechanics).
+
+## Editing Rules
+
+1. **Never delete the `---` … `---` block** at the top — that is where structured data lives.
+2. Keep YAML indentation (2 spaces).
+3. Text after the second `---` is free-form: notes, stories, family chronicles.
+4. Dates: `YYYY-MM-DD`; weeks: ISO `YYYY-WXX`.
+5. Commit after each update — git history is the game’s chronicle book.
+
+## Who Edits What
+
+| File | Who edits | When |
 |---|---|---|
-| `config/game-config.md` | ADM | Setup inicial e mudanças de jogadores |
-| `config/classes.md` | ADM | Raramente (árvore de upgrades) |
-| `config/bestiary.md` | ADM | Raramente (novos inimigos/temas) |
-| `config/months/YYYY-MM.md` | ADM | Início de cada mês |
-| `[Heroi]/objectives.md` | **Jogador** | Início de cada mês (seus 3 objetivos) |
-| `[Heroi]/weekly/YYYY-WXX.md` | Jogador ou ADM | Fim de cada semana (transferir do PDF) |
-| `[Heroi]/profile.md` | ADM | Fim do mês (level-up) |
-| `[Heroi]/skills.md` | ADM | Fim do mês (novo upgrade tipo skill) |
-| `[Heroi]/appearance.md` | ADM | Fim do mês (novo equipamento) |
-| `[Heroi]/rewards.md` | ADM | Fim de semana/mês (recompensas) |
+| `config/game-config.md` | ADMIN | Initial setup and player changes |
+| `config/classes.md` | ADMIN | Rarely (upgrade trees) |
+| `config/bestiary.md` | ADMIN | Rarely (new enemies/themes) |
+| `config/months/YYYY-MM.md` | ADMIN | Start of each month |
+| `[Heroi]/objectives.md` | **Player** | Start of each month (their 3 objectives) |
+| `[Heroi]/weekly/YYYY-WXX.md` | Player or ADMIN | End of each week (transfer from PDF) |
+| `[Heroi]/profile.md` | ADMIN | End of month (level-up) |
+| `[Heroi]/skills.md` | ADMIN | End of month (new skill-type upgrade) |
+| `[Heroi]/appearance.md` | ADMIN | End of month (new gear) |
+| `[Heroi]/rewards.md` | ADMIN | End of week/month (rewards) |
 
-## Como Registar uma Semana (transferir do PDF)
+> Folder IDs stay as `Heroi1`…`HeroiN` for compatibility. Display names are English in content.
 
-1. Copie o template de `weekly/` de uma semana anterior (ou crie `YYYY-WXX.md`)
-2. Preencha `days:` com `true`/`false` para cada objetivo e o número de `extras`
-3. Marque `boss.completed` se a família derrotou o BOSS coletivo
-4. O `total_points` pode ficar a 0 — o frontend calcula automaticamente; se preencher, será usado como valor manual
+## How to Log a Week (from the PDF)
 
-## Como Adicionar um Novo Herói
+1. Copy a previous `weekly/` template (or create `YYYY-WXX.md`)
+2. Fill `days:` with `true`/`false` per objective and the `extras` count
+3. Set `boss.completed` if the family defeated the collective BOSS
+4. `total_points` may stay `0` — the frontend computes it; if set, it is treated as a manual override
 
-1. Copie a pasta `Heroi1/` com o novo nome (ex: `Heroi5/`)
-2. Adicione o herói em `config/game-config.md` na lista `players`
-3. Adicione a foto real em `assets/photos/`
-4. Adicione os objetivos do herói no setup do mês em `config/months/`
+## How to Add a New Hero
 
-## Redação (Privacidade)
+1. Copy the `Heroi1/` folder to a new name (e.g. `Heroi5/`)
+2. Add the hero under `players` in `config/game-config.md`
+3. Add a real photo under `assets/photos/`
+4. Add the hero’s objectives in the month setup under `config/months/`
 
-Os objetivos e prémios reais **nunca** são escritos aqui. Use nomes de fantasia:
-- Objetivos → "Missão Alpha", "Missão Beta", "Desafio do Amanhecer"…
-- Prémios → "Recompensa Lendária", "Tesouro do Dragão"…
+## Redaction (Privacy)
 
-A família guarda uma tabela privada (fora do repositório) com o significado real de cada nome.
+Real objectives and prizes are **never** written here. Use fantasy labels:
+- Objectives → `"Mission Alpha"`, `"Mission Beta"`, `"Dawn Challenge"`…
+- Prizes → `"Legendary Reward"`, `"Dragon’s Treasure"`…
+
+The family keeps a private table (outside the repo) mapping each label to its real meaning.

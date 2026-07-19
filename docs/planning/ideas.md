@@ -1,72 +1,72 @@
-# Family Quest RPG — Brainstorm de Design
+# Family Quest RPG — Design Brainstorm
 
-## Três Abordagens Estilísticas
+## Three Stylistic Approaches
 
-### 1. Grimório de Pergaminho (Illuminated Manuscript)
-Interface como um livro de crônicas medieval iluminado: pergaminho envelhecido, iniciais capitulares douradas, bordas ornamentadas à mão. Sensação de folhear o diário de aventuras da família.
-**Probabilidade:** 0.04
+### 1. Parchment Grimoire (Illuminated Manuscript)
+Interface as an illuminated medieval chronicle book: aged parchment, golden drop caps, hand-ornamented borders. Feeling of flipping through the family's adventure diary.
+**Probability:** 0.04
 
 ### 2. Dark Fantasy Tavern (Baldur's Gate / Diablo UI)
-Painel escuro de taverna: madeira, pedra, metal forjado, tochas. Ouro sobre carvão, molduras entalhadas. Sensação de menu de RPG AAA.
-**Probabilidade:** 0.08
+Dark tavern panel: wood, stone, forged metal, torches. Gold on charcoal, carved frames. Feeling of an AAA RPG menu.
+**Probability:** 0.08
 
 ### 3. Pixel Quest Retro (16-bit JRPG)
-Estética SNES: pixel art, caixas de diálogo azuis, fontes bitmap. Nostalgia divertida de Final Fantasy IV.
-**Probabilidade:** 0.02
+SNES aesthetic: pixel art, blue dialog boxes, bitmap fonts. Fun Final Fantasy IV nostalgia.
+**Probability:** 0.02
 
 ---
 
-## Abordagem Escolhida: **Grimório de Pergaminho** (com estrutura de painel dark fantasy)
+## Chosen Approach: **Parchment Grimoire** (with dark fantasy panel structure)
 
-Escolhida por unir perfeitamente o mundo físico (PDFs impressos preenchidos à mão) e o digital: o site É o grimório da família, o mesmo objeto que vive no papel. Fundo escuro profundo com painéis de pergaminho — o melhor dos mundos 1 e 2.
+Chosen because it perfectly unites the physical world (hand-filled printed PDFs) and the digital: the site IS the family grimoire, the same object that lives on paper. Deep dark background with parchment panels — the best of worlds 1 and 2.
 
 ### Design Movement
-Illuminated Manuscript × Dark Fantasy Game UI (referências: Pillars of Eternity, Divinity Original Sin 2, códices medievais)
+Illuminated Manuscript × Dark Fantasy Game UI (references: Pillars of Eternity, Divinity Original Sin 2, medieval codices)
 
 ### Core Principles
-1. **O site é um artefato**: cada painel parece pergaminho, couro ou pedra — nunca "cards de SaaS"
-2. **Ouro conta a história do progresso**: XP, level-ups e conquistas sempre em dourado iluminado
-3. **Assimetria de códice**: layouts com margens desiguais, capitulares, colunas laterais como notas de margem
-4. **Ornamento com propósito**: molduras e flourishes apenas em momentos de celebração (level-up, boss derrotado)
+1. **The site is an artifact**: every panel looks like parchment, leather, or stone — never "SaaS cards"
+2. **Gold tells the progress story**: XP, level-ups, and achievements always in illuminated gold
+3. **Codex asymmetry**: layouts with uneven margins, drop caps, side columns like margin notes
+4. **Ornament with purpose**: frames and flourishes only at celebration moments (level-up, boss defeated)
 
 ### Color Philosophy
-Fundo: carvão profundo com tom quente (quase marrom-escuro, como couro de capa de livro antigo) — `oklch(0.16 0.015 60)`. Painéis: pergaminho escurecido `oklch(0.28 0.02 75)` com textura sutil. O ouro `oklch(0.75 0.12 85)` é o Signature Color — reservado para XP, títulos e conquistas. Acentos por classe: Guerreiro vermelho-ferro, Bardo verde-esmeralda, Mago azul-arcano, Ladino roxo-sombra. Emocionalmente: aconchego de taverna + reverência de biblioteca arcana.
+Background: deep warm charcoal (almost dark brown, like an old book cover leather) — `oklch(0.16 0.015 60)`. Panels: darkened parchment `oklch(0.28 0.02 75)` with subtle texture. Gold `oklch(0.75 0.12 85)` is the Signature Color — reserved for XP, titles, and achievements. Class accents: Warrior iron-red, Bard emerald-green, Mage arcane-blue, Rogue shadow-purple. Emotionally: tavern coziness + arcane library reverence.
 
 ### Layout Paradigm
-Estrutura de códice: sidebar esquerda estreita como "lombada do livro" (navegação com ícones de classe), conteúdo principal como página do grimório com cabeçalho ornamentado. Dashboard usa grid assimétrico: BOSS da semana grande à esquerda (2/3), coluna de heróis à direita como fichas empilhadas. Nunca centrado-simétrico.
+Codex structure: narrow left sidebar as "book spine" (navigation with class icons), main content as grimoire page with ornamented header. Dashboard uses asymmetric grid: week's BOSS large on the left (2/3), hero column on the right as stacked sheets. Never centered-symmetric.
 
 ### Signature Elements
-1. **Quadrados de XP entalhados** — grade de quadrados que preenchem com ouro líquido (espelho exato do PDF impresso)
-2. **Selo de cera da classe** — badge circular com ícone da classe em relevo, usado em toda ficha de herói
-3. **Divisores de flourish** — linha ornamental fina (❦ estilizado) separando seções, como em manuscritos
+1. **Carved XP squares** — grid of squares that fill with liquid gold (exact mirror of the printed PDF)
+2. **Class wax seal** — circular badge with embossed class icon, used on every hero sheet
+3. **Flourish dividers** — thin ornamental line (stylized ❦) separating sections, as in manuscripts
 
 ### Interaction Philosophy
-Interações têm peso físico: marcar um objetivo "carimba" o check com pequena rotação; abrir uma ficha de herói desliza como virar página; o boss derrotado recebe um "X" de tinta vermelha animado.
+Interactions have physical weight: checking an objective "stamps" the check with a slight rotation; opening a hero sheet slides like turning a page; a defeated boss gets an animated red-ink "X".
 
 ### Animation
-- Preenchimento de XP: ouro flui da esquerda para a direita, 600ms ease-out, com brilho no fim
-- Entradas de página: fade + translateY(8px), 250ms, stagger 50ms entre fichas
-- Level-up: burst de partículas douradas (única animação exuberante permitida)
-- Hover em cards: elevação sutil + borda dourada acendendo (150ms)
-- Sem animações em navegação por teclado
+- XP fill: gold flows left to right, 600ms ease-out, with a glow at the end
+- Page entrances: fade + translateY(8px), 250ms, 50ms stagger between sheets
+- Level-up: burst of gold particles (only exuberant animation allowed)
+- Card hover: subtle lift + gold border lighting (150ms)
+- No animations on keyboard navigation
 
 ### Typography System
-- **Display/Títulos:** "Cinzel" (serifada lapidar romana — gravada em pedra)
-- **Subtítulos/Nomes de personagem:** "Cinzel Decorative" para momentos especiais
-- **Corpo/UI:** "Crimson Pro" (serifada legível de livro)
-- **Dados/números:** "Crimson Pro" semibold tabular
-- Hierarquia: títulos em Cinzel caps espaçado (tracking 0.08em), corpo em Crimson Pro 16-17px
+- **Display/Titles:** "Cinzel" (Roman lapidary serif — carved in stone)
+- **Subtitles/Character names:** "Cinzel Decorative" for special moments
+- **Body/UI:** "Crimson Pro" (readable book serif)
+- **Data/numbers:** "Crimson Pro" semibold tabular
+- Hierarchy: titles in spaced Cinzel caps (tracking 0.08em), body in Crimson Pro 16-17px
 
 ### Brand Essence
-O grimório digital da família aventureira — para famílias que transformam disciplina em lenda. Adjetivos: épico, caloroso, artesanal.
+The digital grimoire of the adventuring family — for families who turn discipline into legend. Adjectives: epic, warm, handcrafted.
 
 ### Brand Voice
-Tom de mestre de RPG narrando a crônica da família. Headlines soam como convocações de aventura; microcopy usa vocabulário de fantasia (missões, façanhas, bestiário).
-- Ex. 1: "A jornada desta semana aguarda, heróis."
-- Ex. 2: "O Dragão da Preguiça foi derrotado. +30 de glória para todos."
+Tone of an RPG dungeon master narrating the family chronicle. Headlines sound like adventure summons; microcopy uses fantasy vocabulary (missions, deeds, bestiary).
+- Ex. 1: "This week's journey awaits, heroes."
+- Ex. 2: "The Dragon of Laziness has been defeated. +30 glory for all."
 
 ### Wordmark & Logo
-Símbolo: escudo heráldico dividido em 4 quartos (espada, alaúde, cajado, adaga — as 4 classes), gravado em ouro sobre fundo escuro. Wordmark "FAMILY QUEST" em Cinzel com Q ornamentada.
+Symbol: heraldic shield split into 4 quarters (sword, lute, staff, dagger — the 4 classes), engraved in gold on a dark field. Wordmark "FAMILY QUEST" in Cinzel with an ornamented Q.
 
 ### Signature Brand Color
-Ouro Iluminado — `oklch(0.75 0.12 85)` (#D4A945 aprox.) — o ouro dos manuscritos iluminados, usado exclusivamente para progresso e glória.
+Illuminated Gold — `oklch(0.75 0.12 85)` (#D4A945 approx.) — the gold of illuminated manuscripts, used exclusively for progress and glory.
