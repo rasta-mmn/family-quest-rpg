@@ -2,109 +2,110 @@
 name: family-quest-game
 description: >-
   Builds and extends Family Quest RPG — a real-life family gamification system
-  with Markdown YAML database, printable monthly PDFs, and a React grimório
+  with Markdown YAML database, printable monthly PDFs, and a React grimoire
   frontend. Use when working on family-quest, family-code, docs/ heroes, PDF
   generator, bestiary, classes, ADM panel, XP/boss logic, or frontend pages
   (Home, Player, Weekly, Leaderboard, Admin).
 ---
 
-# Family Quest — Agente de Criação de Jogos
+# Family Quest — Game Creation Agent
 
-Agente de implementação do **Family Quest RPG**. Base de dados = ficheiros `.md` com frontmatter YAML. Papel (PDF) alimenta digital (repo + frontend).
+Implementation agent for **Family Quest RPG**. Database = `.md` files with YAML frontmatter. Paper (PDF) feeds digital (repo + frontend).
 
-## Antes de codar
+## Before coding
 
-1. Ler estado atual do repo (`README.md`, `docs/`, o que falta vs fases).
-2. Ler só o que a tarefa precisa:
-   - Plano completo → [docs/planning/plan.md](../../../docs/planning/plan.md)
-   - Design visual → [docs/planning/ideas.md](../../../docs/planning/ideas.md)
-   - Stack React/Tailwind → [docs/planning/webdev-skill.md](../../../docs/planning/webdev-skill.md)
-   - Regras de pontuação → [mechanics.md](mechanics.md)
-3. Confirmar fase ativa com o utilizador se ambíguo. Não saltar fases sem pedido.
+1. Read current repo state (`README.md`, `docs/`, what's missing vs phases).
+2. Read only what the task needs:
+   - Full plan → [docs/planning/plan.md](../../../docs/planning/plan.md)
+   - Visual design → [docs/planning/ideas.md](../../../docs/planning/ideas.md)
+   - React/Tailwind stack → [docs/planning/webdev-skill.md](../../../docs/planning/webdev-skill.md)
+   - Scoring rules → [mechanics.md](mechanics.md)
+3. Confirm active phase with the user if ambiguous. Don't skip phases unless asked.
 
-## Fases (ordem canónica)
+## Phases (canonical order)
 
-| Fase | Entrega | Pasta |
+| Phase | Deliverable | Folder |
 |---|---|---|
-| 1 ✅ | DB `.md` + seed heróis | `docs/` |
+| 1 ✅ | DB `.md` + hero seed | `docs/` |
 | 2 | Assets (avatars, enemies, backgrounds, photos) | `docs/assets/` |
-| 3 | Gerador PDF mensal | `pdfs/scripts/generate_monthly_pdf.py` |
-| 4 | Frontend grimório | `frontend/` |
-| 5 | Integração GitHub API + deploy + link no README | — |
+| 3 | Monthly PDF generator | `pdfs/scripts/generate_monthly_pdf.py` |
+| 4 | Grimoire frontend | `frontend/` |
+| 5 | GitHub API integration + deploy + README link | — |
 
-**Estado típico:** Fase 1 feita. Próximo = 2 → 3 → 4 → 5 (ou 3/4 se user pedir).
+**Typical state:** Phase 1 done. Next = 2 → 3 → 4 → 5 (or 3/4 if user asks).
 
-## Arquitetura (não reinventar)
+## Architecture (don't reinvent)
 
 ```
-docs/           ← DB (único source of truth)
-pdfs/           ← fichas imprimíveis + scripts Python
+docs/           ← DB (single source of truth)
+pdfs/           ← printable sheets + Python scripts
 frontend/       ← React 19 + Tailwind 4 + Wouter + shadcn
 ```
 
-- Frontend **lê** `.md` (GitHub Raw ou fetch local em dev).
-- Escrita ADM: GitHub Contents API (token em localStorage) **ou** download `.md` para commit manual.
-- Privacidade: objetivos/prémios/nomes reais sempre **redactados** (`Missão Alpha`, `Jogador 1`).
+- Frontend **reads** `.md` (GitHub Raw or local fetch in dev).
+- ADM writes: GitHub Contents API (token in localStorage) **or** download `.md` for manual commit.
+- Privacy: real objectives/prizes/names always **redacted** (`Mission Alpha`, `Player 1`).
 
-## Regras de implementação
+## Implementation rules
 
 ### DB (`docs/`)
-- Nunca apagar bloco `---` frontmatter.
-- YAML: 2 espaços. Datas `YYYY-MM-DD`, semanas `YYYY-WXX`.
-- Schemas e exemplos: `docs/planning/plan.md` + ficheiros vivos em `docs/config/`, `docs/Heroi*/`.
-- Novo herói: copiar pasta `HeroiN/`, registar em `game-config.md`, foto em `assets/photos/`.
+- Never delete the `---` frontmatter block.
+- YAML: 2 spaces. Dates `YYYY-MM-DD`, weeks `YYYY-WXX`.
+- **Bilingual game strings:** every display field has English + `*_pt` (e.g. `name` / `name_pt`, `daily` / `daily_pt`). UI locale toggle picks one. Keep IDs language-neutral (`Heroi1`, `guerreiro`, `seg`).
+- Schemas and examples: `docs/planning/plan.md` + live files in `docs/config/`, `docs/Heroi*/`.
+- New hero: copy `HeroiN/` folder, register in `game-config.md` with both name fields, photo in `assets/photos/`.
 
-### PDF (Fase 3)
+### PDF (Phase 3)
 - Script: `pdfs/scripts/generate_monthly_pdf.py`
-- Lê: `game-config.md`, `months/YYYY-MM.md`, `profile.md`, `skills.md`, objetivos.
-- 1 página/herói: foto + avatar + classe/level/skills + 3 objetivos + BOSS coletivo + XP squares (100 pts) + grelha 7×3 + extras; repetir por semana do mês.
-- Tema visual do bestiário (paleta/fundo por tema).
-- Saída: `pdfs/YYYY-MM/HeroiN.pdf` + `family-quest-YYYY-MM.pdf`.
-- Stack: WeasyPrint + PyYAML (ou reportlab se WeasyPrint bloquear).
+- Reads: `game-config.md`, `months/YYYY-MM.md`, `profile.md`, `skills.md`, objectives.
+- 1 page/hero: photo + avatar + class/level/skills + 3 objectives + collective BOSS + XP squares (100 pts) + 7×3 grid + extras; repeat per week of the month.
+- Bestiary visual theme (palette/background per theme).
+- Output: `pdfs/YYYY-MM/HeroiN.pdf` + `family-quest-YYYY-MM.pdf`.
+- Stack: WeasyPrint + PyYAML (or reportlab if WeasyPrint blocks).
 
-### Frontend (Fase 4)
-- Path: `frontend/` (Vite React). Convenções UI: `docs/planning/webdev-skill.md`.
-- Design **obrigatório**: Grimório de Pergaminho (`ideas.md`) — Cinzel + Crimson Pro, ouro `oklch(0.75 0.12 85)`, fundo carvão quente. Sem UI SaaS genérica / purple glow.
+### Frontend (Phase 4)
+- Path: `frontend/` (Vite React). UI conventions: `docs/planning/webdev-skill.md`.
+- **Required** design: Parchment Grimoire (`ideas.md`) — Cinzel + Crimson Pro, gold `oklch(0.75 0.12 85)`, warm charcoal background. No generic SaaS UI / purple glow.
 - `lib/`: `mdParser.ts`, `githubApi.ts`, `gameLogic.ts`, `bossSelector.ts`
-- Páginas: Home, Player, Weekly, Leaderboard, Admin (PIN de `game-config.md`)
-- Componentes: XPBar/XPGrid, AvatarCard, BossCard, TaskList, ClassBadge, UpgradeTree
-- Microcopy: voz de mestre de RPG (ver `ideas.md`).
+- Pages: Home, Player, Weekly, Leaderboard, Admin (PIN from `game-config.md`)
+- Components: XPBar/XPGrid, AvatarCard, BossCard, TaskList, ClassBadge, UpgradeTree
+- Microcopy: RPG dungeon-master voice (see `ideas.md`).
 
-### Assets (Fase 2)
-- Guardar em `docs/assets/{avatars,enemies,backgrounds,photos}/`
-- Estilo fantasy consistente com grimório (não pixel, não flat corporate).
-- Placeholders OK até artes finais; paths nos `.md` devem bater certo.
+### Assets (Phase 2)
+- Store in `docs/assets/{avatars,enemies,backgrounds,photos}/`
+- Fantasy style consistent with the grimoire (not pixel, not flat corporate).
+- Placeholders OK until final art; paths in `.md` must match.
 
-## Workflow por pedido do user
+## Workflow per user request
 
 ```
-User pede feature
-  → Identificar fase + ficheiros tocados
-  → Ler mechanics + planning relevante
-  → Implementar mínimo que desbloqueia
-  → Validar pontuação/schemas se mexer em XP/BOSS/weekly
-  → Não commitar sem pedido explícito
+User asks for a feature
+  → Identify phase + files touched
+  → Read mechanics + relevant planning
+  → Implement the minimum that unblocks
+  → Validate scoring/schemas if touching XP/BOSS/weekly
+  → Don't commit without an explicit ask
 ```
 
-Checklist rápido:
-- [ ] Frontmatter YAML válido
-- [ ] Redação de dados reais
-- [ ] Cálculos alinhados com `mechanics.md`
-- [ ] Design grimório se UI
-- [ ] Paths de assets coerentes
+Quick checklist:
+- [ ] Valid YAML frontmatter
+- [ ] Real data redacted
+- [ ] Calculations aligned with `mechanics.md`
+- [ ] Grimoire design if UI
+- [ ] Coherent asset paths
 
-## O que NÃO fazer
+## What NOT to do
 
-- Inventar segunda DB (SQLite, Firebase, etc.) sem pedido.
-- Escrever objetivos/prémios reais nos `.md`.
-- Cards SaaS / Inter / purple gradient no frontend.
-- Gerar PDFs sem ler setup do mês em `docs/config/months/`.
-- Expandir scope além da fase pedida (YAGNI).
+- Invent a second DB (SQLite, Firebase, etc.) without being asked.
+- Write real objectives/prizes into `.md` files.
+- SaaS cards / Inter / purple gradient on the frontend.
+- Generate PDFs without reading month setup in `docs/config/months/`.
+- Expand scope beyond the requested phase (YAGNI).
 
-## Referências
+## References
 
-- [mechanics.md](mechanics.md) — pontuação, BOSS, upgrades
-- [docs/planning/plan.md](../../../docs/planning/plan.md) — plano fases + schemas
+- [mechanics.md](mechanics.md) — scoring, BOSS, upgrades
+- [docs/planning/plan.md](../../../docs/planning/plan.md) — phase plan + schemas
 - [docs/planning/ideas.md](../../../docs/planning/ideas.md) — design system
-- [docs/planning/webdev-skill.md](../../../docs/planning/webdev-skill.md) — template React
-- [docs/README.md](../../../docs/README.md) — quem edita o quê
+- [docs/planning/webdev-skill.md](../../../docs/planning/webdev-skill.md) — React template
+- [docs/README.md](../../../docs/README.md) — who edits what

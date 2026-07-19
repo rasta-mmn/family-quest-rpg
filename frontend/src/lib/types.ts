@@ -10,8 +10,10 @@ export type PointsConfig = {
 export type PlayerConfig = {
   id: string
   character_name: string
+  character_name_pt?: string
   class: string
   real_name_redacted?: string
+  real_name_redacted_pt?: string
   photo?: string
   avatar?: string
 }
@@ -37,7 +39,13 @@ export type WeeklyLog = {
   week: string
   player: string
   month: string
-  boss: { id: string; name: string; completed: boolean; points: number }
+  boss: {
+    id: string
+    name: string
+    name_pt?: string
+    completed: boolean
+    points: number
+  }
   days: Record<string, DayLog>
   total_points?: number
   reward_status?: string
@@ -46,6 +54,7 @@ export type WeeklyLog = {
 export type Profile = {
   id: string
   character_name: string
+  character_name_pt?: string
   class: string
   level: number
   xp_total: number
@@ -54,12 +63,14 @@ export type Profile = {
   photo?: string
   avatar?: string
   avatar_description?: string
+  avatar_description_pt?: string
   stats?: Record<string, number>
 }
 
 export type Objective = {
   id: string
   name: string
+  name_pt?: string
   points: number
   real_meaning_redacted?: boolean
 }
@@ -67,13 +78,16 @@ export type Objective = {
 export type BossEntry = {
   id: string
   name: string
+  name_pt?: string
   type?: string
   description?: string
+  description_pt?: string
   image?: string
   week?: string
   collective?: boolean
   points?: number
   mission_redacted?: string
+  mission_redacted_pt?: string
   completed?: boolean
 }
 
@@ -83,21 +97,35 @@ export type MonthSetup = {
   weeks: string[]
   theme: string
   bosses: BossEntry[]
-  objectives?: Record<string, { theme: string; daily: string[] }>
+  objectives?: Record<
+    string,
+    { theme: string; daily: string[]; daily_pt?: string[] }
+  >
 }
 
 export type BestiaryTheme = {
   name: string
+  name_pt?: string
   palette: string[]
   environment?: string
+  environment_pt?: string
   background?: string
   enemies: BossEntry[]
 }
 
 export type ClassDef = {
   name: string
+  name_pt?: string
   description: string
+  description_pt?: string
   color: string
   icon?: string
-  upgrades: { month: number; type: string; name: string; description: string }[]
+  upgrades: {
+    month: number
+    type: string
+    name: string
+    name_pt?: string
+    description: string
+    description_pt?: string
+  }[]
 }

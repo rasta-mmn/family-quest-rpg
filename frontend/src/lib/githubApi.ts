@@ -25,7 +25,7 @@ export async function fetchDoc(docPath: string): Promise<string> {
   const url = docsUrl(docPath)
   const res = await fetch(url)
   if (!res.ok) {
-    throw new Error(`Falha ao ler ${docPath}: ${res.status}`)
+    throw new Error(`Failed to read ${docPath}: ${res.status}`)
   }
   return res.text()
 }
