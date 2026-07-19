@@ -2,6 +2,7 @@ import type { MonthSetup, Objective, Profile, WeeklyLog } from './types'
 
 const PLAYER_KEY = 'family-quest-player-edits'
 const ADMIN_KEY = 'family-quest-admin-edits'
+const REMOVED_KEY = 'family-quest-removed-heroes'
 
 /** Player-owned fields (edited on character sheet). */
 export type PlayerHeroEdit = {
@@ -91,5 +92,29 @@ export function patchAdminEdits(patch: AdminEdits): AdminEdits {
     month: patch.month ? { ...prev.month, ...patch.month } : prev.month,
   }
   saveAdminEdits(next)
+  return next
+}
+
+export function clearPlayerHeroEdit(heroId: string): void {
+  const all = loadPlayerEdits()
+  if (!(heroId in all)) return
+  delete all[heroId]
+  savePlayerEdits(all)
+}
+
+export function loadRemovedHeroIds(): string[] {
+  try {
+    const raw = localStorage.getItem(REMOVED_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw) as string[]
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+export function markHeroRemoved(heroId: string): string[] {
+  const next = [...new Set([...loadRemovedHeroIds(), heroId])]
+  localStorage.setItem(REMOVED_KEY, JSON.stringify(next))
   return next
 }

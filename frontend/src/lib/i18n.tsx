@@ -180,8 +180,14 @@ export const ui: Dict = {
   saveToken: { en: 'Save token', pt: 'Guardar token' },
   tokenSaved: { en: 'Token saved in this browser.', pt: 'Token guardado neste browser.' },
   tokenCleared: { en: 'Token cleared.', pt: 'Token apagado.' },
-  commitGithub: { en: 'Commit to GitHub', pt: 'Commit no GitHub' },
+  commitGithub: { en: 'Commit month setup', pt: 'Commit setup do mês' },
+  commitAllSheets: { en: 'Commit all hero sheets', pt: 'Commit todas as fichas' },
+  commitAllSheetsHelp: {
+    en: 'Uploads every hero’s current sheet from this browser (missions, week marks, photo/names) to docs/. Needs token.',
+    pt: 'Sobe a ficha atual de cada herói deste browser (missões, semana, foto/nomes) para docs/. Precisa de token.',
+  },
   committed: { en: 'Committed:', pt: 'Commit feito:' },
+  committedAllSheets: { en: 'All sheets committed:', pt: 'Todas as fichas commitadas:' },
   needToken: {
     en: 'Set a GitHub token in Admin first (or use Download).',
     pt: 'Define token GitHub no ADM primeiro (ou usa Descarregar).',
@@ -195,6 +201,29 @@ export const ui: Dict = {
   rewardLabel: { en: 'Reward label (redacted)', pt: 'Label da recompensa (redactada)' },
   applyLevelUp: { en: 'Apply level-up', pt: 'Aplicar level-up' },
   levelUpOk: { en: 'Level-up applied:', pt: 'Level-up aplicado:' },
+  removeHero: { en: 'Remove', pt: 'Excluir' },
+  removeHeroHelp: {
+    en: 'Delete is permanent. Repo heroes need an Admin GitHub token — removes game-config entry, the whole docs/HeroiN/ folder, and photo.',
+    pt: 'Exclusão é permanente. Heróis do repo precisam de token no ADM — apaga entrada no game-config, pasta docs/HeroiN/ inteira e foto.',
+  },
+  confirmRemoveHero: {
+    en: 'DELETE this hero completely? This cannot be undone. Repo heroes: token required (config + folder + photo).',
+    pt: 'EXCLUIR este herói por completo? Não dá para desfazer. Do repo: precisa de token (config + pasta + foto).',
+  },
+  heroRemovedLocal: { en: 'Local hero deleted.', pt: 'Herói local apagado.' },
+  heroRemovedFully: {
+    en: 'Hero fully deleted from GitHub.',
+    pt: 'Herói apagado por completo no GitHub.',
+  },
+  filesDeleted: { en: 'file(s) removed.', pt: 'ficheiro(s) removido(s).' },
+  needTokenToDelete: {
+    en: 'Set a GitHub token in Admin first — full delete needs Contents write.',
+    pt: 'Define token GitHub no ADM primeiro — exclusão total precisa de Contents write.',
+  },
+  noHeroes: {
+    en: 'No heroes yet. Summon one to begin.',
+    pt: 'Ainda sem heróis. Invoca um para começar.',
+  },
 }
 
 const LocaleCtx = createContext<{

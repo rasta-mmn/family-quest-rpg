@@ -12,7 +12,7 @@ import {
   hasGithubToken,
   setGithubToken,
 } from '../lib/githubApi'
-import { commitAdminMonth, commitLevelUp } from '../lib/commitDocs'
+import { commitAdminMonth, commitAllPlayerSheets, commitLevelUp } from '../lib/commitDocs'
 import { buildLevelUpPack, pickUpgrade } from '../lib/levelUp'
 import { parseMarkdown } from '../lib/mdParser'
 import type { BossEntry, MonthSetup } from '../lib/types'
@@ -158,6 +158,25 @@ export function Admin() {
         month: buildMonthSetup(),
       })
       setMsg(`${t('committed')} ${files.join(', ')}`)
+      reload()
+    } catch (e) {
+      setMsg(e instanceof Error && e.message === 'NO_TOKEN' ? t('needToken') : String(e))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function handleCommitAllSheets() {
+    setBusy(true)
+    setMsg('')
+    try {
+      if (!hasGithubToken()) throw new Error('NO_TOKEN')
+      const results = await commitAllPlayerSheets({
+        month: month || data!.config.current_month,
+        heroes: data!.heroes,
+      })
+      const summary = results.map((r) => `${r.heroId}(${r.files.length})`).join(', ')
+      setMsg(`${t('committedAllSheets')} ${summary}`)
       reload()
     } catch (e) {
       setMsg(e instanceof Error && e.message === 'NO_TOKEN' ? t('needToken') : String(e))
@@ -404,12 +423,21 @@ export function Admin() {
           <button
             type="button"
             disabled={busy}
+            onClick={() => void handleCommitAllSheets()}
+            className="border border-[var(--color-gold)] px-4 py-3 font-display text-xs tracking-widest text-[var(--color-gold)] disabled:opacity-50"
+          >
+            {t('commitAllSheets')}
+          </button>
+          <button
+            type="button"
+            disabled={busy}
             onClick={handleDownload}
             className="border border-[var(--color-gold-dim)] px-4 py-3 font-display text-xs tracking-widest text-[var(--color-gold)] hover:border-[var(--color-gold)] disabled:opacity-50"
           >
             {t('download')} {month || 'YYYY-MM'}.md
           </button>
         </div>
+        <p className="text-xs opacity-70">{t('commitAllSheetsHelp')}</p>
       </div>
 
       <div className="panel mt-6 max-w-2xl space-y-3 p-4">

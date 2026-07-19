@@ -3,7 +3,7 @@ import { parseMarkdown } from '../lib/mdParser'
 import { fetchDoc } from '../lib/githubApi'
 import { weekFromLog } from '../lib/gameLogic'
 import { loadLocalHeroes, type AppearanceSlots, type LocalHeroRecord } from '../lib/localHeroes'
-import { loadAdminEdits, loadPlayerEdits } from '../lib/editsStore'
+import { loadAdminEdits, loadPlayerEdits, loadRemovedHeroIds } from '../lib/editsStore'
 import type {
   BestiaryTheme,
   ClassDef,
@@ -150,7 +150,8 @@ export function useGameData() {
           .filter((h) => !repoIds.has(h.id))
           .map((h) => localToBundle(h, config.points))
 
-        let heroes = [...repoHeroes, ...localHeroes]
+        const removed = new Set(loadRemovedHeroIds())
+        let heroes = [...repoHeroes, ...localHeroes].filter((h) => !removed.has(h.id))
         const playerEdits = loadPlayerEdits()
         heroes = heroes.map((h) => {
           const edit = playerEdits[h.id]
