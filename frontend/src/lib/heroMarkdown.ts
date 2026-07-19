@@ -1,19 +1,23 @@
 import { downloadMarkdown } from './githubApi'
+import { downloadDataUrl, isDataUrl } from './photoUpload'
 import type { LocalHeroRecord } from './localHeroes'
 import type { PlayerConfig } from './types'
 
 export function profileMd(h: LocalHeroRecord): string {
   const p = h.profile
   const stats = p.stats || {}
+  const photoPath = h.player.photo || p.photo || ''
+  const photoForYaml = isDataUrl(photoPath) ? `docs/assets/photos/${h.id.toLowerCase()}.jpg` : photoPath
   return `---
 id: ${h.id}
 character_name: "${p.character_name}"
+character_name_pt: "${p.character_name_pt || p.character_name}"
 class: ${p.class}
 level: ${p.level}
 xp_total: ${p.xp_total}
 xp_this_month: ${p.xp_this_month}
 months_completed: ${p.months_completed}
-photo: "${p.photo || ''}"
+photo: "${photoForYaml}"
 avatar: "${p.avatar || ''}"
 avatar_description: "${p.avatar_description || ''}"
 stats:
@@ -33,10 +37,10 @@ level_history:
 
 export function objectivesMd(h: LocalHeroRecord, month: string): string {
   const objs = h.objectives.daily_objectives
-    .map(
-      (o) =>
-        `  - { id: ${o.id}, name: "${o.name}", points: ${o.points}, real_meaning_redacted: true }`,
-    )
+    .map((o) => {
+      const pt = o.name_pt ? `, name_pt: "${o.name_pt}"` : ''
+      return `  - { id: ${o.id}, name: "${o.name}"${pt}, points: ${o.points}, real_meaning_redacted: true }`
+    })
     .join('\n')
   return `---
 month: "${month}"
@@ -113,13 +117,15 @@ reward_status: ${w.reward_status || 'pending'}
 export function playerConfigYaml(p: PlayerConfig): string {
   return `  - id: ${p.id}
     character_name: "${p.character_name}"
+    character_name_pt: "${p.character_name_pt || p.character_name}"
     class: ${p.class}
-    real_name_redacted: "${p.real_name_redacted || 'Jogador'}"
+    real_name_redacted: "${p.real_name_redacted || 'Player'}"
+    real_name_redacted_pt: "${p.real_name_redacted_pt || p.real_name_redacted || 'Jogador'}"
     photo: "${p.photo || ''}"
     avatar: "${p.avatar || ''}"`
 }
 
-/** Download hero .md pack + game-config players snippet for manual commit. */
+/** Download hero .md pack + photo + game-config snippet for manual commit. */
 export function downloadHeroPack(h: LocalHeroRecord, month: string): void {
   const week = h.weekly?.week
   downloadMarkdown(`${h.id}__profile.md`, profileMd(h))
@@ -130,8 +136,11 @@ export function downloadHeroPack(h: LocalHeroRecord, month: string): void {
   if (week && h.weekly) {
     downloadMarkdown(`${h.id}__weekly-${week}.md`, weeklyMd(h))
   }
+  if (isDataUrl(h.profile.photo)) {
+    downloadDataUrl(`${h.id.toLowerCase()}.jpg`, h.profile.photo!)
+  }
   downloadMarkdown(
     `${h.id}__ADD-TO-game-config.txt`,
-    `# Add under players: in docs/config/game-config.md\n\n${playerConfigYaml(h.player)}\n\n# Then create folder docs/${h.id}/ and rename files:\n#   ${h.id}__profile.md → docs/${h.id}/profile.md\n#   ${h.id}__objectives.md → docs/${h.id}/objectives.md\n#   … etc.\n`,
+    `# Add under players: in docs/config/game-config.md\n\n${playerConfigYaml(h.player)}\n\n# Then create folder docs/${h.id}/ and rename files:\n#   ${h.id}__profile.md → docs/${h.id}/profile.md\n#   ${h.id}__objectives.md → docs/${h.id}/objectives.md\n#   ${h.id.toLowerCase()}.jpg → docs/assets/photos/\n`,
   )
 }
