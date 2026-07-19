@@ -1,0 +1,95 @@
+import type { MonthSetup, Objective, Profile, WeeklyLog } from './types'
+
+const PLAYER_KEY = 'family-quest-player-edits'
+const ADMIN_KEY = 'family-quest-admin-edits'
+
+/** Player-owned fields (edited on character sheet). */
+export type PlayerHeroEdit = {
+  objectives?: { theme?: string; daily_objectives: Objective[] }
+  weekly?: WeeklyLog
+  profile?: Partial<
+    Pick<
+      Profile,
+      | 'character_name'
+      | 'character_name_pt'
+      | 'photo'
+      | 'avatar_description'
+      | 'avatar_description_pt'
+    >
+  >
+}
+
+export type PlayerEdits = Record<string, PlayerHeroEdit>
+
+/** Admin-owned fields (edited in ADM panel). */
+export type AdminEdits = {
+  current_month?: string
+  current_week?: string
+  month?: {
+    month?: string
+    month_number?: number
+    weeks?: string[]
+    theme?: string
+    bosses?: MonthSetup['bosses']
+  }
+}
+
+export function loadPlayerEdits(): PlayerEdits {
+  try {
+    const raw = localStorage.getItem(PLAYER_KEY)
+    if (!raw) return {}
+    const parsed = JSON.parse(raw) as PlayerEdits
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
+export function savePlayerEdits(edits: PlayerEdits): void {
+  localStorage.setItem(PLAYER_KEY, JSON.stringify(edits))
+}
+
+export function getPlayerHeroEdit(heroId: string): PlayerHeroEdit {
+  return loadPlayerEdits()[heroId] || {}
+}
+
+export function patchPlayerHeroEdit(heroId: string, patch: PlayerHeroEdit): PlayerHeroEdit {
+  const all = loadPlayerEdits()
+  const prev = all[heroId] || {}
+  const next: PlayerHeroEdit = {
+    ...prev,
+    ...patch,
+    objectives: patch.objectives ?? prev.objectives,
+    weekly: patch.weekly ?? prev.weekly,
+    profile: patch.profile ? { ...prev.profile, ...patch.profile } : prev.profile,
+  }
+  all[heroId] = next
+  savePlayerEdits(all)
+  return next
+}
+
+export function loadAdminEdits(): AdminEdits {
+  try {
+    const raw = localStorage.getItem(ADMIN_KEY)
+    if (!raw) return {}
+    const parsed = JSON.parse(raw) as AdminEdits
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
+export function saveAdminEdits(edits: AdminEdits): void {
+  localStorage.setItem(ADMIN_KEY, JSON.stringify(edits))
+}
+
+export function patchAdminEdits(patch: AdminEdits): AdminEdits {
+  const prev = loadAdminEdits()
+  const next: AdminEdits = {
+    ...prev,
+    ...patch,
+    month: patch.month ? { ...prev.month, ...patch.month } : prev.month,
+  }
+  saveAdminEdits(next)
+  return next
+}
