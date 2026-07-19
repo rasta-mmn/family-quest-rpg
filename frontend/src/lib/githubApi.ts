@@ -10,10 +10,16 @@ export function docsUrl(docPath: string): string {
   return `https://raw.githubusercontent.com/${REPO}/${BRANCH}/docs/${clean}`
 }
 
-/** Asset path as stored in YAML (docs/assets/...). */
+/** Asset path as stored in YAML (docs/assets/...), or data:/blob: from UI upload. */
 export function assetUrl(assetPath: string): string {
   if (!assetPath) return ''
-  if (assetPath.startsWith('http')) return assetPath
+  if (
+    assetPath.startsWith('http') ||
+    assetPath.startsWith('data:') ||
+    assetPath.startsWith('blob:')
+  ) {
+    return assetPath
+  }
   const clean = assetPath.replace(/^\/+/, '').replace(/^docs\//, '')
   if (import.meta.env.DEV) {
     return `/docs/${clean}`
