@@ -9,20 +9,32 @@ import { BossCard } from '../components/BossCard'
 import { assetUrl } from '../lib/githubApi'
 import { filledSquares } from '../lib/gameLogic'
 import { useGameData } from '../hooks/useGameData'
+import { pickL, useLocale } from '../lib/i18n'
 
 export function Player() {
   const [, params] = useRoute('/player/:id')
   const { data, error, loading } = useGameData()
+  const { locale, t } = useLocale()
   const id = params?.id
 
-  if (loading) return <Layout><p>Carregando ficha…</p></Layout>
-  if (error || !data) return <Layout title="Erro"><p>{error}</p></Layout>
+  if (loading)
+    return (
+      <Layout>
+        <p>{t('loadingSheet')}</p>
+      </Layout>
+    )
+  if (error || !data)
+    return (
+      <Layout title={t('error')}>
+        <p>{error}</p>
+      </Layout>
+    )
 
   const hero = data.heroes.find((h) => h.id === id)
   if (!hero) {
     return (
-      <Layout title="Herói">
-        <p>Herói não encontrado no grimório.</p>
+      <Layout title={t('hero')}>
+        <p>{t('heroMissing')}</p>
       </Layout>
     )
   }
@@ -30,9 +42,12 @@ export function Player() {
   const { profile, objectives, weekly, weekPoints, skills } = hero
   const classDef = data.classes[profile.class]
   const squares = filledSquares([weekPoints], data.config.points.weekly_target)
+  const name = pickL(profile as Record<string, unknown>, 'character_name', locale)
+  const className = pickL((classDef || {}) as Record<string, unknown>, 'name', locale)
+  const avatarDesc = pickL(profile as Record<string, unknown>, 'avatar_description', locale)
 
   return (
-    <Layout title={profile.character_name}>
+    <Layout title={name}>
       <div className="mb-6 flex flex-wrap items-start gap-4">
         <img
           src={assetUrl(profile.photo || '')}
@@ -49,9 +64,9 @@ export function Player() {
             <ClassBadge className={profile.class} />
             <div>
               <p className="opacity-80">
-                {classDef?.name || profile.class} · Nível {profile.level}
+                {className || profile.class} · {t('level')} {profile.level}
               </p>
-              <p className="text-sm italic opacity-70">{profile.avatar_description}</p>
+              <p className="text-sm italic opacity-70">{avatarDesc}</p>
             </div>
           </div>
           <div className="mt-4 w-64 max-w-full">
@@ -65,11 +80,11 @@ export function Player() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-4">
-          <h2 className="font-display text-sm text-[var(--color-gold)]">Missões do mês</h2>
+          <h2 className="font-display text-sm text-[var(--color-gold)]">{t('monthMissions')}</h2>
           <ul className="panel space-y-2 p-4">
             {objectives.daily_objectives.map((o) => (
               <li key={o.id}>
-                <strong>{o.name}</strong>{' '}
+                <strong>{pickL(o as Record<string, unknown>, 'name', locale)}</strong>{' '}
                 <span className="opacity-70">({o.points} pts)</span>
               </li>
             ))}
@@ -77,17 +92,17 @@ export function Player() {
           {weekly && (
             <>
               <h2 className="font-display text-sm text-[var(--color-gold)]">
-                Semana {weekly.week}
+                {t('week')} {weekly.week}
               </h2>
               <TaskList objectives={objectives.daily_objectives} days={weekly.days} />
               <p className="text-sm text-[var(--color-gold)] tabular-nums">
-                Total: {weekPoints} pts
+                {t('total')}: {weekPoints} pts
               </p>
             </>
           )}
           {skills.length > 0 && (
             <div className="panel p-4">
-              <h3 className="mb-2 font-display text-sm text-[var(--color-gold)]">Skills</h3>
+              <h3 className="mb-2 font-display text-sm text-[var(--color-gold)]">{t('skills')}</h3>
               <ul>
                 {skills.map((s) => (
                   <li key={s.id}>{s.name}</li>
@@ -98,10 +113,7 @@ export function Player() {
         </div>
         <div className="space-y-4">
           {weekly?.boss && (
-            <BossCard
-              boss={weekly.boss}
-              completed={weekly.boss.completed}
-            />
+            <BossCard boss={weekly.boss} completed={weekly.boss.completed} />
           )}
           <UpgradeTree classDef={classDef} monthsCompleted={profile.months_completed} />
         </div>
