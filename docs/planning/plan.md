@@ -425,5 +425,8 @@ Local pipeline closed without Manus WebDev:
 | 3 — PDF | Done | `pdfs/scripts/generate_monthly_pdf.py` (WeasyPrint → reportlab fallback) |
 | 4 — Frontend | Done | `frontend/` grimoire Vite/React/Tailwind/Wouter |
 | 5 — Deploy | Done | GitHub Raw + Pages workflow; ADM = download `.md` (Contents API optional later) |
+| 6 — Bilingual EN+PT | Done | Game fields `*_pt` + UI toggle; PDF `--locale en|pt` (default pt) |
 
 Local stack: Vite in `frontend/` (not Manus). Deploy: GitHub Pages from `frontend/dist`.
+
+**Next (program):** after PR #2 merges → Pages redeploy; print August sheets (`--locale pt`); optional Phase 2b AI art.

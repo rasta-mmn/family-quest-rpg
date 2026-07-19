@@ -10,13 +10,65 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
-DAYS_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-CLASS_DISPLAY = {
-    "guerreiro": "Warrior",
-    "bardo": "Bard",
-    "mago": "Mage",
-    "ladino": "Rogue",
+
+DAYS = {
+    "en": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "pt": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
 }
+CLASS_DISPLAY = {
+    "en": {
+        "guerreiro": "Warrior",
+        "bardo": "Bard",
+        "mago": "Mage",
+        "ladino": "Rogue",
+    },
+    "pt": {
+        "guerreiro": "Guerreiro",
+        "bardo": "Bardo",
+        "mago": "Mago",
+        "ladino": "Ladino",
+    },
+}
+UI = {
+    "en": {
+        "no_skills": "No skills yet",
+        "daily_objectives": "Daily Objectives",
+        "level": "Level",
+        "month": "Month",
+        "theme": "Theme",
+        "xp_squares": "XP squares (100 pts)",
+        "week": "Week",
+        "extras": "Extras",
+        "boss": "Collective BOSS",
+        "mission_fallback": "Collective Mission",
+        "mission_name": "Mission",
+    },
+    "pt": {
+        "no_skills": "Ainda sem skills",
+        "daily_objectives": "Objetivos diários",
+        "level": "Nível",
+        "month": "Mês",
+        "theme": "Tema",
+        "xp_squares": "Quadrados de XP (100 pts)",
+        "week": "Semana",
+        "extras": "Extras",
+        "boss": "BOSS coletivo",
+        "mission_fallback": "Missão Coletiva",
+        "mission_name": "Missão",
+    },
+}
+
+
+def pick(obj: dict | None, key: str, locale: str) -> str:
+    """Prefer key_pt when locale=pt, else key."""
+    if not obj:
+        return ""
+    if locale == "pt":
+        pt = obj.get(f"{key}_pt")
+        if isinstance(pt, str) and pt.strip():
+            return pt
+    val = obj.get(key)
+    return val if isinstance(val, str) else (str(val) if val is not None else "")
 
 
 def parse_md(path: Path) -> tuple[dict, str]:
@@ -90,11 +142,17 @@ def weasy_available() -> bool:
 
 # --- HTML / WeasyPrint path -------------------------------------------------
 
-def hero_page_html(hero, month, game, themes, points) -> str:
+def hero_page_html(hero, month, game, themes, points, locale: str = "pt") -> str:
+    ui = UI[locale]
+    days = DAYS[locale]
     profile = hero["profile"]
     objs = list(hero["objectives"].get("daily_objectives") or [])
     while len(objs) < 3:
-        objs.append({"name": f"Mission {len(objs) + 1}", "points": points.get("per_task", 30)})
+        objs.append({
+            "name": f"{ui['mission_name']} {len(objs) + 1}",
+            "name_pt": f"{UI['pt']['mission_name']} {len(objs) + 1}",
+            "points": points.get("per_task", 30),
+        })
 
     theme_key = month.get("theme") or "treino"
     palette = theme_palette(themes, theme_key)
@@ -105,14 +163,17 @@ def hero_page_html(hero, month, game, themes, points) -> str:
     bosses = month.get("bosses") or []
     weeks = month.get("weeks") or []
     cls_key = profile.get("class") or "?"
-    cls = CLASS_DISPLAY.get(cls_key, str(cls_key).title())
-    name = profile.get("character_name") or hero["id"]
+    cls = CLASS_DISPLAY[locale].get(cls_key, str(cls_key).title())
+    name = pick(profile, "character_name", locale) or hero["id"]
     level = profile.get("level", 1)
     skills = hero["skills"]
-    skill_txt = " · ".join(s.get("name", "?") for s in skills) if skills else "No skills yet"
+    skill_names = [pick(s, "name", locale) or "?" for s in skills]
+    skill_txt = " · ".join(skill_names) if skill_names else ui["no_skills"]
+    theme_name = pick(theme_meta, "name", locale) or theme_key
 
     obj_list = "".join(
-        f'<li><strong>{o.get("name")}</strong> <span class="muted">({o.get("points", 30)} pts)</span></li>'
+        f'<li><strong>{pick(o, "name", locale)}</strong> '
+        f'<span class="muted">({o.get("points", 30)} pts)</span></li>'
         for o in objs[:3]
     )
 
@@ -125,8 +186,8 @@ def hero_page_html(hero, month, game, themes, points) -> str:
             f'''<div class="boss-week"><div class="boss-head">
               <img src="{asset_uri(img)}" class="boss-img"/>
               <div><div class="week-label">{week}</div>
-              <div class="boss-name">{boss.get("name", "BOSS")}</div>
-              <div class="muted">{boss.get("mission_redacted", "Collective Mission")} · +{boss.get("points", 30)} pts</div></div>
+              <div class="boss-name">{pick(boss, "name", locale) or "BOSS"}</div>
+              <div class="muted">{pick(boss, "mission_redacted", locale) or ui["mission_fallback"]} · +{boss.get("points", 30)} pts</div></div>
               <span class="box big"></span></div></div>'''
         )
 
@@ -136,7 +197,7 @@ def hero_page_html(hero, month, game, themes, points) -> str:
             f'<tr><th>{lab}</th>'
             + "".join('<td class="cb"><span class="box"></span></td>' for _ in range(3))
             + '<td class="extras"></td></tr>'
-            for lab in DAYS_LABELS
+            for lab in days
         )
         week_grids.append(
             f'<div class="week-grid"><h4>{week}</h4><table>'
@@ -146,6 +207,11 @@ def hero_page_html(hero, month, game, themes, points) -> str:
 
     xp_squares = "".join('<div class="xp-sq"></div>' for _ in range(4))
     primary, accent, deep = palette[0], palette[1], palette[2]
+    footer = (
+        f"Family Quest — marcar no papel; transferir para docs/{hero['id']}/weekly/ no fim da semana."
+        if locale == "pt"
+        else f"Family Quest — mark on paper; transfer to docs/{hero['id']}/weekly/ at week end."
+    )
 
     return f'''
     <section class="page" style="--c1:{primary};--c2:{accent};--c3:{deep};--bg:url('{asset_uri(bg)}');">
@@ -157,26 +223,26 @@ def hero_page_html(hero, month, game, themes, points) -> str:
         <div class="meta">
           <div class="game">{game.get("game_name", "Family Quest RPG")}</div>
           <h1>{name}</h1>
-          <p class="subtitle">{cls} · Level {level} · Month {month.get("month")} · Theme {theme_meta.get("name", theme_key)}</p>
+          <p class="subtitle">{cls} · {ui["level"]} {level} · {ui["month"]} {month.get("month")} · {ui["theme"]} {theme_name}</p>
           <p class="skills">Skills: <span class="skill">{skill_txt}</span></p>
         </div>
         <div class="xp-panel">
           <div class="xp-label">XP ({points.get("monthly_xp", 400)})</div>
           <div class="xp-row">{xp_squares}</div>
-          <div class="muted">1 □ = {points.get("weekly_target", 100)} pts/week</div>
+          <div class="muted">1 □ = {points.get("weekly_target", 100)} pts</div>
         </div>
       </header>
       <div class="cols">
-        <div class="panel"><h3>Daily Objectives</h3><ol class="objs">{obj_list}</ol>
-          <p class="muted">Extras: +{points.get("per_extra", 2.5)} pts each</p></div>
-        <div class="panel bosses"><h3>Collective BOSS</h3>{"".join(boss_blocks)}</div>
+        <div class="panel"><h3>{ui["daily_objectives"]}</h3><ol class="objs">{obj_list}</ol>
+          <p class="muted">{ui["extras"]}: +{points.get("per_extra", 2.5)} pts</p></div>
+        <div class="panel bosses"><h3>{ui["boss"]}</h3>{"".join(boss_blocks)}</div>
       </div>
       <div class="grids">{"".join(week_grids)}</div>
-      <footer>Family Quest — mark on paper; transfer to docs/{hero["id"]}/weekly/ at week end.</footer>
+      <footer>{footer}</footer>
     </section>'''
 
 
-def full_html(pages: list[str], title: str) -> str:
+def full_html(pages: list[str], title: str, locale: str = "pt") -> str:
     css = """
     @page { size: A4; margin: 10mm; }
     * { box-sizing: border-box; }
@@ -221,7 +287,7 @@ def full_html(pages: list[str], title: str) -> str:
     footer { position: absolute; bottom: 8px; left: 14px; right: 14px; font-size: 8px; opacity: 0.7;
       border-top: 1px solid rgba(212,169,69,0.3); padding-top: 4px; }
     """
-    return f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+    return f"""<!DOCTYPE html><html lang="{locale}"><head><meta charset="utf-8"/>
 <title>{title}</title><style>{css}</style></head><body>{"".join(pages)}</body></html>"""
 
 
@@ -252,7 +318,7 @@ def _try_image(path: Path, w: float, h: float):
         return None
 
 
-def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = False) -> None:
+def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = False, locale: str = "pt") -> None:
     """heroes_data: list of dicts with keys hero, month, game, themes, points"""
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import mm
@@ -284,10 +350,13 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         c.setStrokeColor(_hex(gold))
         c.rect(10 * mm, 10 * mm, w - 20 * mm, h - 20 * mm, fill=0, stroke=1)
 
-        name = profile.get("character_name") or hero["id"]
+        ui = UI[locale]
+        days = DAYS[locale]
+        name = pick(profile, "character_name", locale) or hero["id"]
         cls_key = profile.get("class") or "?"
-        cls = CLASS_DISPLAY.get(cls_key, str(cls_key).title())
+        cls = CLASS_DISPLAY[locale].get(cls_key, str(cls_key).title())
         level = profile.get("level", 1)
+        theme_name = pick(theme_meta, "name", locale) or theme_key
 
         # Photo / avatar placeholders (SVG not drawn by reportlab — gold frames)
         photo = resolve_asset(profile.get("photo") or "")
@@ -322,10 +391,11 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         c.drawString(
             62 * mm,
             h - 34 * mm,
-            f"{cls} · Level {level} · {month.get('month')} · {theme_meta.get('name', theme_key)}",
+            f"{cls} · {ui['level']} {level} · {month.get('month')} · {theme_name}",
         )
         skills = hero["skills"]
-        skill_txt = ", ".join(s.get("name", "?") for s in skills) if skills else "No skills yet"
+        skill_names = [pick(s, "name", locale) or "?" for s in skills]
+        skill_txt = ", ".join(skill_names) if skill_names else ui["no_skills"]
         c.setFont("Times-Italic", 9)
         c.drawString(62 * mm, h - 39 * mm, f"Skills: {skill_txt}")
 
@@ -349,23 +419,27 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         c.rect(14 * mm, y - 32 * mm, 85 * mm, 38 * mm, fill=1, stroke=1)
         c.setFillColor(_hex(gold))
         c.setFont("Times-Bold", 10)
-        c.drawString(16 * mm, y, "DAILY OBJECTIVES")
+        c.drawString(16 * mm, y, ui["daily_objectives"].upper())
         objs = list(hero["objectives"].get("daily_objectives") or [])
         while len(objs) < 3:
-            objs.append({"name": f"Mission {len(objs)+1}", "points": 30})
+            objs.append({"name": f"{ui['mission_name']} {len(objs)+1}", "points": 30})
         c.setFillColor(_hex(cream))
         c.setFont("Times-Roman", 9)
         for i, o in enumerate(objs[:3]):
-            c.drawString(18 * mm, y - 8 * mm - i * 6 * mm, f"• {o.get('name')} ({o.get('points', 30)} pts)")
+            c.drawString(
+                18 * mm,
+                y - 8 * mm - i * 6 * mm,
+                f"• {pick(o, 'name', locale)} ({o.get('points', 30)} pts)",
+            )
         c.setFont("Times-Italic", 8)
-        c.drawString(18 * mm, y - 28 * mm, f"Extras: +{points.get('per_extra', 2.5)} pts each")
+        c.drawString(18 * mm, y - 28 * mm, f"{ui['extras']}: +{points.get('per_extra', 2.5)} pts")
 
         # Bosses
         c.setFillColor(_hex("#1a1410"))
         c.rect(104 * mm, y - 32 * mm, w - 118 * mm, 38 * mm, fill=1, stroke=1)
         c.setFillColor(_hex(gold))
         c.setFont("Times-Bold", 10)
-        c.drawString(106 * mm, y, "COLLECTIVE BOSS")
+        c.drawString(106 * mm, y, ui["boss"].upper())
         bosses = month.get("bosses") or []
         weeks = month.get("weeks") or []
         c.setFillColor(_hex(cream))
@@ -373,7 +447,7 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         for i, week in enumerate(weeks[:4]):
             boss = next((b for b in bosses if b.get("week") == week), bosses[i] if i < len(bosses) else {})
             by = y - 7 * mm - i * 6 * mm
-            c.drawString(106 * mm, by, f"{week}: {boss.get('name', 'BOSS')}")
+            c.drawString(106 * mm, by, f"{week}: {pick(boss, 'name', locale) or 'BOSS'}")
             c.setStrokeColor(_hex(gold))
             c.rect(w - 22 * mm, by - 1 * mm, 4 * mm, 4 * mm, fill=0, stroke=1)
 
@@ -397,7 +471,7 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
             c.setFont("Times-Roman", 7)
             for hi, lab in enumerate(headers):
                 c.drawCentredString(gx + 2 * mm + hi * cell_w + cell_w / 2, gy + gh - 10 * mm, lab)
-            for di, dlab in enumerate(DAYS_LABELS):
+            for di, dlab in enumerate(days):
                 dy = gy + gh - 10 * mm - (di + 1) * cell_h
                 c.setFillColor(_hex(cream))
                 c.drawString(gx + 3 * mm, dy + 1, dlab)
@@ -415,11 +489,12 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
 
         c.setFillColor(_hex(cream))
         c.setFont("Times-Roman", 7)
-        c.drawString(
-            14 * mm,
-            12 * mm,
-            f"Family Quest — mark on paper; transfer to docs/{hero['id']}/weekly/ at week end.",
+        footer = (
+            f"Family Quest — marcar no papel; transferir para docs/{hero['id']}/weekly/ no fim da semana."
+            if locale == "pt"
+            else f"Family Quest — mark on paper; transfer to docs/{hero['id']}/weekly/ at week end."
         )
+        c.drawString(14 * mm, 12 * mm, footer)
         c.showPage()
 
     c.save()
@@ -435,6 +510,8 @@ def build_hero_bundle(hid: str, p: dict, month: dict, game: dict, themes: dict, 
         hero["profile"]["avatar"] = p.get("avatar")
     if not hero["profile"].get("character_name"):
         hero["profile"]["character_name"] = p.get("character_name")
+    if not hero["profile"].get("character_name_pt") and p.get("character_name_pt"):
+        hero["profile"]["character_name_pt"] = p.get("character_name_pt")
     if not hero["profile"].get("class"):
         hero["profile"]["class"] = p.get("class")
     return {"hero": hero, "month": month, "game": game, "themes": themes, "points": points}
@@ -444,6 +521,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate Family Quest monthly PDFs")
     parser.add_argument("--month", required=True, help="YYYY-MM")
     parser.add_argument(
+        "--locale",
+        choices=("en", "pt"),
+        default="pt",
+        help="Sheet language (default: pt — family print)",
+    )
+    parser.add_argument(
         "--engine",
         choices=("auto", "weasyprint", "reportlab"),
         default="auto",
@@ -451,6 +534,7 @@ def main() -> None:
     )
     args = parser.parse_args()
     month_id = args.month
+    locale = args.locale
     if not re.fullmatch(r"\d{4}-\d{2}", month_id):
         raise SystemExit("--month must be YYYY-MM")
 
@@ -468,18 +552,24 @@ def main() -> None:
         raise SystemExit("WeasyPrint unavailable (system libs missing). Use --engine reportlab")
 
     if use_weasy:
-        pages = [hero_page_html(**b) for b in bundles]
+        pages = [hero_page_html(**b, locale=locale) for b in bundles]
         for b, page in zip(bundles, pages):
-            write_pdf_weasy(full_html([page], f"{b['hero']['id']} {month_id}"), out_dir / f"{b['hero']['id']}.pdf")
-        write_pdf_weasy(full_html(pages, f"Family Quest {month_id}"), out_dir / f"family-quest-{month_id}.pdf")
+            write_pdf_weasy(
+                full_html([page], f"{b['hero']['id']} {month_id}", locale),
+                out_dir / f"{b['hero']['id']}.pdf",
+            )
+        write_pdf_weasy(
+            full_html(pages, f"Family Quest {month_id}", locale),
+            out_dir / f"family-quest-{month_id}.pdf",
+        )
     else:
         if args.engine == "auto":
             print("WeasyPrint unavailable — falling back to reportlab")
         for b in bundles:
-            write_pdf_reportlab([b], out_dir / f"{b['hero']['id']}.pdf")
-        write_pdf_reportlab(bundles, out_dir / f"family-quest-{month_id}.pdf")
+            write_pdf_reportlab([b], out_dir / f"{b['hero']['id']}.pdf", locale=locale)
+        write_pdf_reportlab(bundles, out_dir / f"family-quest-{month_id}.pdf", locale=locale)
 
-    print(f"Done: {len(bundles)} heroes → {out_dir}")
+    print(f"Done: {len(bundles)} heroes · locale={locale} → {out_dir}")
 
 
 if __name__ == "__main__":

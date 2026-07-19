@@ -89,7 +89,8 @@ npm run dev
 ```bash
 cd pdfs/scripts
 pip install -r requirements.txt
-python3 generate_monthly_pdf.py --month 2026-08
+python3 generate_monthly_pdf.py --month 2026-08              # Portuguese (default)
+python3 generate_monthly_pdf.py --month 2026-08 --locale en  # English
 ```
 
 Writes 1 PDF per hero + 1 combined PDF under `pdfs/2026-08/`. Prefers WeasyPrint; if system libs are missing (pango/cairo on macOS), falls back to reportlab (`--engine reportlab` to force).
