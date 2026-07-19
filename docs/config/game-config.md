@@ -12,7 +12,7 @@ players:
     real_name_redacted: "Rank I — Elder"
     real_name_redacted_pt: "Rank I — Ancião"
     photo: "docs/assets/photos/heroi1.svg"
-    avatar: "docs/assets/avatars/guerreiro.svg"
+    avatar: "docs/assets/avatars/guerreiro.png"
   - id: Heroi2
     character_name: "Wandering Melody"
     character_name_pt: "Melodia Errante"
@@ -20,7 +20,7 @@ players:
     real_name_redacted: "Rank II — Consort"
     real_name_redacted_pt: "Rank II — Consorte"
     photo: "docs/assets/photos/heroi2.svg"
-    avatar: "docs/assets/avatars/bardo.svg"
+    avatar: "docs/assets/avatars/bardo.png"
   - id: Heroi3
     character_name: "Arcane Veil"
     character_name_pt: "Véu Arcano"
@@ -28,7 +28,7 @@ players:
     real_name_redacted: "Rank III — Heir"
     real_name_redacted_pt: "Rank III — Herdeiro"
     photo: "docs/assets/photos/heroi3.svg"
-    avatar: "docs/assets/avatars/mago.svg"
+    avatar: "docs/assets/avatars/mago.png"
   - id: Heroi4
     character_name: "Swift Shade"
     character_name_pt: "Sombra Ligeira"
@@ -36,7 +36,7 @@ players:
     real_name_redacted: "Rank IV — Scout"
     real_name_redacted_pt: "Rank IV — Batedor"
     photo: "docs/assets/photos/heroi4.svg"
-    avatar: "docs/assets/avatars/ladino.svg"
+    avatar: "docs/assets/avatars/ladino.png"
 points:
   per_task: 30
   per_extra: 2.5

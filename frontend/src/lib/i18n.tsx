@@ -172,6 +172,29 @@ export const ui: Dict = {
     pt: 'Missões diárias (das fichas)',
   },
   saveAdmin: { en: 'Save admin setup', pt: 'Guardar setup ADM' },
+  githubToken: { en: 'GitHub token (Contents API)', pt: 'Token GitHub (Contents API)' },
+  githubTokenHelp: {
+    en: 'classic PAT with repo contents:write. Stored only in this browser’s localStorage.',
+    pt: 'PAT classic com contents:write. Só neste browser (localStorage).',
+  },
+  saveToken: { en: 'Save token', pt: 'Guardar token' },
+  tokenSaved: { en: 'Token saved in this browser.', pt: 'Token guardado neste browser.' },
+  tokenCleared: { en: 'Token cleared.', pt: 'Token apagado.' },
+  commitGithub: { en: 'Commit to GitHub', pt: 'Commit no GitHub' },
+  committed: { en: 'Committed:', pt: 'Commit feito:' },
+  needToken: {
+    en: 'Set a GitHub token in Admin first (or use Download).',
+    pt: 'Define token GitHub no ADM primeiro (ou usa Descarregar).',
+  },
+  levelUpTitle: { en: 'Month-end level-up', pt: 'Level-up fim de mês' },
+  levelUpHelp: {
+    en: 'Applies class upgrade for the journey month number. Commits if token set; else downloads .md pack.',
+    pt: 'Aplica upgrade da classe para o nº do mês. Faz commit se houver token; senão descarrega pack .md.',
+  },
+  weeksHit: { en: 'Weeks that hit target (for €)', pt: 'Semanas com meta (para €)' },
+  rewardLabel: { en: 'Reward label (redacted)', pt: 'Label da recompensa (redactada)' },
+  applyLevelUp: { en: 'Apply level-up', pt: 'Aplicar level-up' },
+  levelUpOk: { en: 'Level-up applied:', pt: 'Level-up aplicado:' },
 }
 
 const LocaleCtx = createContext<{

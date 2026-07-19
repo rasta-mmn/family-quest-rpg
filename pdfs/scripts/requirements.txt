@@ -1,3 +1,6 @@
 PyYAML>=6.0
 WeasyPrint>=62.0
 reportlab>=4.0
+# Optional SVG→PNG (needs system cairo/pango). Prefer PNG assets in docs/assets/.
+# cairosvg>=2.7
+# svglib>=1.5

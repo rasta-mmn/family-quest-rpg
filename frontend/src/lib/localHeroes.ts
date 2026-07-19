@@ -5,6 +5,7 @@ const STORAGE_KEY = 'family-quest-local-heroes'
 export type AppearanceSlots = {
   weapon: { name: string; month?: number } | null
   armor: { name: string; month?: number } | null
+  appearance?: { name: string; month?: number } | null
   head: { name: string; month?: number } | null
   cape: { name: string; month?: number } | null
   accessory: { name: string; month?: number } | null
@@ -101,7 +102,7 @@ export type CreateHeroInput = {
 export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
   const id = nextHeroId(input.existingIds)
   const cls = input.class
-  const avatar = `docs/assets/avatars/${cls}.svg`
+  const avatar = `docs/assets/avatars/${cls}.png`
   const photoPath = input.photoDataUrl
     ? `docs/assets/photos/${id.toLowerCase()}.jpg`
     : avatar

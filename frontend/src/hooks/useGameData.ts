@@ -36,6 +36,7 @@ export type GameData = {
 const EMPTY_SLOTS: AppearanceSlots = {
   weapon: null,
   armor: null,
+  appearance: null,
   head: null,
   cape: null,
   accessory: null,
