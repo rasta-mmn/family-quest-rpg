@@ -71,19 +71,27 @@ pdfs/
 
 ## Frontend
 
-O painel do jogo (dashboard, fichas de herói, BOSS da semana, ranking e painel ADM) lê os arquivos `.md` deste repositório e exibe a evolução dos personagens.
+Painel grimório em `frontend/` (Vite + React 19 + Tailwind 4 + Wouter). Em dev lê `docs/` local; em prod usa GitHub Raw.
 
-**Link do painel:** _(adicionado após a publicação)_
+```bash
+cd frontend
+npm install
+npm run dev
+# abrir http://localhost:5173/family-quest-rpg/
+```
+
+**Link do painel:** [https://rasta-mmn.github.io/family-quest-rpg/](https://rasta-mmn.github.io/family-quest-rpg/)  
+(Deploy via GitHub Pages — workflow `.github/workflows/deploy-pages.yml`. Ativar Pages → Source: GitHub Actions no repo.)
 
 ## Gerar os PDFs Mensais
 
 ```bash
 cd pdfs/scripts
-pip install weasyprint pyyaml
+pip install -r requirements.txt
 python3 generate_monthly_pdf.py --month 2026-08
 ```
 
-Gera 1 PDF por herói + 1 PDF combinado da família em `pdfs/2026-08/`, com tema visual conforme os objetivos do mês.
+Gera 1 PDF por herói + 1 PDF combinado em `pdfs/2026-08/`. Preferência WeasyPrint; se faltar libs de sistema (pango/cairo no macOS), fallback automático para reportlab (`--engine reportlab` força).
 
 ## Privacidade
 

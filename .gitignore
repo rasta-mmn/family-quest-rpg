@@ -1,3 +1,21 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# OS / editor
 .DS_Store
+Thumbs.db
+
+# Frontend build artifacts (also in frontend/.gitignore)
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+
+# Env secrets
+.env
+.env.local
+*.local

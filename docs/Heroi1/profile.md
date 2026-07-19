@@ -6,8 +6,8 @@ level: 1
 xp_total: 0
 xp_this_month: 0
 months_completed: 0
-photo: "docs/assets/photos/heroi1.jpg"
-avatar: "docs/assets/avatars/guerreiro.png"
+photo: "docs/assets/photos/heroi1.svg"
+avatar: "docs/assets/avatars/guerreiro.svg"
 avatar_description: "Guerreiro de armadura de ferro com capa carmesim e espada ao ombro"
 stats:
   forca: 10
