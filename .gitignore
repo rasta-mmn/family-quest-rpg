@@ -19,3 +19,8 @@ frontend/dist-ssr/
 .env
 .env.local
 *.local
+
+# Real meanings / private family mapping (never commit)
+family-private/mapping.md
+family-private/**/*.local.md
+*real-meanings*

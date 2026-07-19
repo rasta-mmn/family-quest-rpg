@@ -306,7 +306,7 @@ def _hex(c: str):
 
 
 def _try_image(path: Path, w: float, h: float):
-    """Return Image flowable or None. ReportLab rasterizes limited SVG; skip SVG."""
+    """Return Image flowable or None. PNG/JPG/JPEG OK; ReportLab skips SVG (WeasyPrint renders all)."""
     if not path.exists():
         return None
     if path.suffix.lower() == ".svg":
