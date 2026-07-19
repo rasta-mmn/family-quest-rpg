@@ -24,3 +24,6 @@ frontend/dist-ssr/
 family-private/mapping.md
 family-private/**/*.local.md
 *real-meanings*
+
+# PDF SVG raster cache
+*.raster.png

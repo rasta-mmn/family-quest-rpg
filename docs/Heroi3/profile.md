@@ -8,7 +8,7 @@ xp_total: 0
 xp_this_month: 0
 months_completed: 0
 photo: "docs/assets/photos/heroi3.svg"
-avatar: "docs/assets/avatars/mago.svg"
+avatar: "docs/assets/avatars/mago.png"
 avatar_description: "Mage in a starry midnight-blue robe with an apprentice staff"
 avatar_description_pt: "Mago de túnica azul-noite estrelada com cajado de aprendiz"
 stats:
