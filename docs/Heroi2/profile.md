@@ -6,8 +6,8 @@ level: 1
 xp_total: 0
 xp_this_month: 0
 months_completed: 0
-photo: "docs/assets/photos/heroi2.jpg"
-avatar: "docs/assets/avatars/bardo.png"
+photo: "docs/assets/photos/heroi2.svg"
+avatar: "docs/assets/avatars/bardo.svg"
 avatar_description: "Bardo de gibão verde com alaúde às costas e chapéu emplumado"
 stats:
   forca: 10
