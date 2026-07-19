@@ -9,26 +9,26 @@ players:
     character_name: "Brasa de Ferro"
     class: guerreiro
     real_name_redacted: "Jogador 1"
-    photo: "docs/assets/photos/heroi1.jpg"
-    avatar: "docs/assets/avatars/guerreiro.png"
+    photo: "docs/assets/photos/heroi1.svg"
+    avatar: "docs/assets/avatars/guerreiro.svg"
   - id: Heroi2
     character_name: "Melodia Errante"
     class: bardo
     real_name_redacted: "Jogador 2"
-    photo: "docs/assets/photos/heroi2.jpg"
-    avatar: "docs/assets/avatars/bardo.png"
+    photo: "docs/assets/photos/heroi2.svg"
+    avatar: "docs/assets/avatars/bardo.svg"
   - id: Heroi3
     character_name: "Véu Arcano"
     class: mago
     real_name_redacted: "Jogador 3"
-    photo: "docs/assets/photos/heroi3.jpg"
-    avatar: "docs/assets/avatars/mago.png"
+    photo: "docs/assets/photos/heroi3.svg"
+    avatar: "docs/assets/avatars/mago.svg"
   - id: Heroi4
     character_name: "Sombra Ligeira"
     class: ladino
     real_name_redacted: "Jogador 4"
-    photo: "docs/assets/photos/heroi4.jpg"
-    avatar: "docs/assets/avatars/ladino.png"
+    photo: "docs/assets/photos/heroi4.svg"
+    avatar: "docs/assets/avatars/ladino.svg"
 points:
   per_task: 30
   per_extra: 2.5
