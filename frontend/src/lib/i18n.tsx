@@ -60,8 +60,8 @@ export const ui: Dict = {
   hero: { en: 'Hero', pt: 'Herói' },
   loadingWeek: { en: 'Checking the week…', pt: 'Consultando a semana…' },
   weekIntro: {
-    en: 'Marks transferred from paper. Objectives stay redacted in the grimoire.',
-    pt: 'Marcações transferidas do papel. Objetivos permanecem redactados no grimório.',
+    en: 'Family overview. Edit marks on each hero’s sheet (open the card).',
+    pt: 'Visão da família. Edita marcações na ficha de cada herói (abre o cartão).',
   },
   noWeekly: {
     en: 'No weekly/{week}.md log yet.',
@@ -138,6 +138,40 @@ export const ui: Dict = {
     pt: 'Abre a ficha para detalhes. Heróis locais ficam aqui até commit dos .md.',
   },
   summonHeroBtn: { en: '+ Summon hero', pt: '+ Invocar herói' },
+  playerEditHelp: {
+    en: 'Player sheet: edit your mission labels, weekly marks, photo and names. Admin calendar/BOSS live under ADM.',
+    pt: 'Ficha do jogador: edita labels das missões, marcações semanais, foto e nomes. Calendário/BOSS ficam no ADM.',
+  },
+  missionsPlayerOnly: {
+    en: 'These 3 daily missions belong to this hero — not the Admin panel.',
+    pt: 'Estas 3 missões diárias pertencem a este herói — não ao painel ADM.',
+  },
+  saveSheet: { en: 'Save sheet', pt: 'Guardar ficha' },
+  downloadSheet: { en: 'Download .md pack', pt: 'Descarregar pack .md' },
+  savedLocal: {
+    en: 'Saved in this browser. Download pack to commit into docs/.',
+    pt: 'Guardado neste browser. Descarrega o pack para commit em docs/.',
+  },
+  bossMark: { en: 'Mark collective BOSS defeated', pt: 'Marcar BOSS coletivo derrotado' },
+  bossUnmark: { en: 'Unmark collective BOSS', pt: 'Desmarcar BOSS coletivo' },
+  adminScopeHelp: {
+    en: 'Admin: month calendar, current week, dominant theme, collective BOSS missions.',
+    pt: 'ADM: calendário do mês, semana atual, tema dominante, missões do BOSS coletivo.',
+  },
+  adminPlayerMissionsNote: {
+    en: 'Per-hero daily missions are edited on each Player sheet (not here). Export mirrors them.',
+    pt: 'Missões diárias por herói editam-se na ficha do Jogador (não aqui). O export espelha-as.',
+  },
+  currentWeek: { en: 'Current week (YYYY-WXX)', pt: 'Semana atual (YYYY-WXX)' },
+  collectiveMissions: {
+    en: 'Collective BOSS missions (redacted)',
+    pt: 'Missões BOSS coletivo (redactadas)',
+  },
+  missionsFromSheets: {
+    en: 'Daily missions (from player sheets)',
+    pt: 'Missões diárias (das fichas)',
+  },
+  saveAdmin: { en: 'Save admin setup', pt: 'Guardar setup ADM' },
 }
 
 const LocaleCtx = createContext<{

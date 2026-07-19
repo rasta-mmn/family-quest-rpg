@@ -3,6 +3,7 @@ import { parseMarkdown } from '../lib/mdParser'
 import { fetchDoc } from '../lib/githubApi'
 import { weekFromLog } from '../lib/gameLogic'
 import { loadLocalHeroes, type AppearanceSlots, type LocalHeroRecord } from '../lib/localHeroes'
+import { loadAdminEdits, loadPlayerEdits } from '../lib/editsStore'
 import type {
   BestiaryTheme,
   ClassDef,
@@ -69,6 +70,9 @@ export function useGameData() {
         setLoading(true)
         const configText = await fetchDoc('config/game-config.md')
         const { data: config } = parseMarkdown<GameConfig>(configText)
+        const adminEditsEarly = loadAdminEdits()
+        if (adminEditsEarly.current_month) config.current_month = adminEditsEarly.current_month
+        if (adminEditsEarly.current_week) config.current_week = adminEditsEarly.current_week
         const monthId = config.current_month
         const weekId = config.current_week
 
@@ -79,6 +83,7 @@ export function useGameData() {
         ])
 
         const { data: month } = parseMarkdown<MonthSetup>(monthText)
+        if (adminEditsEarly.month) Object.assign(month, adminEditsEarly.month)
         const { data: bestiary } = parseMarkdown<{ themes: Record<string, BestiaryTheme> }>(
           bestiaryText,
         )
@@ -144,13 +149,44 @@ export function useGameData() {
           .filter((h) => !repoIds.has(h.id))
           .map((h) => localToBundle(h, config.points))
 
+        let heroes = [...repoHeroes, ...localHeroes]
+        const playerEdits = loadPlayerEdits()
+        heroes = heroes.map((h) => {
+          const edit = playerEdits[h.id]
+          if (!edit) return h
+          const weekly = edit.weekly ?? h.weekly
+          return {
+            ...h,
+            profile: edit.profile ? { ...h.profile, ...edit.profile } : h.profile,
+            objectives: edit.objectives
+              ? {
+                  daily_objectives: edit.objectives.daily_objectives,
+                  theme: edit.objectives.theme ?? h.objectives.theme,
+                }
+              : h.objectives,
+            weekly,
+            weekPoints: weekly ? weekFromLog(weekly, config.points) : 0,
+          }
+        })
+
+        // Month rollup mirrors player-owned mission labels (for PDF / ADM export).
+        month.objectives = month.objectives || {}
+        for (const h of heroes) {
+          const daily = h.objectives.daily_objectives || []
+          month.objectives[h.id] = {
+            theme: h.objectives.theme || month.theme,
+            daily: daily.map((o) => o.name),
+            daily_pt: daily.map((o) => o.name_pt || o.name),
+          }
+        }
+
         if (!cancelled) {
           setData({
             config,
             month,
             themes: bestiary.themes || {},
             classes: classesFile.classes || {},
-            heroes: [...repoHeroes, ...localHeroes],
+            heroes,
           })
           setError(null)
           setLoading(false)
