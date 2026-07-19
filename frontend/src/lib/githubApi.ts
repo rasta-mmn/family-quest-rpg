@@ -150,3 +150,66 @@ export async function putBinaryFromDataUrl(
 export function hasGithubToken(): boolean {
   return !!getGithubToken()
 }
+
+type GhEntry = { path: string; sha: string; type: 'file' | 'dir'; name: string }
+
+async function listRepoPath(path: string, token: string): Promise<GhEntry[]> {
+  const url = `https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}`
+  const res = await fetch(url, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (res.status === 404) return []
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`GitHub LIST ${path}: ${res.status} ${body}`)
+  }
+  const data = (await res.json()) as GhEntry | GhEntry[]
+  return Array.isArray(data) ? data : []
+}
+
+/** Delete a single file in the repo (path like docs/Heroi1/profile.md). */
+export async function deleteRepoFile(path: string, message: string): Promise<void> {
+  const token = getGithubToken()
+  if (!token) throw new Error('GitHub token missing — set it in Admin')
+  const sha = await getFileSha(path, token)
+  if (!sha) return
+  const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message, sha, branch: BRANCH }),
+  })
+  if (!res.ok) {
+    const err = await res.text()
+    throw new Error(`GitHub DELETE ${path}: ${res.status} ${err}`)
+  }
+}
+
+/** Recursively delete docs/<rel>/ tree (files only; empty dirs vanish). */
+export async function deleteDocsTree(relDocPath: string): Promise<string[]> {
+  const token = getGithubToken()
+  if (!token) throw new Error('GitHub token missing — set it in Admin')
+  const root = repoPath(relDocPath)
+  const deleted: string[] = []
+
+  async function walk(path: string): Promise<void> {
+    const entries = await listRepoPath(path, token)
+    for (const e of entries) {
+      if (e.type === 'dir') {
+        await walk(e.path)
+      } else {
+        await deleteRepoFile(e.path, `admin: delete ${e.path}`)
+        deleted.push(e.path)
+      }
+    }
+  }
+
+  await walk(root)
+  return deleted
+}
