@@ -8,7 +8,7 @@ xp_total: 0
 xp_this_month: 0
 months_completed: 0
 photo: "docs/assets/photos/heroi4.svg"
-avatar: "docs/assets/avatars/ladino.svg"
+avatar: "docs/assets/avatars/ladino.png"
 avatar_description: "Rogue in a dark-purple hood with twin daggers at the belt"
 avatar_description_pt: "Ladino de capuz roxo-escuro com adagas gémeas na cintura"
 stats:

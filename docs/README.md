@@ -48,7 +48,9 @@ Cursor agent skill: `.cursor/skills/family-quest-game/` — use when continuing 
 | `[Heroi]/profile.md` (names, photo) | **Player** (display) / ADMIN (level-up) | `/player/:id` |
 | `[Heroi]/skills.md` / `appearance.md` / `rewards.md` | ADMIN | End of month (repo / future ADM) |
 
-Edits in the UI save to **browser localStorage** and can **download `.md` packs** for commit into `docs/`.
+Edits in the UI save to **browser localStorage**. With a GitHub PAT (Contents write) set in `/admin`, **Commit to GitHub** writes into `docs/` via the Contents API. Download packs remain as fallback.
+
+**Month-end:** Admin → Level-up section applies class upgrade + redacted reward (commit or download).
 
 > Folder IDs stay as `Heroi1`…`HeroiN` for compatibility. Display names are English in content.
 

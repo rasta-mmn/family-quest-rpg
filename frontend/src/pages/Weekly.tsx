@@ -42,7 +42,7 @@ export function Weekly() {
               description: enemy?.description,
               description_pt: enemy?.description_pt,
               name_pt: bossMeta.name_pt || enemy?.name_pt,
-              image: enemy?.image || `docs/assets/enemies/${bossMeta.type}.svg`,
+              image: enemy?.image || `docs/assets/enemies/${bossMeta.type}.png`,
             }}
           />
         </div>

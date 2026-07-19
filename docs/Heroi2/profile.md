@@ -8,7 +8,7 @@ xp_total: 0
 xp_this_month: 0
 months_completed: 0
 photo: "docs/assets/photos/heroi2.svg"
-avatar: "docs/assets/avatars/bardo.svg"
+avatar: "docs/assets/avatars/bardo.png"
 avatar_description: "Bard in a green doublet with a lute on the back and a plumed hat"
 avatar_description_pt: "Bardo de gibão verde com alaúde às costas e chapéu emplumado"
 stats:

@@ -10,7 +10,7 @@ type Props = {
 
 export function BossCard({ boss, completed, large }: Props) {
   const { locale, t } = useLocale()
-  const img = boss.image || `docs/assets/enemies/${boss.type || 'monstro'}.svg`
+  const img = boss.image || `docs/assets/enemies/${boss.type || 'monstro'}.png`
   const name = pickL(boss as Record<string, unknown>, 'name', locale)
   const description = pickL(boss as Record<string, unknown>, 'description', locale)
   const mission = pickL(boss as Record<string, unknown>, 'mission_redacted', locale)
