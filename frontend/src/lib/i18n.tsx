@@ -102,6 +102,42 @@ export const ui: Dict = {
   plannedBosses: { en: 'Planned BOSSes', pt: 'BOSS previstos' },
   download: { en: 'Download', pt: 'Descarregar' },
   failRead: { en: 'Failed to read', pt: 'Falha ao ler' },
+  summonTitle: { en: 'Summon hero', pt: 'Invocar herói' },
+  summonPreparing: { en: 'Preparing the summoning…', pt: 'Preparando a invocação…' },
+  summonHelp: {
+    en: 'Create on demand. Lives in this browser; download the pack to commit into docs/.',
+    pt: 'Cria sob demanda. Fica neste browser; descarrega o pack para commit em docs/.',
+  },
+  charName: { en: 'Character name', pt: 'Nome do personagem' },
+  classField: { en: 'Class', pt: 'Classe' },
+  rankField: { en: 'Rank (hierarchy, redacted)', pt: 'Rank (hierarquia, redactado)' },
+  rankHelp: {
+    en: 'Family order without real names — Elder → Initiate.',
+    pt: 'Ordem familiar sem nomes reais — Ancião → Iniciado.',
+  },
+  photoField: { en: 'Photo (optional)', pt: 'Foto (opcional)' },
+  photoHelp: {
+    en: 'Upload now or later. Stored in this browser; pack downloads .jpg for docs/assets/photos/.',
+    pt: 'Upload agora ou depois. Fica neste browser; o pack baixa .jpg para docs/assets/photos/.',
+  },
+  photoFail: { en: 'Could not read that image.', pt: 'Não foi possível ler essa imagem.' },
+  missionTheme: { en: 'Mission theme', pt: 'Tema das missões' },
+  threeDaily: { en: '3 daily missions (redacted)', pt: '3 missões diárias (redactadas)' },
+  downloadPack: {
+    en: 'Download .md pack (+ photo) for the repo',
+    pt: 'Descarregar pack .md (+ foto) para o repo',
+  },
+  needName: { en: 'Every hero needs a legendary name.', pt: 'Todo herói precisa de um nome lendário.' },
+  needBoss: {
+    en: 'No month BOSS — set up the month in Admin first.',
+    pt: 'Sem BOSS do mês — faz o setup no ADM primeiro.',
+  },
+  summonCta: { en: 'Summon & open sheet', pt: 'Invocar e abrir ficha' },
+  heroesHelp: {
+    en: 'Open a sheet for full details. Local heroes live here until you commit their .md files.',
+    pt: 'Abre a ficha para detalhes. Heróis locais ficam aqui até commit dos .md.',
+  },
+  summonHeroBtn: { en: '+ Summon hero', pt: '+ Invocar herói' },
 }
 
 const LocaleCtx = createContext<{

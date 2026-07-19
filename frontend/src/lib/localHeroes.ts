@@ -83,10 +83,15 @@ export function emptyWeekly(opts: {
 
 export type CreateHeroInput = {
   character_name: string
+  character_name_pt?: string
   class: string
   real_name_redacted: string
+  real_name_redacted_pt?: string
   theme: string
   missions: [string, string, string]
+  missions_pt?: [string, string, string]
+  /** data:image/... from UI upload; else class avatar */
+  photoDataUrl?: string
   existingIds: string[]
   month: string
   week: string
@@ -97,11 +102,16 @@ export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
   const id = nextHeroId(input.existingIds)
   const cls = input.class
   const avatar = `docs/assets/avatars/${cls}.svg`
-  const photo = avatar
+  const photoPath = input.photoDataUrl
+    ? `docs/assets/photos/${id.toLowerCase()}.jpg`
+    : avatar
+  const photo = input.photoDataUrl || avatar
   const name = input.character_name.trim()
-  const daily_objectives: Objective[] = input.missions.map((name, i) => ({
+  const namePt = (input.character_name_pt || name).trim()
+  const daily_objectives: Objective[] = input.missions.map((mission, i) => ({
     id: `obj${i + 1}`,
-    name: name.trim() || `Mission ${['Alpha', 'Beta', 'Gamma'][i]}`,
+    name: mission.trim() || `Mission ${['Alpha', 'Beta', 'Gamma'][i]}`,
+    name_pt: input.missions_pt?.[i]?.trim() || undefined,
     points: 30,
     real_meaning_redacted: true,
   }))
@@ -109,6 +119,7 @@ export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
   const profile: Profile = {
     id,
     character_name: name,
+    character_name_pt: namePt,
     class: cls,
     level: 1,
     xp_total: 0,
@@ -123,9 +134,12 @@ export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
   const player: PlayerConfig = {
     id,
     character_name: name,
+    character_name_pt: namePt,
     class: cls,
     real_name_redacted: input.real_name_redacted.trim() || 'Player',
-    photo,
+    real_name_redacted_pt: (input.real_name_redacted_pt || input.real_name_redacted).trim(),
+    // YAML path for commit; runtime display uses profile.photo (may be data URL)
+    photo: photoPath,
     avatar,
   }
 
