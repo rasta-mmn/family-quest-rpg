@@ -38,18 +38,17 @@ Cursor agent skill: `.cursor/skills/family-quest-game/` — use when continuing 
 
 ## Who Edits What
 
-| File | Who edits | When |
+| File | Who edits | Frontend |
 |---|---|---|
-| `config/game-config.md` | ADMIN | Initial setup and player changes |
-| `config/classes.md` | ADMIN | Rarely (upgrade trees) |
-| `config/bestiary.md` | ADMIN | Rarely (new enemies/themes) |
-| `config/months/YYYY-MM.md` | ADMIN | Start of each month |
-| `[Heroi]/objectives.md` | **Player** | Start of each month (their 3 objectives) |
-| `[Heroi]/weekly/YYYY-WXX.md` | Player or ADMIN | End of each week (transfer from PDF) |
-| `[Heroi]/profile.md` | ADMIN | End of month (level-up) |
-| `[Heroi]/skills.md` | ADMIN | End of month (new skill-type upgrade) |
-| `[Heroi]/appearance.md` | ADMIN | End of month (new gear) |
-| `[Heroi]/rewards.md` | ADMIN | End of week/month (rewards) |
+| `config/game-config.md` (calendar, PIN, players) | **ADMIN** | `/admin` — month + current week |
+| `config/months/YYYY-MM.md` (weeks, theme, BOSS) | **ADMIN** | `/admin` — collective missions |
+| `config/classes.md` / `bestiary.md` | ADMIN | (repo only, rare) |
+| `[Heroi]/objectives.md` (3 daily missions + theme) | **Player** | `/player/:id` |
+| `[Heroi]/weekly/YYYY-WXX.md` (marks + BOSS flag) | **Player** | `/player/:id` grid |
+| `[Heroi]/profile.md` (names, photo) | **Player** (display) / ADMIN (level-up) | `/player/:id` |
+| `[Heroi]/skills.md` / `appearance.md` / `rewards.md` | ADMIN | End of month (repo / future ADM) |
+
+Edits in the UI save to **browser localStorage** and can **download `.md` packs** for commit into `docs/`.
 
 > Folder IDs stay as `Heroi1`…`HeroiN` for compatibility. Display names are English in content.
 
