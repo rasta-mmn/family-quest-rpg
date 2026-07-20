@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="yokai">
+  <defs>
+    <radialGradient id="g-yokai" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#EA580C" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#431407" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#431407"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-yokai)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M44 18 L52 8 L64 14 L76 8 L84 18 Z" fill="#D4A945" stroke="#1a1410" stroke-width="1.2" opacity="0.95"/>
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="2.6s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="64" rx="28" ry="32" fill="#EA580C" stroke="#D4A945" stroke-width="2"/>
+    <path d="M40 50 H88 V68 H40 Z" fill="#e8e0d0" stroke="#1a1410" stroke-width="1.5"/>
+    <circle cx="52" cy="58" r="4" fill="#1a1410"/><circle cx="76" cy="58" r="4" fill="#1a1410"/>
+    <path d="M56 66 Q64 72 72 66" fill="none" stroke="#1a1410" stroke-width="2"/>
+    <path d="M44 36 L34 16 M84 36 L94 16" stroke="#D4A945" stroke-width="3"/>
+  </g>
+</svg>

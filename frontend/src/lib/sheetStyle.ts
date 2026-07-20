@@ -91,7 +91,12 @@ export function bodyStage(monthsCompleted: number): number {
   return Math.min(12, Math.max(0, Math.floor(monthsCompleted)))
 }
 
-/** Class avatar path — {male|female}/lv-00…12 (gear from classes.md). */
+/** Exact art level 0…12 (Grok PNG per classes.md upgrade stack). */
+export function bodyArtLevel(monthsCompleted: number): number {
+  return bodyStage(monthsCompleted)
+}
+
+/** Class avatar path — {male|female}/lv-00…12.png */
 export function bodyAssetPath(
   classId: string | undefined,
   monthsCompleted: number,
@@ -101,8 +106,8 @@ export function bodyAssetPath(
     ? classId!
     : 'guerreiro'
   const s = sex === 'female' ? 'female' : 'male'
-  const lv = String(bodyStage(monthsCompleted)).padStart(2, '0')
-  return `docs/assets/bodies/${cls}/${s}/lv-${lv}.svg`
+  const lv = String(bodyArtLevel(monthsCompleted)).padStart(2, '0')
+  return `docs/assets/bodies/${cls}/${s}/lv-${lv}.png`
 }
 
 const CLASS_BG: Record<string, string> = {

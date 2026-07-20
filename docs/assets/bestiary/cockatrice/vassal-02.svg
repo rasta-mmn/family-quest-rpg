@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="stone_gaze_imp">
+  <defs>
+    <radialGradient id="g-stone_gaze_imp" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#CA8A04" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#292524" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#292524"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-stone_gaze_imp)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="2.5s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="64" rx="22" ry="26" fill="#78716c" stroke="#D4A945" stroke-width="1.8"/>
+    <circle cx="64" cy="58" r="12" fill="#fef08a" stroke="#D4A945"/>
+    <circle cx="64" cy="58" r="5" fill="#ef4444">
+      <animate attributeName="r" values="3;7;3" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

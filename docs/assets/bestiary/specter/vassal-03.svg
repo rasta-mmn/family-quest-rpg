@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="echo_wraith">
+  <defs>
+    <radialGradient id="g-echo_wraith" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#94A3B8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#0F172A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-echo_wraith)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g opacity="0.55">
+    <animateTransform attributeName="transform" type="translate" values="-2 0; 2 0; -2 0" dur="3s" repeatCount="indefinite"/>
+    <path d="M42 32 Q64 16 86 32 L82 92 Q64 104 46 92 Z" fill="#cbd5e1" stroke="#D4A945"/>
+    <circle cx="56" cy="50" r="2.5" fill="#1a1410"/><circle cx="72" cy="50" r="2.5" fill="#1a1410"/>
+  </g>
+</svg>

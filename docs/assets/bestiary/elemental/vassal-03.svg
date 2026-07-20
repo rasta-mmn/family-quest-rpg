@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="tide_sprite">
+  <defs>
+    <radialGradient id="g-tide_sprite" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#0F172A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-tide_sprite)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <ellipse cx="64" cy="64" rx="30" ry="22" fill="#0ea5e9" opacity="0.9" stroke="#D4A945" stroke-width="2"/>
+    <path d="M36 60 Q50 48 64 60 Q78 72 92 60" fill="none" stroke="#e0f2fe" stroke-width="3">
+      <animate attributeName="d" values="M36 60 Q50 48 64 60 Q78 72 92 60;M36 60 Q50 72 64 60 Q78 48 92 60;M36 60 Q50 48 64 60 Q78 72 92 60" dur="2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

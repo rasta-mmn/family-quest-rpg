@@ -5,9 +5,12 @@ import { ClassEvolutions } from '../components/ClassEvolutions'
 import { assetUrl } from '../lib/githubApi'
 import { useGameData } from '../hooks/useGameData'
 import { useLocale } from '../lib/i18n'
+import { bodyAssetPath } from '../lib/sheetStyle'
 import {
   clearTestLevelHeroes,
   countTestLevelHeroes,
+  isTestLevelHeroId,
+  loadLocalHeroes,
   seedTestLevelHeroesForce,
   testLevelHeroId,
 } from '../lib/localHeroes'
@@ -37,6 +40,13 @@ export function Avatars() {
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
   const [sex, setSex] = useState<'male' | 'female'>('female')
+
+  // Re-read on nTest change (seed/clear) so cards match localStorage.
+  const testIds = new Set(
+    loadLocalHeroes()
+      .filter((h) => isTestLevelHeroId(h.id))
+      .map((h) => h.id),
+  )
 
   function doSeed() {
     if (busy) return
@@ -122,36 +132,41 @@ export function Avatars() {
         </button>
       </div>
 
-      <div className="mb-6 space-y-6">
-        {CLASSES.map((cls) => (
-          <section key={cls} className="panel p-3">
-            <h2 className="mb-3 font-display text-sm tracking-widest text-[var(--color-gold)] uppercase">
-              {cls} · {sex === 'female' ? t('sexFemale') : t('sexMale')} — Lv 0…12
-            </h2>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
-              {LEVELS.map((lv) => {
-                const id = testLevelHeroId(cls, lv, sex)
-                const pad = String(lv).padStart(2, '0')
-                const img = assetUrl(`docs/assets/bodies/${cls}/${sex}/lv-${pad}.svg`)
-                return (
-                  <Link
-                    key={id}
-                    href={`/player/${id}`}
-                    className="block border border-[var(--color-gold)]/40 bg-[var(--color-charcoal)]/40 p-2 text-center hover:border-[var(--color-gold)]"
-                  >
-                    <img src={img} alt="" className="mx-auto h-28 w-auto object-contain" />
-                    <p className="mt-1 truncate font-display text-[10px] tracking-wider text-[var(--color-gold)]">
-                      Lv {lv}
-                      {lv === 0 ? ` · ${t('avatarPlain')}` : ''}
-                    </p>
-                    <p className="text-[9px] opacity-60">{id}</p>
-                  </Link>
-                )
-              })}
-            </div>
-          </section>
-        ))}
-      </div>
+      {nTest > 0 && (
+        <div className="mb-6 space-y-6">
+          {CLASSES.map((cls) => {
+            const levels = LEVELS.filter((lv) => testIds.has(testLevelHeroId(cls, lv, sex)))
+            if (levels.length === 0) return null
+            return (
+              <section key={cls} className="panel p-3">
+                <h2 className="mb-3 font-display text-sm tracking-widest text-[var(--color-gold)] uppercase">
+                  {cls} · {sex === 'female' ? t('sexFemale') : t('sexMale')} — Lv 0…12
+                </h2>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+                  {levels.map((lv) => {
+                    const id = testLevelHeroId(cls, lv, sex)
+                    const img = assetUrl(bodyAssetPath(cls, lv, sex))
+                    return (
+                      <Link
+                        key={id}
+                        href={`/player/${id}`}
+                        className="block border border-[var(--color-gold)]/40 bg-[var(--color-charcoal)]/40 p-2 text-center hover:border-[var(--color-gold)]"
+                      >
+                        <img src={img} alt="" className="mx-auto h-28 w-auto object-contain" />
+                        <p className="mt-1 truncate font-display text-[10px] tracking-wider text-[var(--color-gold)]">
+                          Lv {lv}
+                          {lv === 0 ? ` · ${t('avatarPlain')}` : ''}
+                        </p>
+                        <p className="text-[9px] opacity-60">{id}</p>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </section>
+            )
+          })}
+        </div>
+      )}
 
       <div className="panel p-3 md:p-4">
         <ClassEvolutions allClasses monthsCompleted={12} classId="guerreiro" sex={sex} />

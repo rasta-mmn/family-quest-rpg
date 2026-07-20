@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="lich">
+  <defs>
+    <radialGradient id="g-lich" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#7048E8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1E1B2E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1E1B2E"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-lich)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M44 18 L52 8 L64 14 L76 8 L84 18 Z" fill="#D4A945" stroke="#1a1410" stroke-width="1.2" opacity="0.95"/>
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="3s" repeatCount="indefinite"/>
+    <!-- flayed undead -->
+    <path d="M48 48 L40 110 H56 L70 110 L62 48 Z" fill="#2a2a2e" stroke="#1a1410" stroke-width="1.8"/>
+    <path d="M50 52 Q64 58 68 78 Q62 70 52 68 Z" fill="#3f3f46" stroke="#1a1410" stroke-width="1.2"/>
+    <path d="M52 54 Q40 60 36 80 Q44 72 52 68 Z" fill="#3f3f46" stroke="#1a1410" stroke-width="1.2"/>
+    <ellipse cx="56" cy="44" rx="16" ry="14" fill="#27272a" stroke="#1a1410" stroke-width="2"/>
+    <path d="M44 40 Q56 34 68 40" fill="none" stroke="#67e8f9" stroke-width="1" opacity="0.7">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="56" cy="28" r="14" fill="#18181b" stroke="#1a1410" stroke-width="2"/>
+    <ellipse cx="50" cy="28" rx="3" ry="4" fill="#09090b"/>
+    <ellipse cx="62" cy="28" rx="3" ry="4" fill="#09090b"/>
+    <path d="M48 34 H64" stroke="#a1a1aa" stroke-width="1.2"/>
+    <circle cx="56" cy="20" r="4" fill="#f472b6">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="3.5;5;3.5" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M70 50 Q92 44 98 56 Q90 68 72 62" fill="#27272a" stroke="#1a1410" stroke-width="1.8"/>
+    <path d="M42 50 Q24 56 22 70" fill="none" stroke="#27272a" stroke-width="5" stroke-linecap="round"/>
+    <path d="M40 58 Q28 64 30 78" fill="none" stroke="#67e8f9" stroke-width="1" opacity="0.6"/>
+    <path d="M72 58 Q84 52 90 60" fill="none" stroke="#67e8f9" stroke-width="1" opacity="0.6"/>
+  </g>
+</svg>

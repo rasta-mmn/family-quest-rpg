@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="crown_guard">
+  <defs>
+    <radialGradient id="g-crown_guard" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#996515" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1C1917" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1C1917"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-crown_guard)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="2.4s" repeatCount="indefinite"/>
+    <path d="M64 26 L84 42 V98 H44 V42 Z" fill="#57534e" stroke="#D4A945" stroke-width="2"/>
+    <rect x="52" y="54" width="24" height="12" fill="#1a1410"/>
+    <path d="M96 48 V88 M90 54 H102" stroke="#D4A945" stroke-width="2.5"/>
+    <circle cx="64" cy="40" r="5" fill="#a8a29e" stroke="#1a1410"/>
+  </g>
+</svg>

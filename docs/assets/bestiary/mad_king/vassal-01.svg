@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="templar_zealot">
+  <defs>
+    <radialGradient id="g-templar_zealot" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#996515" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1C1917" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1C1917"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-templar_zealot)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="2.5s" repeatCount="indefinite"/>
+    <path d="M64 28 L86 46 V100 H42 V46 Z" fill="#44403c" stroke="#D4A945" stroke-width="2"/>
+    <path d="M52 58 H76 V72 H52 Z" fill="#1a1410"/>
+    <path d="M64 28 V14 M56 20 H72" stroke="#D4A945" stroke-width="3"/>
+    <circle cx="64" cy="42" r="6" fill="#996515" stroke="#1a1410"/>
+    <path d="M90 50 V90 M84 56 H96" stroke="#D4A945" stroke-width="2.5"/>
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="rubble_chunk">
+  <defs>
+    <radialGradient id="g-rubble_chunk" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#78716C" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1C1917" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1C1917"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-rubble_chunk)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1; 0 0" dur="2.5s" repeatCount="indefinite"/>
+    <path d="M36 88 L48 32 L80 40 L96 88 Z" fill="#57534e" stroke="#D4A945" stroke-width="2"/>
+    <rect x="56" y="56" width="8" height="8" fill="#1a1410"/><rect x="70" y="60" width="7" height="7" fill="#1a1410"/>
+  </g>
+</svg>

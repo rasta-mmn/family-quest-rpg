@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="root_guardian">
+  <defs>
+    <radialGradient id="g-root_guardian" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#15803D" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#14532D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#14532D"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-root_guardian)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.2; 0 0" dur="3s" repeatCount="indefinite"/>
+    <path d="M64 18 L88 48 L76 108 H52 L40 48 Z" fill="#3f6212" stroke="#D4A945" stroke-width="2"/>
+    <circle cx="54" cy="54" r="3" fill="#bbf7d0"/><circle cx="74" cy="54" r="3" fill="#bbf7d0"/>
+    <path d="M48 100 Q36 114 28 118 M80 100 Q92 114 100 118" stroke="#365314" stroke-width="4"/>
+  </g>
+</svg>

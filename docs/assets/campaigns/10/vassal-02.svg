@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="demon_scope">
+  <rect width="80" height="80" rx="8" fill="#0F172A"/>
+  <circle cx="40" cy="40" r="32" fill="#2563EB" opacity="0.22"/>
+  
+  <path d="M24 50 L28 24 L40 30 L52 24 L56 50 Z" fill="#2563EB" stroke="#D4A945" stroke-width="1.5"/>
+  <path d="M28 24 L22 14 M52 24 L58 14" stroke="#D4A945" stroke-width="2"/>
+  <circle cx="34" cy="36" r="2.5" fill="#ffcc00"/><circle cx="46" cy="36" r="2.5" fill="#ffcc00"/>
+</svg>

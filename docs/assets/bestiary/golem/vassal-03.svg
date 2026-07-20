@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="iron_fist">
+  <defs>
+    <radialGradient id="g-iron_fist" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#78716C" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1C1917" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1C1917"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-iron_fist)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="2.4s" repeatCount="indefinite"/>
+    <rect x="38" y="36" width="52" height="56" rx="10" fill="#57534e" stroke="#D4A945" stroke-width="2"/>
+    <rect x="48" y="48" width="10" height="28" fill="#1a1410"/><rect x="70" y="48" width="10" height="28" fill="#1a1410"/>
+    <path d="M52 28 H76 V40 H52 Z" fill="#78716C" stroke="#D4A945"/>
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="horned_thrall">
+  <defs>
+    <radialGradient id="g-horned_thrall" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#B91C1C" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1C0A0A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1C0A0A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-horned_thrall)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.8; 0 0" dur="2.4s" repeatCount="indefinite"/>
+    <path d="M40 100 L48 36 L64 48 L80 36 L88 100 Z" fill="#B91C1C" stroke="#D4A945" stroke-width="2"/>
+    <path d="M48 36 L38 14 M80 36 L90 14" stroke="#D4A945" stroke-width="3"/>
+    <circle cx="56" cy="58" r="3" fill="#fbbf24"/><circle cx="72" cy="58" r="3" fill="#fbbf24"/>
+  </g>
+</svg>

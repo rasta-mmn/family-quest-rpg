@@ -34,7 +34,16 @@ export function BossCard({ boss, completed, large }: Props) {
         />
         <div>
           <p className="sheet-label font-display text-xs tracking-widest">
-            <StableT k="collectiveBoss" align="start" />
+            <StableT
+              k={
+                boss.type === 'boss'
+                  ? 'monthBossLabel'
+                  : boss.type === 'vassal'
+                    ? 'weekVassal'
+                    : 'collectiveBoss'
+              }
+              align="start"
+            />
           </p>
           <h2
             className={`sheet-title font-display ${large ? 'text-2xl' : 'text-base'} normal-case tracking-wide`}

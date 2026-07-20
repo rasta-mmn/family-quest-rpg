@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="mirror_anxiety">
+  <rect width="80" height="80" rx="8" fill="#1E1B2E"/>
+  <circle cx="40" cy="40" r="32" fill="#7C3AED" opacity="0.22"/>
+  <path d="M28 18 L32 10 L40 14 L48 10 L52 18 Z" fill="#D4A945" stroke="#1a1410" stroke-width="1"/>
+  <path d="M40 14 L58 54 L22 54 Z" fill="#7C3AED" stroke="#D4A945" stroke-width="1.5"/>
+  <circle cx="40" cy="38" r="6" fill="#1a1410" stroke="#D4A945"/>
+  <path d="M40 14 L40 8" stroke="#D4A945" stroke-width="2"/>
+</svg>

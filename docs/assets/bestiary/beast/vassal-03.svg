@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="shell_crab">
+  <defs>
+    <radialGradient id="g-shell_crab" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#A87900" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#2A2118" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#2A2118"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-shell_crab)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 2; 0 0" dur="1.2s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="68" rx="28" ry="18" fill="#A87900" stroke="#1a1410" stroke-width="2"/>
+    <circle cx="52" cy="62" r="4" fill="#1a1410"/><circle cx="76" cy="62" r="4" fill="#1a1410"/>
+    <path d="M36 64 Q16 48 22 36 M92 64 Q112 48 106 36" fill="none" stroke="#A87900" stroke-width="5" stroke-linecap="round">
+      <animate attributeName="d" values="M36 64 Q16 48 22 36 M92 64 Q112 48 106 36;M36 64 Q18 52 28 40 M92 64 Q110 52 100 40;M36 64 Q16 48 22 36 M92 64 Q112 48 106 36" dur="1.6s" repeatCount="indefinite"/>
+    </path>
+    <path d="M44 84 V96 M54 86 V100 M74 86 V100 M84 84 V96" stroke="#D4A945" stroke-width="2.5"/>
+  </g>
+</svg>

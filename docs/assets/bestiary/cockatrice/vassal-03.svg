@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="plume_harpy">
+  <defs>
+    <radialGradient id="g-plume_harpy" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#CA8A04" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#292524" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#292524"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-plume_harpy)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2.5; 0 0" dur="2.2s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="68" rx="18" ry="24" fill="#a8a29e" stroke="#1a1410" stroke-width="1.8"/>
+    <circle cx="64" cy="44" r="14" fill="#d6d3d1" stroke="#1a1410"/>
+    <path d="M46 56 Q22 44 28 24 M82 56 Q106 44 100 24" fill="#78716c" stroke="#1a1410">
+      <animateTransform attributeName="transform" type="rotate" values="0 64 50; 6 64 50; 0 64 50" dur="1.6s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="58" cy="44" r="2.5" fill="#1a1410"/><circle cx="70" cy="44" r="2.5" fill="#1a1410"/>
+    <path d="M58 52 L64 58 L70 52" fill="#ef4444"/>
+  </g>
+</svg>

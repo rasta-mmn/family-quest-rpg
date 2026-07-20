@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="beast">
+  <defs>
+    <radialGradient id="g-beast" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#A87900" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#2A2118" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#2A2118"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-beast)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M44 18 L52 8 L64 14 L76 8 L84 18 Z" fill="#D4A945" stroke="#1a1410" stroke-width="1.2" opacity="0.95"/>
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="2.3s" repeatCount="indefinite"/>
+    <ellipse cx="70" cy="72" rx="34" ry="22" fill="#A87900" stroke="#1a1410" stroke-width="2.2"/>
+    <circle cx="40" cy="56" r="18" fill="#A87900" stroke="#1a1410" stroke-width="2"/>
+    <path d="M28 44 L18 28 M36 42 L32 24" stroke="#1a1410" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="34" cy="54" r="3" fill="#1a1410"/>
+    <path d="M26 60 L14 66" stroke="#1a1410" stroke-width="2"/>
+    <path d="M48 88 L36 108 M80 88 L88 108 M96 80 L110 90" stroke="#A87900" stroke-width="5" stroke-linecap="round"/>
+    <path d="M100 68 Q118 60 114 48" fill="none" stroke="#A87900" stroke-width="4"/>
+  </g>
+</svg>

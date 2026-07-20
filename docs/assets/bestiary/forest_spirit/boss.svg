@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="forest_spirit">
+  <defs>
+    <radialGradient id="g-forest_spirit" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#15803D" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#14532D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#14532D"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-forest_spirit)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M44 18 L52 8 L64 14 L76 8 L84 18 Z" fill="#D4A945" stroke="#1a1410" stroke-width="1.2" opacity="0.95"/>
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="3s" repeatCount="indefinite"/>
+    <path d="M64 14 Q92 48 80 108 Q64 96 48 108 Q36 48 64 14 Z" fill="#15803D" stroke="#D4A945" stroke-width="2"/>
+    <circle cx="54" cy="56" r="4" fill="#bbf7d0"/><circle cx="74" cy="56" r="4" fill="#bbf7d0"/>
+    <path d="M52 72 Q64 82 76 72" fill="none" stroke="#14532d" stroke-width="2"/>
+    <path d="M44 36 L34 18 M84 36 L94 18" stroke="#86efac" stroke-width="2.5"/>
+    <circle cx="64" cy="40" r="3" fill="#fbbf24" opacity="0.8">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="lantern_spirit">
+  <defs>
+    <radialGradient id="g-lantern_spirit" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#EA580C" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#431407" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#431407"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-lantern_spirit)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2.5; 0 0" dur="2.4s" repeatCount="indefinite"/>
+    <rect x="46" y="40" width="36" height="44" rx="4" fill="#9a3412" stroke="#D4A945" stroke-width="2"/>
+    <rect x="52" y="48" width="24" height="28" fill="#fbbf24">
+      <animate attributeName="opacity" values="0.45;1;0.45" dur="1.6s" repeatCount="indefinite"/>
+    </rect>
+    <path d="M64 40 V22 M52 28 H76" stroke="#D4A945" stroke-width="2.5"/>
+    <circle cx="64" cy="96" r="6" fill="#fdba74" opacity="0.75"/>
+  </g>
+</svg>

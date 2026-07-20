@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="brimstone_hound">
+  <defs>
+    <radialGradient id="g-brimstone_hound" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#B91C1C" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1C0A0A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1C0A0A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-brimstone_hound)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="2s" repeatCount="indefinite"/>
+    <ellipse cx="72" cy="72" rx="30" ry="16" fill="#7f1d1d" stroke="#D4A945" stroke-width="1.8"/>
+    <circle cx="40" cy="60" r="14" fill="#7f1d1d" stroke="#D4A945"/>
+    <circle cx="34" cy="58" r="2.5" fill="#fbbf24"/>
+    <path d="M30 50 L22 38" stroke="#D4A945" stroke-width="2"/>
+    <path d="M96 70 Q112 62 110 50" fill="none" stroke="#7f1d1d" stroke-width="3"/>
+  </g>
+</svg>

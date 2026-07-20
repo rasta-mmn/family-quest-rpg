@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="moss_sprite">
+  <defs>
+    <radialGradient id="g-moss_sprite" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#15803D" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#14532D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#14532D"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-moss_sprite)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="2.8s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="68" rx="22" ry="24" fill="#4d7c0f" stroke="#D4A945" stroke-width="1.8"/>
+    <circle cx="56" cy="62" r="2.5" fill="#1a1410"/><circle cx="72" cy="62" r="2.5" fill="#1a1410"/>
+    <path d="M46 46 Q64 34 82 46" fill="#86efac" stroke="#D4A945"/>
+  </g>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="fire_cultist">
+  <defs>
+    <radialGradient id="g-fire_cultist" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#C92A2A" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3D2B1F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#3D2B1F"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-fire_cultist)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="2.8s" repeatCount="indefinite"/>
+    <path d="M64 20 L92 108 H36 Z" fill="#7f1d1d" stroke="#D4A945" stroke-width="2"/>
+    <path d="M50 36 Q64 28 78 36 L74 52 Q64 46 54 52 Z" fill="#450a0a" stroke="#1a1410"/>
+    <circle cx="64" cy="56" r="9" fill="#1a1410" stroke="#D4A945"/>
+    <path d="M52 24 L64 8 L76 24" fill="#991b1b" stroke="#D4A945" stroke-width="1.5"/>
+    <circle cx="64" cy="56" r="3" fill="#fbbf24">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

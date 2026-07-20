@@ -25,7 +25,8 @@ export function Weekly() {
   const { config, month, heroes, themes, classes } = data
   const week = config.current_week
   const bossMeta = month.bosses?.find((b) => b.week === week)
-  const theme = themes[month.theme]
+  const themeKey = bossMeta?.theme || month.theme
+  const theme = themes[themeKey]
   const enemy = theme?.enemies?.find((e) => e.id === bossMeta?.id)
   const bossCompleted = heroes.some((h) => h.weekly?.boss?.completed)
 
@@ -39,10 +40,13 @@ export function Weekly() {
             completed={bossCompleted}
             boss={{
               ...bossMeta,
-              description: enemy?.description,
-              description_pt: enemy?.description_pt,
+              description: bossMeta.description || enemy?.description,
+              description_pt: bossMeta.description_pt || enemy?.description_pt,
               name_pt: bossMeta.name_pt || enemy?.name_pt,
-              image: enemy?.image || `docs/assets/enemies/${bossMeta.type}.png`,
+              image:
+                bossMeta.image ||
+                enemy?.image ||
+                `docs/assets/enemies/${bossMeta.type || 'monstro'}.png`,
             }}
           />
         </div>

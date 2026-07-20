@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { assetUrl } from '../lib/githubApi'
-import { bodyAssetPath, bodyStage } from '../lib/sheetStyle'
+import { bodyArtLevel, bodyAssetPath, bodyStage } from '../lib/sheetStyle'
 import { useLocale } from '../lib/i18n'
 
 const CLASSES = ['guerreiro', 'bardo', 'mago', 'ladino'] as const
@@ -22,6 +22,7 @@ export function ClassEvolutions({
 }: Props) {
   const { t } = useLocale()
   const current = bodyStage(monthsCompleted)
+  const artCurrent = bodyArtLevel(monthsCompleted)
   const [tab, setTab] = useState(() => classId)
   const [sex, setSex] = useState<'male' | 'female'>(sexProp)
   const cls = allClasses ? tab : classId
@@ -87,7 +88,7 @@ export function ClassEvolutions({
 
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
         {LEVELS.map((lv) => {
-          const active = !allClasses && lv === current
+          const active = !allClasses && lv === artCurrent
           const img = assetUrl(bodyAssetPath(cls, lv, sex))
           return (
             <figure

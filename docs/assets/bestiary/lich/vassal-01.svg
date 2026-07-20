@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="bone_skeleton">
+  <defs>
+    <radialGradient id="g-bone_skeleton" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#7048E8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1E1B2E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1E1B2E"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-bone_skeleton)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="2.4s" repeatCount="indefinite"/>
+    <circle cx="64" cy="28" r="14" fill="#e8e0d0" stroke="#1a1410" stroke-width="2"/>
+    <ellipse cx="58" cy="26" rx="2.5" ry="3.5" fill="#1a1410"/>
+    <ellipse cx="70" cy="26" rx="2.5" ry="3.5" fill="#1a1410"/>
+    <path d="M56 34 Q64 38 72 34" fill="none" stroke="#1a1410" stroke-width="1.5"/>
+    <path d="M64 42 V70" stroke="#e8e0d0" stroke-width="6" stroke-linecap="round"/>
+    <path d="M52 50 H76 M54 58 H74 M56 66 H72" stroke="#e8e0d0" stroke-width="2.5"/>
+    <path d="M52 48 L36 62 M76 48 L92 62" stroke="#e8e0d0" stroke-width="4" stroke-linecap="round"/>
+    <path d="M58 70 L48 98 M70 70 L78 98" stroke="#e8e0d0" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="48" cy="100" r="4" fill="#e8e0d0" stroke="#1a1410"/><circle cx="78" cy="100" r="4" fill="#e8e0d0" stroke="#1a1410"/>
+  </g>
+</svg>

@@ -2,6 +2,7 @@ import { Layout } from '../components/Layout'
 import { AvatarCard } from '../components/AvatarCard'
 import { BossCard } from '../components/BossCard'
 import { XPGrid } from '../components/XPGrid'
+import { campaignBossAsEntry } from '../lib/campaign'
 import { filledSquares } from '../lib/gameLogic'
 import { useGameData } from '../hooks/useGameData'
 import { pickL, useLocale } from '../lib/i18n'
@@ -25,16 +26,33 @@ export function Home() {
     )
   }
 
-  const { config, month, heroes, themes, classes } = data
+  const { config, month, campaign, heroes, themes, classes } = data
   const week = config.current_week
-  const bossMeta = month.bosses?.find((b) => b.week === week) || month.bosses?.[0]
+  const weekBoss = month.bosses?.find((b) => b.week === week) || month.bosses?.[0]
+  const isBossWeek = weekBoss?.type === 'boss'
+  const monthBoss = campaign
+    ? campaignBossAsEntry(campaign, month.weeks?.[month.weeks.length - 1])
+    : null
   const theme = themes[month.theme]
-  const enemy = theme?.enemies?.find((e) => e.id === bossMeta?.id)
-  const bossCompleted = heroes.every((h) => h.weekly?.boss?.completed)
+  const weekDone = heroes.every((h) => h.weekly?.boss?.completed)
   const sampleSquares = filledSquares(
     heroes[0] ? [heroes[0].weekPoints] : [],
     config.points.weekly_target,
   )
+  const campTitle = campaign
+    ? pickL(campaign as unknown as Record<string, unknown>, 'title', locale)
+    : ''
+  const campCity = campaign
+    ? pickL(campaign as unknown as Record<string, unknown>, 'city', locale)
+    : ''
+  const campSeason = campaign
+    ? pickL(campaign as unknown as Record<string, unknown>, 'season_name', locale) ||
+      campaign.season ||
+      ''
+    : ''
+  const campLore = campaign
+    ? pickL(campaign as unknown as Record<string, unknown>, 'lore', locale)
+    : ''
 
   return (
     <Layout>
@@ -44,25 +62,38 @@ export function Home() {
         </p>
         <p className="mt-2 max-w-xl text-lg opacity-90">
           {t('journeyWeek')} {t('week')} {week} · {month.month}
+          {campTitle ? ` · ${campTitle}` : ''}
         </p>
+        {(campCity || campSeason) && (
+          <p className="mt-1 text-sm opacity-70">
+            {[campCity, campSeason].filter(Boolean).join(' · ')}
+          </p>
+        )}
         <div className="flourish mt-3">❦</div>
       </header>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-4">
-          {bossMeta && (
+          {campLore ? (
+            <div className="panel p-4 md:p-5">
+              <h2 className="font-display text-xs tracking-widest text-[var(--color-gold)]">
+                {t('campaignLore')}
+              </h2>
+              <p className="mt-3 max-w-prose text-base leading-relaxed opacity-90">
+                {campLore}
+              </p>
+            </div>
+          ) : null}
+          {monthBoss && !isBossWeek && <BossCard large boss={monthBoss} />}
+          {weekBoss && (
             <BossCard
-              large
-              completed={bossCompleted}
+              large={isBossWeek}
+              completed={weekDone}
               boss={{
-                ...bossMeta,
-                description: enemy?.description ?? bossMeta.description,
-                description_pt: enemy?.description_pt ?? bossMeta.description_pt,
-                name_pt: bossMeta.name_pt || enemy?.name_pt,
+                ...weekBoss,
                 image:
-                  bossMeta.image ||
-                  enemy?.image ||
-                  `docs/assets/enemies/${bossMeta.type}.png`,
+                  weekBoss.image ||
+                  `docs/assets/enemies/${weekBoss.type || 'monstro'}.svg`,
               }}
             />
           )}

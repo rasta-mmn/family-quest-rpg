@@ -1,4 +1,5 @@
 import { emptyDay, normalizeWeeklyLog, WEEKDAYS } from './dayLog'
+import { bodyAssetPath } from './sheetStyle'
 import type { DayLog, HeroObjectives, PlayerConfig, Profile, WeeklyLog } from './types'
 
 const STORAGE_KEY = 'family-quest-local-heroes'
@@ -25,10 +26,10 @@ export type LocalHeroRecord = {
 }
 
 const AVATAR_DESC: Record<string, string> = {
-  guerreiro: 'Cartoon warrior in iron armor with a crimson cloak',
-  bardo: 'Cartoon bard in a green doublet with a lute',
-  mago: 'Cartoon mage in a starry robe with a staff',
-  ladino: 'Cartoon rogue in a purple hood with twin daggers',
+  guerreiro: '80s adventure-cartoon warrior (Caverna do Dragão style), crimson accents',
+  bardo: '80s adventure-cartoon bard (Caverna do Dragão style), green tunic and lute',
+  mago: '80s adventure-cartoon mage (Caverna do Dragão style), blue robe and staff',
+  ladino: '80s adventure-cartoon rogue (Caverna do Dragão style), purple cloak and daggers',
 }
 
 export function loadLocalHeroes(): LocalHeroRecord[] {
@@ -106,7 +107,7 @@ export type CreateHeroInput = {
 export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
   const id = nextHeroId(input.existingIds)
   const cls = input.class
-  const avatar = `docs/assets/avatars/${cls}.svg`
+  const avatar = `docs/assets/avatars/${cls}.png`
   const photoPath = input.photoDataUrl
     ? `docs/assets/photos/${id.toLowerCase()}.jpg`
     : avatar
@@ -216,7 +217,7 @@ export function seedTestLevelHeroes(opts: {
       for (let lv = 0; lv <= 12; lv++) {
         const id = testLevelHeroId(cls, lv, sex)
         const pad = String(lv).padStart(2, '0')
-        const body = `docs/assets/bodies/${cls}/${sex}/lv-${pad}.svg`
+        const body = bodyAssetPath(cls, lv, sex)
         const name = `[TEST] ${sex === 'female' ? '♀' : '♂'} ${cls} Lv${pad}`
         const base = buildLocalHero({
           character_name: name,

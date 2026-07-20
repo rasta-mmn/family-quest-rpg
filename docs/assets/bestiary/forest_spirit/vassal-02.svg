@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="vine_wisp">
+  <defs>
+    <radialGradient id="g-vine_wisp" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#15803D" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#14532D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#14532D"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-vine_wisp)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="rotate" values="-4 64 64; 4 64 64; -4 64 64" dur="3s" repeatCount="indefinite"/>
+    <path d="M64 20 Q84 52 64 108 Q44 52 64 20" fill="#166534" stroke="#D4A945" stroke-width="1.8"/>
+    <path d="M50 44 Q70 56 50 68 Q70 80 50 92" fill="none" stroke="#86efac" stroke-width="2.5"/>
+  </g>
+</svg>

@@ -1,4 +1,4 @@
-import type { HeroObjectives, MonthSetup, Profile, WeeklyLog } from './types'
+import type { Campaign, HeroObjectives, MonthSetup, Profile, WeeklyLog } from './types'
 
 const PLAYER_KEY = 'family-quest-player-edits'
 const ADMIN_KEY = 'family-quest-admin-edits'
@@ -31,10 +31,13 @@ export type AdminEdits = {
   month?: {
     month?: string
     month_number?: number
+    campaign?: string
     weeks?: string[]
     theme?: string
     bosses?: MonthSetup['bosses']
   }
+  /** Draft campaigns keyed by id ("01"…"12") */
+  campaigns?: Record<string, Campaign>
 }
 
 export function loadPlayerEdits(): PlayerEdits {
@@ -92,6 +95,9 @@ export function patchAdminEdits(patch: AdminEdits): AdminEdits {
     ...prev,
     ...patch,
     month: patch.month ? { ...prev.month, ...patch.month } : prev.month,
+    campaigns: patch.campaigns
+      ? { ...prev.campaigns, ...patch.campaigns }
+      : prev.campaigns,
   }
   saveAdminEdits(next)
   return next

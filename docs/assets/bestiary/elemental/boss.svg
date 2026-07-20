@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="elemental">
+  <defs>
+    <radialGradient id="g-elemental" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#0F172A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-elemental)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M44 18 L52 8 L64 14 L76 8 L84 18 Z" fill="#D4A945" stroke="#1a1410" stroke-width="1.2" opacity="0.95"/>
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -3; 0 0" dur="2.2s" repeatCount="indefinite"/>
+    <path d="M64 16 Q96 44 84 104 Q64 88 44 104 Q32 44 64 16 Z" fill="#2563EB" stroke="#D4A945" stroke-width="2"/>
+    <path d="M52 48 L76 60 L52 72 Z" fill="#93c5fd" opacity="0.9"/>
+    <circle cx="64" cy="52" r="8" fill="#e0f2fe">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M40 36 Q28 28 32 18 M88 36 Q100 28 96 18" stroke="#93c5fd" stroke-width="2" opacity="0.7">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="1.5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

@@ -105,10 +105,11 @@ export function buildMonthMdFromSetup(month: MonthSetup): string {
       return `  ${hid}:\n    theme: ${o.theme}\n    month_objective: "${yamlEscape(o.month_objective || '')}"`
     })
     .join('\n')
+  const campaignLine = month.campaign ? `campaign: "${month.campaign}"\n` : ''
   return `---
 month: "${month.month}"
 month_number: ${month.month_number || 1}
-weeks: [${(month.weeks || []).map((w) => `"${w}"`).join(', ')}]
+${campaignLine}weeks: [${(month.weeks || []).map((w) => `"${w}"`).join(', ')}]
 theme: ${month.theme}
 bosses:
 ${bossYaml}
@@ -118,7 +119,7 @@ ${objYaml}
 
 # Month Setup / Setup do Mês — ${month.month}
 
-**ADM:** calendar + BOSS. **Player:** daily labels live in each HeroiN/weekly/*.md.
+**ADM:** calendar + campaign link. Weekly vassals/BOSS live in campaigns/*.md.
 `
 }
 
@@ -156,6 +157,8 @@ export function downloadPlayerExports(opts: {
 export function downloadAdminExports(opts: {
   config: Pick<GameConfig, 'current_month' | 'current_week'>
   month: MonthSetup
+  campaignMd?: string
+  campaignId?: string
 }): void {
   downloadMarkdown(`${opts.month.month}.md`, buildMonthMdFromSetup(opts.month))
   downloadMarkdown(
@@ -165,4 +168,7 @@ export function downloadAdminExports(opts: {
       current_week: opts.config.current_week,
     }),
   )
+  if (opts.campaignMd && opts.campaignId) {
+    downloadMarkdown(`campaign-${opts.campaignId}.md`, opts.campaignMd)
+  }
 }

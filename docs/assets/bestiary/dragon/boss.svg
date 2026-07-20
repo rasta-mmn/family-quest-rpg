@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="dragon">
+  <defs>
+    <radialGradient id="g-dragon" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#C92A2A" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3D2B1F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#3D2B1F"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-dragon)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M44 18 L52 8 L64 14 L76 8 L84 18 Z" fill="#D4A945" stroke="#1a1410" stroke-width="1.2" opacity="0.95"/>
+  
+  <!-- crimson wyrm profile -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="3.2s" repeatCount="indefinite"/>
+    <path d="M78 38 Q98 28 108 42 Q100 58 82 52 Z" fill="#C92A2A" stroke="#1a1410" stroke-width="2">
+      <animateTransform attributeName="transform" type="rotate" values="0 82 45; -8 82 45; 0 82 45" dur="2.4s" repeatCount="indefinite"/>
+    </path>
+    <path d="M80 42 Q96 34 104 44" fill="none" stroke="#fbbf24" stroke-width="1.2" opacity="0.7"/>
+    <path d="M36 78 Q20 96 28 110 Q48 118 70 108 Q92 96 88 78 Q70 88 52 86 Z" fill="#C92A2A" stroke="#1a1410" stroke-width="2.2"/>
+    <path d="M42 92 Q58 100 74 94" fill="none" stroke="#fbbf24" stroke-width="2"/>
+    <path d="M42 98 Q58 106 72 100" fill="none" stroke="#fbbf24" stroke-width="1.4"/>
+    <ellipse cx="58" cy="72" rx="22" ry="16" fill="#C92A2A" stroke="#1a1410" stroke-width="2"/>
+    <path d="M40 68 Q58 48 78 58 Q70 78 48 78 Z" fill="#C92A2A" stroke="#1a1410" stroke-width="2"/>
+    <path d="M48 62 Q58 54 68 60" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+    <path d="M72 52 Q88 28 96 22" fill="#C92A2A" stroke="#1a1410" stroke-width="2"/>
+    <path d="M88 26 Q100 18 108 28 Q102 36 90 34 Z" fill="#C92A2A" stroke="#1a1410" stroke-width="2"/>
+    <path d="M96 30 L112 34" stroke="#1a1410" stroke-width="1.5">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite"/>
+    </path>
+    <ellipse cx="100" cy="26" rx="2.2" ry="2.8" fill="#fbbf24">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="1.4s" repeatCount="indefinite"/>
+    </ellipse>
+    <path d="M92 20 L98 10 M100 18 L108 10" stroke="#7f1d1d" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M70 108 Q88 120 96 108 Q90 96 78 100" fill="#C92A2A" stroke="#1a1410" stroke-width="1.8">
+      <animateTransform attributeName="transform" type="rotate" values="0 84 104; 6 84 104; 0 84 104" dur="2.8s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="48" cy="86" r="3" fill="#1a1410"/><circle cx="68" cy="84" r="3" fill="#1a1410"/>
+  </g>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="hex_puppet">
+  <defs>
+    <radialGradient id="g-hex_puppet" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1E1B2E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1E1B2E"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-hex_puppet)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="2.2s" repeatCount="indefinite"/>
+    <circle cx="64" cy="34" r="14" fill="#a78bfa" stroke="#D4A945" stroke-width="1.8"/>
+    <rect x="52" y="48" width="24" height="36" fill="#7c3aed" stroke="#D4A945"/>
+    <path d="M52 56 L34 74 M76 56 L94 74" stroke="#D4A945" stroke-width="2.5"/>
+    <path d="M64 14 V4 M54 10 H74" stroke="#c4b5fd" stroke-width="1.5"/>
+    <circle cx="58" cy="34" r="2" fill="#1a1410"/><circle cx="70" cy="34" r="2" fill="#1a1410"/>
+  </g>
+</svg>

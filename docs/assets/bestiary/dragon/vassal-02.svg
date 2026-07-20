@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="ash_drake">
+  <defs>
+    <radialGradient id="g-ash_drake" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#C92A2A" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3D2B1F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#3D2B1F"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-ash_drake)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="2.2s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="70" rx="28" ry="18" fill="#C92A2A" stroke="#1a1410" stroke-width="2"/>
+    <path d="M40 62 Q64 40 88 62" fill="#C92A2A" stroke="#1a1410" stroke-width="2"/>
+    <path d="M36 58 Q24 48 28 38" fill="none" stroke="#C92A2A" stroke-width="5"/>
+    <path d="M92 58 Q104 48 100 38" fill="none" stroke="#C92A2A" stroke-width="5">
+      <animateTransform attributeName="transform" type="rotate" values="0 96 50; -12 96 50; 0 96 50" dur="1.8s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="54" cy="62" r="2.5" fill="#1a1410"/><circle cx="74" cy="62" r="2.5" fill="#1a1410"/>
+    <path d="M58 72 Q64 76 70 72" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+    <path d="M88 72 Q104 80 108 70" fill="#C92A2A" stroke="#1a1410" stroke-width="1.5"/>
+  </g>
+</svg>

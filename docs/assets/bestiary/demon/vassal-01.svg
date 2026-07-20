@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="imp_ember">
+  <defs>
+    <radialGradient id="g-imp_ember" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#B91C1C" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1C0A0A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1C0A0A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-imp_ember)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2.5; 0 0" dur="1.8s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="64" rx="18" ry="22" fill="#B91C1C" stroke="#D4A945" stroke-width="1.8"/>
+    <path d="M50 44 L40 26 M78 44 L88 26" stroke="#D4A945" stroke-width="2.5"/>
+    <circle cx="58" cy="60" r="2.5" fill="#fbbf24"/><circle cx="70" cy="60" r="2.5" fill="#fbbf24"/>
+    <path d="M82 68 Q100 60 96 44" fill="none" stroke="#B91C1C" stroke-width="3"/>
+  </g>
+</svg>

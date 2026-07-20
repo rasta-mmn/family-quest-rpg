@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="stone_shard">
+  <defs>
+    <radialGradient id="g-stone_shard" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#0F172A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-stone_shard)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="2.8s" repeatCount="indefinite"/>
+    <path d="M64 16 L92 72 L64 108 L36 72 Z" fill="#78716c" stroke="#D4A945" stroke-width="2"/>
+    <path d="M64 32 L76 68 L64 88 L52 68 Z" fill="#2563EB" opacity="0.75"/>
+  </g>
+</svg>

@@ -7,6 +7,7 @@ import {
   putDoc,
 } from './githubApi'
 import { isDataUrl } from './photoUpload'
+import { buildCampaignMd } from './campaign'
 import {
   buildMonthMdFromSetup,
   buildObjectivesMd,
@@ -14,7 +15,14 @@ import {
   buildWeeklyMd,
 } from './exportMarkdown'
 import { playerConfigYaml } from './heroMarkdown'
-import type { HeroObjectives, MonthSetup, PlayerConfig, Profile, WeeklyLog } from './types'
+import type {
+  Campaign,
+  HeroObjectives,
+  MonthSetup,
+  PlayerConfig,
+  Profile,
+  WeeklyLog,
+} from './types'
 import type { LevelUpResult } from './levelUp'
 import { loadLocalHeroes } from './localHeroes'
 
@@ -158,6 +166,17 @@ export async function commitAdminMonth(opts: {
     done.push('game-config.md')
   }
   return done
+}
+
+export async function commitCampaign(raw: Campaign): Promise<string[]> {
+  if (!hasGithubToken()) throw new Error('NO_TOKEN')
+  const id = raw.id
+  await putDoc(
+    `config/campaigns/${id}.md`,
+    buildCampaignMd(raw),
+    `admin: campaign ${id}`,
+  )
+  return [`campaigns/${id}.md`]
 }
 
 /** Full delete: game-config entry + docs/HeroiN/** + photo assets. */

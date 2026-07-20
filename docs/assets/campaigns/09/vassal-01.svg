@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="specter_trigger">
+  <rect width="80" height="80" rx="8" fill="#1E1B2E"/>
+  <circle cx="40" cy="40" r="32" fill="#7C3AED" opacity="0.22"/>
+  
+  <path d="M26 22 Q40 12 54 22 L56 50 Q48 44 40 52 Q32 44 24 50 Z" fill="#7C3AED" opacity="0.85" stroke="#D4A945" stroke-width="1.5"/>
+  <circle cx="34" cy="32" r="3" fill="#1a1410"/><circle cx="46" cy="32" r="3" fill="#1a1410"/>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="scale_acolyte">
+  <defs>
+    <radialGradient id="g-scale_acolyte" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#C92A2A" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3D2B1F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#3D2B1F"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-scale_acolyte)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -1.5; 0 0" dur="2.6s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="64" rx="20" ry="28" fill="#7f1d1d" stroke="#D4A945" stroke-width="1.8"/>
+    <path d="M48 42 Q64 30 80 42" fill="#C92A2A" stroke="#D4A945"/>
+    <circle cx="64" cy="58" r="6" fill="#fbbf24" stroke="#1a1410"/>
+    <path d="M44 88 L64 100 L84 88" fill="none" stroke="#D4A945" stroke-width="2"/>
+  </g>
+</svg>

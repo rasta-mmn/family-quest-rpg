@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="spark_wisp">
+  <defs>
+    <radialGradient id="g-spark_wisp" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#0F172A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-spark_wisp)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 4; 0 -4; 0 4" dur="2s" repeatCount="indefinite"/>
+    <ellipse cx="64" cy="60" rx="18" ry="24" fill="#93c5fd" opacity="0.85" stroke="#D4A945"/>
+    <circle cx="64" cy="54" r="8" fill="#e0f2fe">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="1.3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

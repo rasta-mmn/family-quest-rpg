@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="lich_grudge">
+  <rect width="80" height="80" rx="8" fill="#14532D"/>
+  <circle cx="40" cy="40" r="32" fill="#15803D" opacity="0.22"/>
+  
+  <ellipse cx="40" cy="36" rx="16" ry="20" fill="#15803D" stroke="#D4A945" stroke-width="1.5"/>
+  <path d="M28 30 Q40 38 52 30" fill="none" stroke="#1a1410" stroke-width="2"/>
+  <circle cx="34" cy="34" r="2.5" fill="#e8e0d0"/><circle cx="46" cy="34" r="2.5" fill="#e8e0d0"/>
+  <path d="M32 48 Q40 54 48 48" fill="none" stroke="#1a1410" stroke-width="1.5"/>
+</svg>

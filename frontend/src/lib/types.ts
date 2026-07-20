@@ -102,6 +102,8 @@ export type BossEntry = {
   name: string
   name_pt?: string
   type?: string
+  /** Dominant objective theme for this week enemy. */
+  theme?: string
   description?: string
   description_pt?: string
   image?: string
@@ -113,6 +115,73 @@ export type BossEntry = {
   completed?: boolean
 }
 
+/** Monthly campaign: 1 BOSS (last calendar week) + N−1 vassals (earlier weeks). */
+export type CampaignBoss = {
+  id: string
+  name: string
+  name_pt?: string
+  /** Dominant objective theme for this BOSS week. */
+  theme?: string
+  /** Animated bestiary SVG — used for campaign/map characters. */
+  avatar?: string
+  /** Optional uploaded portrait (ADM photo field). */
+  photo?: string
+  /** @deprecated use avatar; kept for legacy YAML */
+  image?: string
+  lore?: string
+  lore_pt?: string
+  points: number
+}
+
+export type CampaignVassal = {
+  id: string
+  week_index: number
+  name: string
+  name_pt?: string
+  /** Dominant objective theme for this vassal week. */
+  theme?: string
+  avatar?: string
+  photo?: string
+  /** @deprecated use avatar */
+  image?: string
+  objective?: string
+  objective_pt?: string
+  lore?: string
+  lore_pt?: string
+  points: number
+}
+
+/** Meteorological season id (Spain order) on Solstícia. */
+export type CampaignSeasonId = 'primavera' | 'verao' | 'outono' | 'inverno'
+
+export type Campaign = {
+  id: string
+  month_number: number
+  /** @deprecated use boss.theme; kept as fallback / month default */
+  theme: string
+  /** World name EN — default Solstice */
+  world?: string
+  world_pt?: string
+  /** Season id: primavera | verao | outono | inverno */
+  season?: CampaignSeasonId | string
+  /** Kid-friendly season display name EN (e.g. Ice Night) */
+  season_name?: string
+  season_name_pt?: string
+  city?: string
+  city_pt?: string
+  title: string
+  title_pt?: string
+  lore?: string
+  lore_pt?: string
+  /** When false/absent, lore (+ boss/vassal blurbs, month_objective) auto-sync from templates. */
+  lore_custom?: boolean
+  map?: string
+  month_objective?: string
+  month_objective_pt?: string
+  boss: CampaignBoss
+  vassals: CampaignVassal[]
+}
+
 export type ThemeSubarea = {
   id: string
   name: string
@@ -122,6 +191,8 @@ export type ThemeSubarea = {
 export type MonthSetup = {
   month: string
   month_number?: number
+  /** Links to docs/config/campaigns/NN.md */
+  campaign?: string
   weeks: string[]
   theme: string
   bosses: BossEntry[]
@@ -140,6 +211,41 @@ export type BestiaryTheme = {
   background?: string
   subareas?: ThemeSubarea[]
   enemies: BossEntry[]
+}
+
+/** Curated avatar roster (Admin bestiary) — separate from theme enemy lists. */
+export type BestiaryRosterVassal = {
+  id: string
+  role?: 'vassal'
+  name: string
+  name_pt?: string
+  type?: string
+  image: string
+  /** Extra selectable portraits (alt pose, dark variant, etc.) */
+  avatars?: string[]
+  lore?: string
+  lore_pt?: string
+}
+
+export type BestiaryRosterBoss = {
+  id: string
+  role?: 'boss'
+  name: string
+  name_pt?: string
+  type?: string
+  /** Strong/default BOSS display art */
+  image: string
+  /** Optional single friendly/alternate selectable avatar */
+  avatar?: string
+  /** Extra selectable portraits (friendly avatar, dark variant, etc.) */
+  avatars?: string[]
+  lore?: string
+  lore_pt?: string
+  vassals: BestiaryRosterVassal[]
+}
+
+export type BestiaryRoster = {
+  roster: BestiaryRosterBoss[]
 }
 
 export type ClassDef = {

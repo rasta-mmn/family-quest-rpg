@@ -8,11 +8,18 @@ import {
   type AppearanceSlots,
   type LocalHeroRecord,
 } from '../lib/localHeroes'
+import {
+  applyCampaignToMonth,
+  campaignIdFromMonthNumber,
+  emptyCampaign,
+  normalizeCampaign,
+} from '../lib/campaign'
 import { loadAdminEdits, loadPlayerEdits, loadRemovedHeroIds } from '../lib/editsStore'
 import { normalizeWeeklyLog } from '../lib/dayLog'
 import { resolveThemeId } from '../lib/themeAlias'
 import type {
   BestiaryTheme,
+  Campaign,
   ClassDef,
   GameConfig,
   HeroObjectives,
@@ -35,6 +42,7 @@ export type HeroBundle = {
 export type GameData = {
   config: GameConfig
   month: MonthSetup
+  campaign: Campaign | null
   themes: Record<string, BestiaryTheme>
   classes: Record<string, ClassDef>
   heroes: HeroBundle[]
@@ -95,6 +103,35 @@ export function useGameData() {
         const { data: month } = parseMarkdown<MonthSetup>(monthText)
         if (adminEditsEarly.month) Object.assign(month, adminEditsEarly.month)
         month.theme = resolveThemeId(month.theme)
+
+        const campaignKey =
+          month.campaign ||
+          campaignIdFromMonthNumber(month.month_number || 1)
+        month.campaign = campaignKey
+        let campaign: Campaign | null = null
+        try {
+          const campText = await fetchDoc(`config/campaigns/${campaignKey}.md`)
+          campaign = normalizeCampaign(parseMarkdown<Campaign>(campText).data, campaignKey)
+        } catch {
+          campaign = emptyCampaign(campaignKey)
+        }
+        const draftCamp = adminEditsEarly.campaigns?.[campaignKey]
+        if (draftCamp && campaign) {
+          campaign = normalizeCampaign(
+            {
+              ...campaign,
+              ...draftCamp,
+              boss: { ...campaign.boss, ...draftCamp.boss },
+              vassals: draftCamp.vassals?.length ? draftCamp.vassals : campaign.vassals,
+            },
+            campaignKey,
+          )
+        }
+        if (campaign) {
+          Object.assign(month, applyCampaignToMonth(month, campaign))
+          month.theme = resolveThemeId(month.theme)
+        }
+
         const { data: bestiary } = parseMarkdown<{ themes: Record<string, BestiaryTheme> }>(
           bestiaryText,
         )
@@ -205,6 +242,7 @@ export function useGameData() {
           setData({
             config,
             month,
+            campaign,
             themes: bestiary.themes || {},
             classes: classesFile.classes || {},
             heroes,

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="court_mage">
+  <defs>
+    <radialGradient id="g-court_mage" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#996515" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1C1917" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1C1917"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-court_mage)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="2.7s" repeatCount="indefinite"/>
+    <path d="M64 18 L96 108 H32 Z" fill="#996515" stroke="#D4A945" stroke-width="2"/>
+    <circle cx="64" cy="56" r="12" fill="#1a1410" stroke="#D4A945" stroke-width="1.5"/>
+    <circle cx="64" cy="56" r="5" fill="#c4b5fd">
+      <animate attributeName="r" values="4;7;4" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M64 18 V6" stroke="#D4A945" stroke-width="2.5"/>
+    <circle cx="64" cy="4" r="3" fill="#a78bfa"/>
+  </g>
+</svg>

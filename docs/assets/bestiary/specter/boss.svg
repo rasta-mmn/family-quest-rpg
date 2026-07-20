@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="specter">
+  <defs>
+    <radialGradient id="g-specter" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#94A3B8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#0F172A"/>
+  <circle cx="64" cy="64" r="50" fill="url(#g-specter)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M44 18 L52 8 L64 14 L76 8 L84 18 Z" fill="#D4A945" stroke="#1a1410" stroke-width="1.2" opacity="0.95"/>
+  
+  <g opacity="0.85">
+    <animateTransform attributeName="transform" type="translate" values="0 3; 0 -3; 0 3" dur="3.5s" repeatCount="indefinite"/>
+    <path d="M40 30 Q64 12 88 30 L90 100 Q72 84 64 104 Q56 84 38 100 Z" fill="#94A3B8" stroke="#D4A945" stroke-width="1.8"/>
+    <circle cx="54" cy="48" r="5" fill="#1a1410"/><circle cx="74" cy="48" r="5" fill="#1a1410"/>
+    <path d="M50 64 Q64 74 78 64" fill="none" stroke="#1a1410" stroke-width="2"/>
+  </g>
+</svg>
