@@ -1,15 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 560" preserveAspectRatio="xMidYMid slice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#1C1917"/>
-      <stop offset="55%" stop-color="#996515" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#166534" stop-opacity="0.4"/>
+      <stop offset="55%" stop-color="#996515" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#1C1917"/>
     </linearGradient>
-    <pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M0 40 L40 0 M-10 10 L10 -10 M30 50 L50 30" stroke="#996515" stroke-width="0.6" opacity="0.25"/>
-    </pattern>
   </defs>
-  <rect width="400" height="560" fill="url(#bg)"/>
-  <rect width="400" height="560" fill="url(#p)"/>
-  <rect x="12" y="12" width="376" height="536" fill="none" stroke="#D4A945" stroke-width="2" opacity="0.35"/>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <rect width="800" height="600" fill="#166534" opacity="0.06"/>
+
+  <!-- chest -->
+  <rect x="280" y="280" width="240" height="140" rx="12" fill="#3D2B1F" stroke="#996515" stroke-width="6"/>
+  <rect x="280" y="280" width="240" height="50" rx="12" fill="#5C4033" stroke="#996515" stroke-width="6"/>
+  <circle cx="400" cy="320" r="16" fill="#FBBF24" stroke="#996515" stroke-width="3"/>
+  <!-- coins -->
+  <circle cx="180" cy="360" r="28" fill="#FBBF24" opacity="0.85"/><circle cx="210" cy="380" r="22" fill="#F59E0B" opacity="0.8"/>
+  <circle cx="580" cy="200" r="24" fill="#FBBF24" opacity="0.7"/><circle cx="620" cy="230" r="18" fill="#F59E0B" opacity="0.65"/>
+  <text x="180" y="368" text-anchor="middle" font-size="22" fill="#78350F" font-family="Georgia">$</text>
+  <!-- vines of gold -->
+  <path d="M100 100 Q200 180 100 260" stroke="#166534" stroke-width="8" fill="none" opacity="0.5"/>
+
 </svg>

@@ -12,14 +12,17 @@ const STORAGE_KEY = 'fq-locale'
 
 type Dict = Record<string, { en: string; pt: string }>
 
-/** UI chrome (not game-data fields). */
+/**
+ * UI chrome (not game-data fields).
+ * Prefer EN/PT pairs with similar length so chrome slots don’t jump.
+ */
 export const ui: Dict = {
   chronicle: { en: 'Chronicle', pt: 'Crônica' },
   week: { en: 'Week', pt: 'Semana' },
-  rankings: { en: 'Rankings', pt: 'Ranking' },
-  admin: { en: 'Admin', pt: 'ADM' },
+  rankings: { en: 'Ranking', pt: 'Ranking' },
+  admin: { en: 'Admin', pt: 'Admin' },
   heroesNav: { en: 'Heroes', pt: 'Heróis' },
-  grimoireTag: { en: 'Family grimoire', pt: 'Grimório da família' },
+  grimoireTag: { en: 'Family grimoire', pt: 'Grimório família' },
   opening: { en: 'Opening the grimoire…', pt: 'Abrindo o grimório…' },
   error: { en: 'Error', pt: 'Erro' },
   noData: { en: 'No data', pt: 'Sem dados' },
@@ -34,83 +37,140 @@ export const ui: Dict = {
   monthTheme: { en: 'Month theme', pt: 'Tema do mês' },
   weeklyTarget: { en: 'Weekly target', pt: 'Meta semanal' },
   heroes: { en: 'Heroes', pt: 'Heróis' },
-  collectiveBoss: { en: 'Collective BOSS', pt: 'BOSS coletivo' },
-  gloryForAll: { en: 'glory for everyone', pt: 'de glória para todos' },
+  collectiveBoss: { en: 'Group BOSS', pt: 'BOSS grupo' },
+  gloryForAll: { en: 'glory for all', pt: 'glória a todos' },
   level: { en: 'Level', pt: 'Nível' },
-  ptsThisWeek: { en: 'pts this week', pt: 'pts esta semana' },
-  monthMissions: { en: 'Month missions', pt: 'Missões do mês' },
+  ptsThisWeek: { en: 'pts / week', pt: 'pts / sem.' },
+  monthMissions: { en: 'Month focus', pt: 'Foco do mês' },
+  monthObjective: { en: 'Month goal', pt: 'Meta do mês' },
+  dimension: { en: 'Dimension', pt: 'Dimensão' },
+  subareasHelp: { en: 'Focus areas', pt: 'Áreas foco' },
   total: { en: 'Total', pt: 'Total' },
   skills: { en: 'Skills', pt: 'Skills' },
-  upgradeTree: { en: 'Upgrade tree', pt: 'Árvore de upgrades' },
-  treeUnavailable: {
-    en: 'Upgrade tree unavailable.',
-    pt: 'Árvore de upgrades indisponível.',
+  upgradeTree: { en: 'Upgrade tree', pt: 'Árvore upgrade' },
+  earnedUpgrades: { en: 'Earned upgrades', pt: 'Upgrades ganhos' },
+  noUpgradesYet: {
+    en: 'No upgrades yet — keep earning XP.',
+    pt: 'Sem upgrades — continua a ganhar XP.',
   },
+  treeUnavailable: {
+    en: 'Tree unavailable.',
+    pt: 'Árvore ausente.',
+  },
+  bodyProgress: { en: 'Class form', pt: 'Forma da classe' },
+  bodyStage: { en: 'Level', pt: 'Nível' },
+  classEvolutions: { en: 'All evolutions', pt: 'Todas evoluções' },
+  classEvolutionsHelp: {
+    en: 'Lv0 = plain clothes. Each month adds a class reward (sword, lute, hat, cloak…).',
+    pt: 'Lv0 = roupa simples. Cada mês soma um prémio da classe (espada, alaúde, chapéu, capa…).',
+  },
+  avatarPlain: { en: 'plain', pt: 'simples' },
+  youAreHere: { en: 'you', pt: 'tu' },
+  avatarsNav: { en: 'Avatars', pt: 'Avatares' },
+  seeAllEvolutions: { en: 'See all 12 levels', pt: 'Ver os 12 níveis' },
+  testSheetsHelp: {
+    en: 'Temporary test sheets (104): sex × class × Lv0–12. Open card → sheet. Delete when done.',
+    pt: 'Fichas teste (104): sexo × classe × Lv0–12. Abre o card → ficha. Apaga quando acabares.',
+  },
+  testSheetsSeed: { en: 'Generate 104 test sheets', pt: 'Gerar 104 fichas teste' },
+  testSheetsClear: { en: 'Delete test sheets', pt: 'Apagar fichas teste' },
+  testSheetsCount: { en: 'test sheets in browser', pt: 'fichas teste neste browser' },
+  testSheetsSeeded: {
+    en: 'Created {n} test sheets. Also listed under Heroes.',
+    pt: 'Criadas {n} fichas teste. Também em Heróis.',
+  },
+  testSheetsCleared: {
+    en: 'Removed {n} test sheets.',
+    pt: 'Removidas {n} fichas teste.',
+  },
+  monthsShort: { en: 'months', pt: 'meses' },
+  sexField: { en: 'Body', pt: 'Corpo' },
+  sexMale: { en: 'Male', pt: 'Masc' },
+  sexFemale: { en: 'Fem.', pt: 'Fem.' },
+  sheetColors: { en: 'Sheet colors', pt: 'Cores ficha' },
+  textColor: { en: 'Text color', pt: 'Cor texto' },
+  blockColor: { en: 'Fill color', pt: 'Cor bloco' },
+  blockOpacity: {
+    en: 'Opacity',
+    pt: 'Opacidade',
+  },
+  resetSheetColors: { en: 'Reset', pt: 'Repor' },
+  applySheetColors: { en: 'Confirm', pt: 'Confirmar' },
+  cancelSheetColors: { en: 'Cancel', pt: 'Cancelar' },
+  sheetActions: { en: 'Save / sync', pt: 'Guardar/sync' },
+  weekProgress: { en: 'Weekly path', pt: 'Via semanal' },
+  editAllDays: { en: 'Show all', pt: 'Ver tudo' },
+  collapseDays: { en: 'By day', pt: 'Por dia' },
+  heroIdentity: { en: 'Hero', pt: 'Herói' },
+  objective: { en: 'Goal', pt: 'Meta' },
+  extras: { en: 'Extras', pt: 'Extras' },
+  extra: { en: 'Extra', pt: 'Extra' },
+  remove: { en: 'Remove', pt: 'Apagar' },
   day: { en: 'Day', pt: 'Dia' },
-  done: { en: 'done', pt: 'cumprido' },
-  pending: { en: 'pending', pt: 'pendente' },
-  xpSquares: { en: 'XP squares', pt: 'Quadrados de XP' },
-  squareFilled: { en: 'Square {n} filled', pt: 'Quadrado {n} preenchido' },
+  done: { en: 'done', pt: 'feito' },
+  pending: { en: 'open', pt: 'aberto' },
+  xpSquares: { en: 'XP squares', pt: 'XP squares' },
+  squareFilled: { en: 'Square {n} filled', pt: 'Quadrado {n} cheio' },
   squareEmpty: { en: 'Square {n} empty', pt: 'Quadrado {n} vazio' },
-  loadingSheet: { en: 'Loading character sheet…', pt: 'Carregando ficha…' },
+  loadingSheet: { en: 'Loading sheet…', pt: 'A carregar…' },
   heroMissing: {
     en: 'Hero not found in the grimoire.',
-    pt: 'Herói não encontrado no grimório.',
+    pt: 'Herói não achado no grimório.',
   },
   hero: { en: 'Hero', pt: 'Herói' },
-  loadingWeek: { en: 'Checking the week…', pt: 'Consultando a semana…' },
+  loadingWeek: { en: 'Checking week…', pt: 'A ver semana…' },
   weekIntro: {
-    en: 'Family overview. Edit marks on each hero’s sheet (open the card).',
-    pt: 'Visão da família. Edita marcações na ficha de cada herói (abre o cartão).',
+    en: 'Family overview. Edit marks on each hero sheet (open the card).',
+    pt: 'Visão da família. Edita marcas na ficha de cada herói (abre o cartão).',
   },
   noWeekly: {
     en: 'No weekly/{week}.md log yet.',
-    pt: 'Sem registo weekly/{week}.md ainda.',
+    pt: 'Sem weekly/{week}.md ainda.',
   },
-  countingDeeds: { en: 'Counting deeds…', pt: 'Contando façanhas…' },
-  weekGlory: { en: 'Glory for week', pt: 'Glória da semana' },
-  loadingAdmin: { en: 'Loading panel…', pt: 'Carregando painel…' },
+  countingDeeds: { en: 'Counting deeds…', pt: 'A contar feitos…' },
+  weekGlory: { en: 'Week glory', pt: 'Glória sem.' },
+  loadingAdmin: { en: 'Loading panel…', pt: 'A carregar…' },
   badPin: {
     en: 'Wrong PIN. The grimoire stays sealed.',
-    pt: 'PIN incorreto. O grimório permanece selado.',
+    pt: 'PIN errado. O grimório fica selado.',
   },
-  adminTitle: { en: 'Admin panel', pt: 'Painel ADM' },
+  adminTitle: { en: 'Admin panel', pt: 'Painel Admin' },
   adminGate: {
     en: 'Only the grimoire’s guardian passes here.',
     pt: 'Só o guardião do grimório passa daqui.',
   },
   enter: { en: 'Enter', pt: 'Entrar' },
-  monthSetup: { en: 'Monthly setup', pt: 'Setup mensal' },
+  monthSetup: { en: 'Month setup', pt: 'Setup mês' },
   monthSetupHelp: {
     en: 'Generates months/YYYY-MM.md for a manual commit. Objectives stay redacted.',
     pt: 'Gera months/YYYY-MM.md para commit manual. Objetivos ficam redactados.',
   },
   monthField: { en: 'Month (YYYY-MM)', pt: 'Mês (YYYY-MM)' },
-  monthNumber: { en: 'Journey month number', pt: 'Nº do mês na jornada' },
-  weeksComma: { en: 'Weeks (comma-separated)', pt: 'Semanas (vírgula)' },
+  monthNumber: { en: 'Journey month nº', pt: 'Nº mês jornada' },
+  weeksComma: { en: 'Weeks (comma)', pt: 'Semanas (vírg)' },
   dominantTheme: { en: 'Dominant theme', pt: 'Tema dominante' },
-  objectivesPerHero: { en: 'Objectives per hero', pt: 'Objetivos por herói' },
+  objectivesPerHero: { en: 'Goals per hero', pt: 'Metas / herói' },
   theme: { en: 'Theme', pt: 'Tema' },
   threeMissions: {
-    en: '3 missions (redacted, comma-separated)',
-    pt: '3 missões (redactadas, vírgula)',
+    en: '3 missions (redacted, comma)',
+    pt: '3 missões (redactadas, vírg)',
   },
   threeMissionsPt: {
-    en: '3 missions PT (redacted, comma-separated)',
-    pt: '3 missões PT (redactadas, vírgula)',
+    en: '3 missions PT (redacted, comma)',
+    pt: '3 missões PT (redactadas, vírg)',
   },
   plannedBosses: { en: 'Planned BOSSes', pt: 'BOSS previstos' },
-  download: { en: 'Download', pt: 'Descarregar' },
+  download: { en: 'Download', pt: 'Download' },
   failRead: { en: 'Failed to read', pt: 'Falha ao ler' },
   summonTitle: { en: 'Summon hero', pt: 'Invocar herói' },
-  summonPreparing: { en: 'Preparing the summoning…', pt: 'Preparando a invocação…' },
+  summonPreparing: { en: 'Preparing summon…', pt: 'A preparar…' },
   summonHelp: {
     en: 'Create on demand. Lives in this browser; download the pack to commit into docs/.',
     pt: 'Cria sob demanda. Fica neste browser; descarrega o pack para commit em docs/.',
   },
-  charName: { en: 'Character name', pt: 'Nome do personagem' },
+  charName: { en: 'Character name', pt: 'Nome personagem' },
   classField: { en: 'Class', pt: 'Classe' },
-  rankField: { en: 'Rank (hierarchy, redacted)', pt: 'Rank (hierarquia, redactado)' },
+  rankField: { en: 'Rank (hierarchy, redacted)', pt: 'Rank (hierarquia, redact.)' },
   rankHelp: {
     en: 'Family order without real names — Elder → Initiate.',
     pt: 'Ordem familiar sem nomes reais — Ancião → Iniciado.',
@@ -120,116 +180,160 @@ export const ui: Dict = {
     en: 'Upload now or later. Stored in this browser; pack downloads .jpg for docs/assets/photos/.',
     pt: 'Upload agora ou depois. Fica neste browser; o pack baixa .jpg para docs/assets/photos/.',
   },
-  photoFail: { en: 'Could not read that image.', pt: 'Não foi possível ler essa imagem.' },
-  missionTheme: { en: 'Mission theme', pt: 'Tema das missões' },
-  threeDaily: { en: '3 daily missions (redacted)', pt: '3 missões diárias (redactadas)' },
+  photoFail: { en: 'Could not read that image.', pt: 'Não deu para ler a imagem.' },
+  missionTheme: { en: 'Mission theme', pt: 'Tema missão' },
+  threeDaily: { en: '3 daily missions (redacted)', pt: '3 missões diárias (redact.)' },
   downloadPack: {
     en: 'Download .md pack (+ photo) for the repo',
-    pt: 'Descarregar pack .md (+ foto) para o repo',
+    pt: 'Download pack .md (+ foto) para o repo',
   },
-  needName: { en: 'Every hero needs a legendary name.', pt: 'Todo herói precisa de um nome lendário.' },
+  needName: {
+    en: 'Every hero needs a legendary name.',
+    pt: 'Todo herói precisa de nome lendário.',
+  },
   needBoss: {
     en: 'No month BOSS — set up the month in Admin first.',
-    pt: 'Sem BOSS do mês — faz o setup no ADM primeiro.',
+    pt: 'Sem BOSS do mês — faz o setup no Admin primeiro.',
   },
   summonCta: { en: 'Summon & open sheet', pt: 'Invocar e abrir ficha' },
   heroesHelp: {
-    en: 'Open a sheet for full details. Local heroes live here until you commit their .md files.',
-    pt: 'Abre a ficha para detalhes. Heróis locais ficam aqui até commit dos .md.',
+    en: 'Open a sheet for details. Local heroes stay here until you commit their .md files.',
+    pt: 'Abre a ficha p/ detalhes. Heróis locais ficam aqui até commit dos .md.',
   },
   summonHeroBtn: { en: '+ Summon hero', pt: '+ Invocar herói' },
   playerEditHelp: {
-    en: 'Player sheet: edit your mission labels, weekly marks, photo and names. Admin calendar/BOSS live under ADM.',
-    pt: 'Ficha do jogador: edita labels das missões, marcações semanais, foto e nomes. Calendário/BOSS ficam no ADM.',
+    en: 'Player sheet: set month focus, write daily goals and extras, mark progress. Calendar/BOSS live under Admin.',
+    pt: 'Ficha do jogador: define foco do mês, escreve metas e extras diários, marca progresso. Calendário/BOSS no Admin.',
   },
   missionsPlayerOnly: {
-    en: 'These 3 daily missions belong to this hero — not the Admin panel.',
-    pt: 'Estas 3 missões diárias pertencem a este herói — não ao painel ADM.',
+    en: 'Each weekday has its own 3 goals — written on this sheet, stored in the weekly log.',
+    pt: 'Cada dia da semana tem as suas 3 metas — escritas nesta ficha, guardadas no weekly.',
   },
   saveSheet: { en: 'Save sheet', pt: 'Guardar ficha' },
-  downloadSheet: { en: 'Download .md pack', pt: 'Descarregar pack .md' },
+  downloadSheet: { en: 'Download .md pack', pt: 'Download pack .md' },
   savedLocal: {
     en: 'Saved in this browser. Download pack to commit into docs/.',
-    pt: 'Guardado neste browser. Descarrega o pack para commit em docs/.',
+    pt: 'Guardado neste browser. Faz download do pack p/ commit em docs/.',
   },
-  bossMark: { en: 'Mark collective BOSS defeated', pt: 'Marcar BOSS coletivo derrotado' },
-  bossUnmark: { en: 'Unmark collective BOSS', pt: 'Desmarcar BOSS coletivo' },
+  bossMark: { en: 'Mark group BOSS defeated', pt: 'Marcar BOSS grupo derrotado' },
+  bossUnmark: { en: 'Unmark group BOSS', pt: 'Desmarcar BOSS grupo' },
   adminScopeHelp: {
-    en: 'Admin: month calendar, current week, dominant theme, collective BOSS missions.',
-    pt: 'ADM: calendário do mês, semana atual, tema dominante, missões do BOSS coletivo.',
+    en: 'Admin: month calendar, current week, dominant theme, group BOSS missions.',
+    pt: 'Admin: calendário do mês, semana atual, tema dominante, missões do BOSS grupo.',
   },
   adminPlayerMissionsNote: {
-    en: 'Per-hero daily missions are edited on each Player sheet (not here). Export mirrors them.',
-    pt: 'Missões diárias por herói editam-se na ficha do Jogador (não aqui). O export espelha-as.',
+    en: 'Per-hero daily goals are edited on each Player sheet (not here). Export mirrors them.',
+    pt: 'Metas diárias por herói editam-se na ficha do Jogador (não aqui). O export espelha-as.',
   },
   currentWeek: { en: 'Current week (YYYY-WXX)', pt: 'Semana atual (YYYY-WXX)' },
   collectiveMissions: {
-    en: 'Collective BOSS missions (redacted)',
-    pt: 'Missões BOSS coletivo (redactadas)',
+    en: 'Group BOSS missions (redacted)',
+    pt: 'Missões BOSS grupo (redact.)',
   },
   missionsFromSheets: {
-    en: 'Daily missions (from player sheets)',
-    pt: 'Missões diárias (das fichas)',
+    en: 'Daily goals (from player sheets)',
+    pt: 'Metas diárias (das fichas)',
   },
-  saveAdmin: { en: 'Save admin setup', pt: 'Guardar setup ADM' },
+  saveAdmin: { en: 'Save admin setup', pt: 'Guardar setup Adm' },
   githubToken: { en: 'GitHub token (Contents API)', pt: 'Token GitHub (Contents API)' },
   githubTokenHelp: {
-    en: 'classic PAT with repo contents:write. Stored only in this browser’s localStorage.',
+    en: 'classic PAT with contents:write. Stored only in this browser (localStorage).',
     pt: 'PAT classic com contents:write. Só neste browser (localStorage).',
   },
   saveToken: { en: 'Save token', pt: 'Guardar token' },
   tokenSaved: { en: 'Token saved in this browser.', pt: 'Token guardado neste browser.' },
   tokenCleared: { en: 'Token cleared.', pt: 'Token apagado.' },
-  commitGithub: { en: 'Commit month setup', pt: 'Commit setup do mês' },
-  commitAllSheets: { en: 'Commit all hero sheets', pt: 'Commit todas as fichas' },
+  commitGithub: { en: 'Commit month setup', pt: 'Commit setup mês' },
+  commitAllSheets: { en: 'Commit all hero sheets', pt: 'Commit todas fichas' },
   commitAllSheetsHelp: {
     en: 'Uploads every hero’s current sheet from this browser (missions, week marks, photo/names) to docs/. Needs token.',
     pt: 'Sobe a ficha atual de cada herói deste browser (missões, semana, foto/nomes) para docs/. Precisa de token.',
   },
-  committed: { en: 'Committed:', pt: 'Commit feito:' },
-  committedAllSheets: { en: 'All sheets committed:', pt: 'Todas as fichas commitadas:' },
+  committed: { en: 'Committed:', pt: 'Commitado:' },
+  committedAllSheets: { en: 'All sheets committed:', pt: 'Fichas commitadas:' },
   needToken: {
     en: 'Set a GitHub token in Admin first (or use Download).',
-    pt: 'Define token GitHub no ADM primeiro (ou usa Descarregar).',
+    pt: 'Define token GitHub no Admin primeiro (ou usa Download).',
   },
-  levelUpTitle: { en: 'Month-end level-up', pt: 'Level-up fim de mês' },
+  levelUpTitle: { en: 'Month-end level-up', pt: 'Level-up fim mês' },
   levelUpHelp: {
     en: 'Applies class upgrade for the journey month number. Commits if token set; else downloads .md pack.',
-    pt: 'Aplica upgrade da classe para o nº do mês. Faz commit se houver token; senão descarrega pack .md.',
+    pt: 'Aplica upgrade da classe para o nº do mês. Faz commit se houver token; senão download do pack .md.',
   },
-  weeksHit: { en: 'Weeks that hit target (for €)', pt: 'Semanas com meta (para €)' },
-  rewardLabel: { en: 'Reward label (redacted)', pt: 'Label da recompensa (redactada)' },
+  weeksHit: { en: 'Weeks that hit target (€)', pt: 'Semanas com meta (€)' },
+  rewardLabel: { en: 'Reward label (redacted)', pt: 'Label recompensa (redact.)' },
   applyLevelUp: { en: 'Apply level-up', pt: 'Aplicar level-up' },
   levelUpOk: { en: 'Level-up applied:', pt: 'Level-up aplicado:' },
-  removeHero: { en: 'Remove', pt: 'Excluir' },
+  removeHero: { en: 'Remove', pt: 'Apagar' },
   removeHeroHelp: {
     en: 'Delete is permanent. Repo heroes need an Admin GitHub token — removes game-config entry, the whole docs/HeroiN/ folder, and photo.',
-    pt: 'Exclusão é permanente. Heróis do repo precisam de token no ADM — apaga entrada no game-config, pasta docs/HeroiN/ inteira e foto.',
+    pt: 'Exclusão é permanente. Heróis do repo precisam de token no Admin — apaga entrada no game-config, pasta docs/HeroiN/ inteira e foto.',
   },
   confirmRemoveHero: {
     en: 'DELETE this hero completely? This cannot be undone. Repo heroes: token required (config + folder + photo).',
-    pt: 'EXCLUIR este herói por completo? Não dá para desfazer. Do repo: precisa de token (config + pasta + foto).',
+    pt: 'APAGAR este herói por completo? Não dá para desfazer. Do repo: precisa de token (config + pasta + foto).',
   },
   heroRemovedLocal: { en: 'Local hero deleted.', pt: 'Herói local apagado.' },
   heroRemovedFully: {
     en: 'Hero fully deleted from GitHub.',
     pt: 'Herói apagado por completo no GitHub.',
   },
-  filesDeleted: { en: 'file(s) removed.', pt: 'ficheiro(s) removido(s).' },
+  filesDeleted: { en: 'file(s) removed.', pt: 'ficheiro(s) remov.' },
   needTokenToDelete: {
     en: 'Set a GitHub token in Admin first — full delete needs Contents write.',
-    pt: 'Define token GitHub no ADM primeiro — exclusão total precisa de Contents write.',
+    pt: 'Define token GitHub no Admin primeiro — delete total precisa Contents write.',
   },
   noHeroes: {
     en: 'No heroes yet. Summon one to begin.',
-    pt: 'Ainda sem heróis. Invoca um para começar.',
+    pt: 'Sem heróis ainda. Invoca um p/ começar.',
   },
+}
+
+export type UiKey = keyof typeof ui
+
+/** Max EN/PT length in `ch` — reserve slot so locale switch doesn’t resize. */
+export function uiCh(...keys: UiKey[]): number {
+  let n = 0
+  for (const k of keys) {
+    n = Math.max(n, ui[k].en.length, ui[k].pt.length)
+  }
+  return n
+}
+
+/** Label with reserved width (longer locale). */
+export function StableT({
+  k,
+  also,
+  className,
+  align = 'center',
+}: {
+  k: UiKey
+  /** Extra keys that share the same slot (e.g. toggle labels). */
+  also?: UiKey[]
+  className?: string
+  align?: 'center' | 'start' | 'end'
+}) {
+  const { t } = useLocale()
+  const ch = uiCh(k, ...(also || []))
+  return (
+    <span
+      className={className}
+      style={{
+        display: 'inline-block',
+        minWidth: `${ch}ch`,
+        maxWidth: '100%',
+        textAlign: align,
+      }}
+    >
+      {t(k)}
+    </span>
+  )
 }
 
 const LocaleCtx = createContext<{
   locale: Locale
   setLocale: (l: Locale) => void
-  t: (key: keyof typeof ui, vars?: Record<string, string | number>) => string
+  t: (key: UiKey, vars?: Record<string, string | number>) => string
 } | null>(null)
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
@@ -247,7 +351,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     setLocaleState(l)
   }
 
-  function t(key: keyof typeof ui, vars?: Record<string, string | number>) {
+  function t(key: UiKey, vars?: Record<string, string | number>) {
     let s = ui[key][locale] || ui[key].en
     if (vars) {
       for (const [k, v] of Object.entries(vars)) {

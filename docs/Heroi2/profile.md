@@ -2,6 +2,7 @@
 id: Heroi2
 character_name: "Wandering Melody"
 character_name_pt: "Melodia Errante"
+sex: male
 class: bardo
 level: 1
 xp_total: 0

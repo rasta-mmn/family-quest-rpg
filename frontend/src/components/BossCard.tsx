@@ -1,5 +1,5 @@
 import { assetUrl } from '../lib/githubApi'
-import { pickL, useLocale } from '../lib/i18n'
+import { pickL, StableT, useLocale } from '../lib/i18n'
 import type { BossEntry } from '../lib/types'
 
 type Props = {
@@ -17,37 +17,34 @@ export function BossCard({ boss, completed, large }: Props) {
 
   return (
     <article
-      className={`panel relative overflow-hidden ${large ? 'p-5' : 'p-3'} ${
-        completed ? 'opacity-80' : ''
+      className={`relative overflow-hidden ${large ? 'panel p-5' : 'p-0'} ${
+        completed ? 'ring-1 ring-[var(--sheet-fg-muted,#c4c4c4)]' : ''
       }`}
     >
       {completed && (
-        <div
-          className="pointer-events-none absolute inset-0 flex items-center justify-center font-display text-6xl text-red-700/80"
-          aria-hidden
-        >
-          ✕
-        </div>
+        <p className="sheet-label mb-1 font-display text-[10px] tracking-widest">
+          {t('done').toUpperCase()}
+        </p>
       )}
       <div className={`flex ${large ? 'gap-5' : 'gap-3'} items-start`}>
         <img
           src={assetUrl(img)}
           alt=""
-          className={`${large ? 'h-24 w-24' : 'h-14 w-14'} border border-[var(--color-gold)] bg-[var(--color-charcoal)]`}
+          className={`${large ? 'h-24 w-24' : 'h-14 w-14'} border border-[var(--sheet-fg-muted,var(--color-gold))] bg-[var(--color-charcoal)]`}
         />
         <div>
-          <p className="font-display text-xs tracking-widest text-[var(--color-gold-dim)]">
-            {t('collectiveBoss')}
+          <p className="sheet-label font-display text-xs tracking-widest">
+            <StableT k="collectiveBoss" align="start" />
           </p>
           <h2
-            className={`font-display text-[var(--color-gold)] ${large ? 'text-2xl' : 'text-base'} normal-case tracking-wide`}
+            className={`sheet-title font-display ${large ? 'text-2xl' : 'text-base'} normal-case tracking-wide`}
           >
             {name}
           </h2>
-          {description && <p className="mt-2 max-w-prose text-sm opacity-85">{description}</p>}
-          {mission && <p className="mt-2 text-sm italic opacity-70">{mission}</p>}
-          <p className="mt-2 font-body tabular-nums text-[var(--color-gold)]">
-            +{boss.points ?? 30} {t('gloryForAll')}
+          {description && <p className="sheet-muted mt-2 max-w-prose text-sm">{description}</p>}
+          {mission && <p className="sheet-dim mt-2 text-sm italic">{mission}</p>}
+          <p className="sheet-muted mt-2 font-body tabular-nums">
+            +{boss.points ?? 30} <StableT k="gloryForAll" align="start" />
           </p>
         </div>
       </div>

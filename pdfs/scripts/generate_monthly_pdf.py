@@ -29,10 +29,25 @@ CLASS_DISPLAY = {
         "ladino": "Ladino",
     },
 }
+THEME_ALIASES = {
+    "treino": "fisico",
+    "alimentacao": "fisico",
+    "saude": "fisico",
+    "estudo": "profissional",
+    "organizacao": "profissional",
+}
+
+
+def resolve_theme(key: str | None) -> str:
+    if not key:
+        return "fisico"
+    return THEME_ALIASES.get(key, key)
+
+
 UI = {
     "en": {
         "no_skills": "No skills yet",
-        "daily_objectives": "Daily Objectives",
+        "daily_objectives": "Month objective",
         "level": "Level",
         "month": "Month",
         "theme": "Theme",
@@ -41,11 +56,11 @@ UI = {
         "extras": "Extras",
         "boss": "Collective BOSS",
         "mission_fallback": "Collective Mission",
-        "mission_name": "Mission",
+        "mission_name": "Objective",
     },
     "pt": {
         "no_skills": "Ainda sem skills",
-        "daily_objectives": "Objetivos diários",
+        "daily_objectives": "Objetivo do mês",
         "level": "Nível",
         "month": "Mês",
         "theme": "Tema",
@@ -125,8 +140,26 @@ def load_hero(hid: str) -> dict:
 
 
 def theme_palette(themes: dict, theme_key: str) -> list[str]:
-    t = themes.get(theme_key) or {}
+    key = resolve_theme(theme_key)
+    t = themes.get(key) or themes.get(theme_key) or {}
     return t.get("palette") or ["#C92A2A", "#A87900", "#3D2B1F"]
+
+
+def hero_objective_lines(hero: dict, points: dict, locale: str) -> list[dict]:
+    """Prefer month_objective; fall back to legacy daily_objectives."""
+    ui = UI[locale]
+    obj = hero.get("objectives") or {}
+    month_obj = (obj.get("month_objective") or "").strip()
+    if month_obj:
+        return [{"name": month_obj, "name_pt": month_obj, "points": points.get("per_task", 30)}]
+    objs = list(obj.get("daily_objectives") or [])
+    while len(objs) < 3:
+        objs.append({
+            "name": f"{ui['mission_name']} {len(objs) + 1}",
+            "name_pt": f"{UI['pt']['mission_name']} {len(objs) + 1}",
+            "points": points.get("per_task", 30),
+        })
+    return objs[:3]
 
 
 def weasy_available() -> bool:
@@ -146,15 +179,9 @@ def hero_page_html(hero, month, game, themes, points, locale: str = "pt") -> str
     ui = UI[locale]
     days = DAYS[locale]
     profile = hero["profile"]
-    objs = list(hero["objectives"].get("daily_objectives") or [])
-    while len(objs) < 3:
-        objs.append({
-            "name": f"{ui['mission_name']} {len(objs) + 1}",
-            "name_pt": f"{UI['pt']['mission_name']} {len(objs) + 1}",
-            "points": points.get("per_task", 30),
-        })
+    objs = hero_objective_lines(hero, points, locale)
 
-    theme_key = month.get("theme") or "treino"
+    theme_key = resolve_theme(month.get("theme") or "fisico")
     palette = theme_palette(themes, theme_key)
     theme_meta = themes.get(theme_key) or {}
     bg = theme_meta.get("background") or f"docs/assets/backgrounds/{theme_key}.svg"
@@ -364,7 +391,7 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         themes = item["themes"]
         points = item["points"]
         profile = hero["profile"]
-        theme_key = month.get("theme") or "treino"
+        theme_key = resolve_theme(month.get("theme") or "fisico")
         palette = theme_palette(themes, theme_key)
         theme_meta = themes.get(theme_key) or {}
         deep, primary = palette[2], palette[0]
@@ -449,19 +476,17 @@ def write_pdf_reportlab(heroes_data: list[dict], out: Path, combined: bool = Fal
         c.setFillColor(_hex(gold))
         c.setFont("Times-Bold", 10)
         c.drawString(16 * mm, y, ui["daily_objectives"].upper())
-        objs = list(hero["objectives"].get("daily_objectives") or [])
-        while len(objs) < 3:
-            objs.append({"name": f"{ui['mission_name']} {len(objs)+1}", "points": 30})
+        objs = hero_objective_lines(hero, points, locale)
         c.setFillColor(_hex(cream))
         c.setFont("Times-Roman", 9)
         for i, o in enumerate(objs[:3]):
             c.drawString(
                 18 * mm,
                 y - 8 * mm - i * 6 * mm,
-                f"• {pick(o, 'name', locale)} ({o.get('points', 30)} pts)",
+                f"• {pick(o, 'name', locale)}",
             )
         c.setFont("Times-Italic", 8)
-        c.drawString(18 * mm, y - 28 * mm, f"{ui['extras']}: +{points.get('per_extra', 2.5)} pts")
+        c.drawString(18 * mm, y - 28 * mm, f"{ui['extras']}: +{points.get('per_extra', 2.5)} pts · 3 obj/dia no weekly")
 
         # Bosses
         c.setFillColor(_hex("#1a1410"))

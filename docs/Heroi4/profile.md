@@ -2,6 +2,7 @@
 id: Heroi4
 character_name: "Swift Shade"
 character_name_pt: "Sombra Ligeira"
+sex: male
 class: ladino
 level: 1
 xp_total: 0

@@ -1,26 +1,37 @@
 import { downloadMarkdown } from './githubApi'
+import { dayLogToYaml, WEEKDAYS } from './dayLog'
 import { downloadDataUrl, isDataUrl } from './photoUpload'
 import type { LocalHeroRecord } from './localHeroes'
 import type { PlayerConfig } from './types'
+
+function yamlEscape(s: string): string {
+  return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+}
 
 export function profileMd(h: LocalHeroRecord): string {
   const p = h.profile
   const stats = p.stats || {}
   const photoPath = h.player.photo || p.photo || ''
   const photoForYaml = isDataUrl(photoPath) ? `docs/assets/photos/${h.id.toLowerCase()}.jpg` : photoPath
+  const sex = p.sex === 'female' ? 'female' : 'male'
+  const colors = p.sheet_colors
+  const colorsYaml = colors
+    ? `sheet_colors:\n  text: "${colors.text}"\n  block: "${colors.block}"\n  block_opacity: ${colors.block_opacity}\n`
+    : ''
   return `---
 id: ${h.id}
-character_name: "${p.character_name}"
-character_name_pt: "${p.character_name_pt || p.character_name}"
+character_name: "${yamlEscape(p.character_name)}"
+character_name_pt: "${yamlEscape(p.character_name_pt || p.character_name)}"
 class: ${p.class}
+sex: ${sex}
 level: ${p.level}
 xp_total: ${p.xp_total}
 xp_this_month: ${p.xp_this_month}
 months_completed: ${p.months_completed}
 photo: "${photoForYaml}"
 avatar: "${p.avatar || ''}"
-avatar_description: "${p.avatar_description || ''}"
-stats:
+avatar_description: "${yamlEscape(p.avatar_description || '')}"
+${colorsYaml}stats:
   forca: ${stats.forca ?? 10}
   agilidade: ${stats.agilidade ?? 10}
   sabedoria: ${stats.sabedoria ?? 10}
@@ -36,17 +47,10 @@ level_history:
 }
 
 export function objectivesMd(h: LocalHeroRecord, month: string): string {
-  const objs = h.objectives.daily_objectives
-    .map((o) => {
-      const pt = o.name_pt ? `, name_pt: "${o.name_pt}"` : ''
-      return `  - { id: ${o.id}, name: "${o.name}"${pt}, points: ${o.points}, real_meaning_redacted: true }`
-    })
-    .join('\n')
   return `---
 month: "${month}"
-theme: ${h.objectives.theme}
-daily_objectives:
-${objs}
+theme: ${h.objectives.theme || 'fisico'}
+month_objective: "${yamlEscape(h.objectives.month_objective || '')}"
 extras_allowed: true
 extras_points: 2.5
 ---
@@ -93,17 +97,15 @@ monthly_rewards: []
 export function weeklyMd(h: LocalHeroRecord): string {
   const w = h.weekly
   if (!w) return ''
-  const dayLines = Object.entries(w.days)
-    .map(
-      ([d, day]) =>
-        `  ${d}: { obj1: ${day.obj1}, obj2: ${day.obj2}, obj3: ${day.obj3}, extras: ${day.extras} }`,
-    )
-    .join('\n')
+  const dayLines = WEEKDAYS.map((d) => {
+    const day = w.days[d] || { objectives: [], extras: [] }
+    return `  ${d}: ${dayLogToYaml(day)}`
+  }).join('\n')
   return `---
 week: "${w.week}"
 player: ${w.player}
 month: "${w.month}"
-boss: { id: ${w.boss.id}, name: "${w.boss.name}", completed: ${w.boss.completed}, points: ${w.boss.points} }
+boss: { id: ${w.boss.id}, name: "${yamlEscape(w.boss.name)}", completed: ${w.boss.completed}, points: ${w.boss.points} }
 days:
 ${dayLines}
 total_points: ${w.total_points ?? 0}

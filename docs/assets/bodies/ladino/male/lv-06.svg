@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 320" fill="none">
+  <title>male level 6</title>
+  
+
+    <path d="M100 70 Q45 130 55 250 Q100 210 145 250 Q155 130 100 70"
+      fill="#7C4DB2" stroke="#1a1520" stroke-width="3.5" opacity="0.92"/>
+
+  <ellipse cx="100" cy="298" rx="42" ry="7" fill="#000" opacity="0.18"/>
+  <rect x="84" y="178" width="14" height="58" rx="5" fill="#3D2B4A" stroke="#1a1520" stroke-width="3"/>
+  <rect x="102" y="178" width="14" height="58" rx="5" fill="#3D2B4A" stroke="#1a1520" stroke-width="3"/>
+  <ellipse cx="91" cy="240" rx="11" ry="6" fill="#3D2B1F" stroke="#1a1520" stroke-width="2.5"/>
+  <ellipse cx="109" cy="240" rx="11" ry="6" fill="#3D2B1F" stroke="#1a1520" stroke-width="2.5"/>
+  <path d="M74 98 L126 98 L120 175 L80 175 Z" fill="#5C3A6E" stroke="#1a1520" stroke-width="3.5"/>
+  <rect x="56" y="105" width="20" height="48" rx="9" fill="#F0C8A0" stroke="#1a1520" stroke-width="3"/>
+  <rect x="124" y="105" width="20" height="48" rx="9" fill="#F0C8A0" stroke="#1a1520" stroke-width="3"/>
+  
+
+    <g transform="translate(148,110) rotate(-28)">
+      <rect x="0" y="0" width="5" height="32" fill="#C0C8D4" stroke="#1a1520" stroke-width="2"/>
+      <rect x="-3" y="28" width="11" height="6" fill="#E8A0D0" stroke="#1a1520" stroke-width="1.5"/>
+    </g>
+    <g transform="translate(48,110) rotate(28)">
+      <rect x="0" y="0" width="5" height="32" fill="#C0C8D4" stroke="#1a1520" stroke-width="2"/>
+      <rect x="-3" y="28" width="11" height="6" fill="#E8A0D0" stroke="#1a1520" stroke-width="1.5"/>
+    </g>
+<circle cx="155" cy="120" r="10" fill="#E8A0D0" opacity="0.4"/>
+<circle cx="100" cy="150" r="50" fill="#7C4DB2" opacity="0.08"/>
+<path d="M82 58 Q100 42 118 58" fill="#C23B2E" stroke="#1a1520" stroke-width="2"/>
+
+  <circle cx="100" cy="72" r="22" fill="#F0C8A0" stroke="#1a1520" stroke-width="3.5"/>
+  <ellipse cx="93" cy="70" rx="5" ry="6" fill="#fff" stroke="#1a1520" stroke-width="2"/>
+  <ellipse cx="107" cy="70" rx="5" ry="6" fill="#fff" stroke="#1a1520" stroke-width="2"/>
+  <circle cx="94" cy="71" r="2.3" fill="#1a1520"/>
+  <circle cx="108" cy="71" r="2.3" fill="#1a1520"/>
+  
+  <path d="M92 82 Q100 88 108 82" stroke="#1a1520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  
+
+
+    <path d="M78 58 Q100 38 122 58 L118 88 Q100 98 82 88 Z" fill="#7C4DB2" stroke="#1a1520" stroke-width="2.5" opacity="0.85"/>
+
+    <rect x="86" y="66" width="28" height="10" rx="3" fill="#1a1520" opacity="0.65"/>
+    <circle cx="93" cy="71" r="1.8" fill="#E8A0D0"/><circle cx="107" cy="71" r="1.8" fill="#E8A0D0"/>
+  
+  <rect x="58" y="300" width="84" height="16" rx="6" fill="#7C4DB2" opacity="0.9"/>
+  <text x="100" y="312" text-anchor="middle" font-family="Verdana, sans-serif" font-size="11" font-weight="700" fill="#FFF8E7">Lv 6 ♂</text>
+</svg>

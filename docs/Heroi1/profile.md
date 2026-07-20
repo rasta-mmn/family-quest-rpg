@@ -2,6 +2,7 @@
 id: Heroi1
 character_name: "Iron Ember"
 character_name_pt: "Brasa de Ferro"
+sex: male
 class: guerreiro
 level: 1
 xp_total: 0

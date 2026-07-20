@@ -1,4 +1,5 @@
-import type { DayLog, Objective, PlayerConfig, Profile, WeeklyLog } from './types'
+import { emptyDay, normalizeWeeklyLog, WEEKDAYS } from './dayLog'
+import type { DayLog, HeroObjectives, PlayerConfig, Profile, WeeklyLog } from './types'
 
 const STORAGE_KEY = 'family-quest-local-heroes'
 
@@ -15,7 +16,7 @@ export type LocalHeroRecord = {
   id: string
   player: PlayerConfig
   profile: Profile
-  objectives: { daily_objectives: Objective[]; theme: string }
+  objectives: HeroObjectives
   skills: { id: string; name: string; description?: string }[]
   appearance: { class: string; slots: AppearanceSlots }
   weekly: WeeklyLog | null
@@ -24,22 +25,26 @@ export type LocalHeroRecord = {
 }
 
 const AVATAR_DESC: Record<string, string> = {
-  guerreiro: 'Warrior in iron armor with a crimson cloak and sword at the shoulder',
-  bardo: 'Bard in a green doublet with a lute on the back and a plumed hat',
-  mago: 'Mage in a starry midnight-blue robe with an apprentice staff',
-  ladino: 'Rogue in a dark purple hood with twin daggers at the belt',
+  guerreiro: 'Cartoon warrior in iron armor with a crimson cloak',
+  bardo: 'Cartoon bard in a green doublet with a lute',
+  mago: 'Cartoon mage in a starry robe with a staff',
+  ladino: 'Cartoon rogue in a purple hood with twin daggers',
 }
-
-const EMPTY_DAY: DayLog = { obj1: false, obj2: false, obj3: false, extras: 0 }
-
-const WEEKDAYS = ['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom'] as const
 
 export function loadLocalHeroes(): LocalHeroRecord[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return []
     const parsed = JSON.parse(raw) as LocalHeroRecord[]
-    return Array.isArray(parsed) ? parsed : []
+    if (!Array.isArray(parsed)) return []
+    return parsed.map((h) => ({
+      ...h,
+      weekly: h.weekly ? normalizeWeeklyLog(h.weekly) : null,
+      objectives: {
+        theme: h.objectives?.theme || 'fisico',
+        month_objective: h.objectives?.month_objective || '',
+      },
+    }))
   } catch {
     return []
   }
@@ -62,10 +67,10 @@ export function emptyWeekly(opts: {
   id: string
   week: string
   month: string
-  boss: { id: string; name: string; points?: number }
+  boss: { id: string; name: string; name_pt?: string; points?: number }
 }): WeeklyLog {
   const days: Record<string, DayLog> = {}
-  for (const d of WEEKDAYS) days[d] = { ...EMPTY_DAY }
+  for (const d of WEEKDAYS) days[d] = emptyDay()
   return {
     week: opts.week,
     player: opts.id,
@@ -73,6 +78,7 @@ export function emptyWeekly(opts: {
     boss: {
       id: opts.boss.id,
       name: opts.boss.name,
+      name_pt: opts.boss.name_pt,
       completed: false,
       points: opts.boss.points ?? 30,
     },
@@ -84,44 +90,35 @@ export function emptyWeekly(opts: {
 
 export type CreateHeroInput = {
   character_name: string
-  character_name_pt?: string
   class: string
+  sex: 'male' | 'female'
   real_name_redacted: string
   real_name_redacted_pt?: string
   theme: string
-  missions: [string, string, string]
-  missions_pt?: [string, string, string]
-  /** data:image/... from UI upload; else class avatar */
+  month_objective?: string
   photoDataUrl?: string
   existingIds: string[]
   month: string
   week: string
-  boss: { id: string; name: string; points?: number }
+  boss: { id: string; name: string; name_pt?: string; points?: number }
 }
 
 export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
   const id = nextHeroId(input.existingIds)
   const cls = input.class
-  const avatar = `docs/assets/avatars/${cls}.png`
+  const avatar = `docs/assets/avatars/${cls}.svg`
   const photoPath = input.photoDataUrl
     ? `docs/assets/photos/${id.toLowerCase()}.jpg`
     : avatar
   const photo = input.photoDataUrl || avatar
   const name = input.character_name.trim()
-  const namePt = (input.character_name_pt || name).trim()
-  const daily_objectives: Objective[] = input.missions.map((mission, i) => ({
-    id: `obj${i + 1}`,
-    name: mission.trim() || `Mission ${['Alpha', 'Beta', 'Gamma'][i]}`,
-    name_pt: input.missions_pt?.[i]?.trim() || undefined,
-    points: 30,
-    real_meaning_redacted: true,
-  }))
 
   const profile: Profile = {
     id,
     character_name: name,
-    character_name_pt: namePt,
+    character_name_pt: name,
     class: cls,
+    sex: input.sex,
     level: 1,
     xp_total: 0,
     xp_this_month: 0,
@@ -135,11 +132,10 @@ export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
   const player: PlayerConfig = {
     id,
     character_name: name,
-    character_name_pt: namePt,
+    character_name_pt: name,
     class: cls,
     real_name_redacted: input.real_name_redacted.trim() || 'Player',
     real_name_redacted_pt: (input.real_name_redacted_pt || input.real_name_redacted).trim(),
-    // YAML path for commit; runtime display uses profile.photo (may be data URL)
     photo: photoPath,
     avatar,
   }
@@ -148,7 +144,10 @@ export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
     id,
     player,
     profile,
-    objectives: { daily_objectives, theme: input.theme },
+    objectives: {
+      theme: input.theme,
+      month_objective: input.month_objective || '',
+    },
     skills: [],
     appearance: {
       class: cls,
@@ -181,4 +180,129 @@ export function updateLocalWeekly(id: string, weekly: WeeklyLog): LocalHeroRecor
   const next = loadLocalHeroes().map((h) => (h.id === id ? { ...h, weekly } : h))
   saveLocalHeroes(next)
   return next
+}
+
+const TEST_CLASSES = ['guerreiro', 'bardo', 'mago', 'ladino'] as const
+
+export function isTestLevelHeroId(id: string): boolean {
+  return (
+    /^TestLv-(male|female)-(guerreiro|bardo|mago|ladino)-\d{2}$/.test(id) ||
+    /^TestLv-(guerreiro|bardo|mago|ladino)-\d{2}$/.test(id)
+  )
+}
+
+export function testLevelHeroId(
+  cls: string,
+  lv: number,
+  sex: 'male' | 'female' = 'male',
+): string {
+  return `TestLv-${sex}-${cls}-${String(lv).padStart(2, '0')}`
+}
+
+/** Temporary sheets: 2 sexes × 4 classes × Lv 0…12 (104) — safe to delete. */
+export function seedTestLevelHeroes(opts: {
+  month: string
+  week: string
+  boss: { id: string; name: string; name_pt?: string; points?: number }
+}): LocalHeroRecord[] {
+  const kept = loadLocalHeroes().filter((h) => !isTestLevelHeroId(h.id))
+  // Also drop legacy TestLv-{cls}-{lv} ids
+  const keptClean = kept.filter(
+    (h) => !/^TestLv-(guerreiro|bardo|mago|ladino)-\d{2}$/.test(h.id),
+  )
+  const seeded: LocalHeroRecord[] = []
+  for (const sex of ['male', 'female'] as const) {
+    for (const cls of TEST_CLASSES) {
+      for (let lv = 0; lv <= 12; lv++) {
+        const id = testLevelHeroId(cls, lv, sex)
+        const pad = String(lv).padStart(2, '0')
+        const body = `docs/assets/bodies/${cls}/${sex}/lv-${pad}.svg`
+        const name = `[TEST] ${sex === 'female' ? '♀' : '♂'} ${cls} Lv${pad}`
+        const base = buildLocalHero({
+          character_name: name,
+          class: cls,
+          sex,
+          real_name_redacted: `Test ${cls}`,
+          theme: 'fisico',
+          month_objective: `QA avatar ${cls} ${sex} lv ${lv}`,
+          existingIds: [...keptClean, ...seeded].map((h) => h.id),
+          month: opts.month,
+          week: opts.week,
+          boss: opts.boss,
+        })
+        seeded.push({
+          ...base,
+          id,
+          player: {
+            ...base.player,
+            id,
+            character_name: name,
+            character_name_pt: name,
+            photo: body,
+            avatar: body,
+          },
+          profile: {
+            ...base.profile,
+            id,
+            character_name: name,
+            character_name_pt: name,
+            sex,
+            level: Math.max(1, lv),
+            months_completed: lv,
+            xp_this_month: Math.min(400, lv * 30),
+            photo: body,
+            avatar: body,
+            avatar_description: `${cls} ${sex} cartoon lv ${lv}`,
+          },
+          weekly: base.weekly
+            ? { ...base.weekly, player: id }
+            : emptyWeekly({
+                id,
+                week: opts.week,
+                month: opts.month,
+                boss: opts.boss,
+              }),
+        })
+      }
+    }
+  }
+  const next = [...keptClean, ...seeded]
+  saveLocalHeroes(next)
+  return seeded
+}
+
+const TEST_CLEARED_KEY = 'fq-test-sheets-cleared'
+
+export function clearTestLevelHeroes(): number {
+  const before = loadLocalHeroes()
+  const next = before.filter((h) => !isTestLevelHeroId(h.id))
+  saveLocalHeroes(next)
+  localStorage.setItem(TEST_CLEARED_KEY, '1')
+  return before.length - next.length
+}
+
+export function countTestLevelHeroes(): number {
+  return loadLocalHeroes().filter((h) => isTestLevelHeroId(h.id)).length
+}
+
+/** Auto-seed on game load unless user cleared test sheets. */
+export function ensureTestLevelHeroes(opts: {
+  month: string
+  week: string
+  boss: { id: string; name: string; name_pt?: string; points?: number }
+}): number {
+  if (localStorage.getItem(TEST_CLEARED_KEY) === '1') return countTestLevelHeroes()
+  // Full set: 2 sexes × 4 classes × 13 levels = 104
+  const n = countTestLevelHeroes()
+  if (n >= 104) return n
+  return seedTestLevelHeroes(opts).length
+}
+
+export function seedTestLevelHeroesForce(opts: {
+  month: string
+  week: string
+  boss: { id: string; name: string; name_pt?: string; points?: number }
+}): LocalHeroRecord[] {
+  localStorage.removeItem(TEST_CLEARED_KEY)
+  return seedTestLevelHeroes(opts)
 }

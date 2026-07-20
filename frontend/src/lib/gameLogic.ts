@@ -1,3 +1,4 @@
+import { countDoneObjectives, normalizeDayLog } from './dayLog'
 import type { DayLog, PointsConfig, WeeklyLog } from './types'
 
 const DEFAULT_POINTS: PointsConfig = {
@@ -17,11 +18,10 @@ export function calcWeeklyPoints(
   const p = { ...DEFAULT_POINTS, ...points }
   let objCount = 0
   let extras = 0
-  for (const day of Object.values(days || {})) {
-    if (day.obj1) objCount++
-    if (day.obj2) objCount++
-    if (day.obj3) objCount++
-    extras += Number(day.extras) || 0
+  for (const raw of Object.values(days || {})) {
+    const day = normalizeDayLog(raw)
+    objCount += countDoneObjectives(day)
+    extras += day.extras.length
   }
   return objCount * p.per_task + extras * p.per_extra + (bossCompleted ? p.boss : 0)
 }

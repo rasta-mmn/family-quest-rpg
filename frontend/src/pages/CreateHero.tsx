@@ -6,7 +6,7 @@ import { downloadHeroPack } from '../lib/heroMarkdown'
 import { RANK_OPTIONS, rankById } from '../lib/hierarchy'
 import { fileToPhotoDataUrl } from '../lib/photoUpload'
 import { useGameData } from '../hooks/useGameData'
-import { useLocale } from '../lib/i18n'
+import { pickL, useLocale } from '../lib/i18n'
 
 const CLASS_OPTS = [
   { id: 'guerreiro', en: 'Warrior', pt: 'Guerreiro' },
@@ -21,23 +21,32 @@ export function CreateHero() {
   const [, setLoc] = useLocation()
   const [name, setName] = useState('')
   const [cls, setCls] = useState('guerreiro')
+  const [sex, setSex] = useState<'male' | 'female'>('male')
   const [rankId, setRankId] = useState('rank5')
-  const [theme, setTheme] = useState('treino')
-  const [m1, setM1] = useState('Mission Alpha')
-  const [m2, setM2] = useState('Mission Beta')
-  const [m3, setM3] = useState('Mission Gamma')
+  const [theme, setTheme] = useState('fisico')
+  const [monthObjective, setMonthObjective] = useState('')
   const [photoPreview, setPhotoPreview] = useState('')
   const [photoBusy, setPhotoBusy] = useState(false)
   const [formError, setFormError] = useState('')
   const [alsoDownload, setAlsoDownload] = useState(true)
 
-  if (loading) return <Layout><p>{t('summonPreparing')}</p></Layout>
-  if (error || !data) return <Layout title={t('error')}><p>{error}</p></Layout>
+  if (loading)
+    return (
+      <Layout>
+        <p>{t('summonPreparing')}</p>
+      </Layout>
+    )
+  if (error || !data)
+    return (
+      <Layout title={t('error')}>
+        <p>{error}</p>
+      </Layout>
+    )
 
   const themes = Object.keys(data.themes)
   const week = data.config.current_week
-  const bossMeta =
-    data.month.bosses?.find((b) => b.week === week) || data.month.bosses?.[0]
+  const bossMeta = data.month.bosses?.find((b) => b.week === week) || data.month.bosses?.[0]
+  const themeDef = data.themes[theme]
 
   async function onPhoto(file: File | undefined) {
     if (!file) return
@@ -66,17 +75,22 @@ export function CreateHero() {
     const rank = rankById(rankId)
     const hero = buildLocalHero({
       character_name: name,
-      character_name_pt: name,
       class: cls,
+      sex,
       real_name_redacted: rank.en,
       real_name_redacted_pt: rank.pt,
       theme,
-      missions: [m1, m2, m3],
+      month_objective: monthObjective,
       photoDataUrl: photoPreview || undefined,
       existingIds: data!.heroes.map((h) => h.id),
       month: data!.config.current_month,
       week,
-      boss: { id: bossMeta.id || 'boss', name: bossMeta.name, points: bossMeta.points },
+      boss: {
+        id: bossMeta.id || 'boss',
+        name: bossMeta.name,
+        name_pt: bossMeta.name_pt,
+        points: bossMeta.points,
+      },
     })
     addLocalHero(hero)
     if (alsoDownload) downloadHeroPack(hero, data!.config.current_month)
@@ -113,6 +127,17 @@ export function CreateHero() {
           </select>
         </label>
         <label className="block text-sm">
+          <span className="font-display text-xs text-[var(--color-gold)]">{t('sexField')}</span>
+          <select
+            value={sex}
+            onChange={(e) => setSex(e.target.value as 'male' | 'female')}
+            className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-3 py-2"
+          >
+            <option value="male">{t('sexMale')}</option>
+            <option value="female">{t('sexFemale')}</option>
+          </select>
+        </label>
+        <label className="block text-sm">
           <span className="font-display text-xs text-[var(--color-gold)]">{t('rankField')}</span>
           <select
             value={rankId}
@@ -146,7 +171,7 @@ export function CreateHero() {
           )}
         </label>
         <label className="block text-sm">
-          <span className="font-display text-xs text-[var(--color-gold)]">{t('missionTheme')}</span>
+          <span className="font-display text-xs text-[var(--color-gold)]">{t('dimension')}</span>
           <select
             value={theme}
             onChange={(e) => setTheme(e.target.value)}
@@ -154,28 +179,27 @@ export function CreateHero() {
           >
             {themes.map((th) => (
               <option key={th} value={th}>
-                {data.themes[th]?.name || th}
+                {pickL((data.themes[th] || {}) as Record<string, unknown>, 'name', locale) || th}
               </option>
             ))}
           </select>
+          {themeDef?.subareas && themeDef.subareas.length > 0 && (
+            <span className="mt-1 block text-xs opacity-70">
+              {themeDef.subareas
+                .map((s) => pickL(s as Record<string, unknown>, 'name', locale) || s.id)
+                .join(' · ')}
+            </span>
+          )}
         </label>
-        <fieldset className="space-y-2 border border-[var(--color-gold-dim)]/40 p-3">
-          <legend className="px-1 font-display text-xs text-[var(--color-gold)]">
-            {t('threeDaily')}
-          </legend>
-          {[
-            [m1, setM1],
-            [m2, setM2],
-            [m3, setM3],
-          ].map(([val, set], i) => (
-            <input
-              key={i}
-              value={val as string}
-              onChange={(e) => (set as (v: string) => void)(e.target.value)}
-              className="w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
-            />
-          ))}
-        </fieldset>
+        <label className="block text-sm">
+          <span className="font-display text-xs text-[var(--color-gold)]">{t('monthObjective')}</span>
+          <textarea
+            value={monthObjective}
+            onChange={(e) => setMonthObjective(e.target.value)}
+            rows={2}
+            className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-3 py-2"
+          />
+        </label>
         <label className="flex items-center gap-2 text-sm opacity-85">
           <input
             type="checkbox"

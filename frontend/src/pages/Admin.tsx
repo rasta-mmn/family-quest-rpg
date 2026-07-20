@@ -30,7 +30,7 @@ export function Admin() {
 
   const [month, setMonth] = useState('')
   const [monthNumber, setMonthNumber] = useState(1)
-  const [theme, setTheme] = useState('treino')
+  const [theme, setTheme] = useState('fisico')
   const [weeksRaw, setWeeksRaw] = useState('')
   const [currentWeek, setCurrentWeek] = useState('')
   const [bossMissions, setBossMissions] = useState<
@@ -48,7 +48,7 @@ export function Admin() {
     if (!data || ready) return
     setMonth(data.config.current_month)
     setWeeksRaw((data.month.weeks || []).join(', '))
-    setTheme(data.month.theme || 'treino')
+    setTheme(data.month.theme || 'fisico')
     setMonthNumber(data.month.month_number || 1)
     setCurrentWeek(data.config.current_week)
     const bm: Record<string, { en: string; pt: string }> = {}
@@ -102,11 +102,9 @@ export function Admin() {
     })
     const objectives: MonthSetup['objectives'] = {}
     for (const h of data!.heroes) {
-      const daily = h.objectives.daily_objectives || []
       objectives[h.id] = {
         theme: h.objectives.theme || theme,
-        daily: daily.map((o) => o.name),
-        daily_pt: daily.map((o) => o.name_pt || o.name),
+        month_objective: h.objectives.month_objective || '',
       }
     }
     return {
@@ -395,9 +393,7 @@ export function Admin() {
             {data.heroes.map((h) => (
               <li key={h.id}>
                 {pickL(h.profile as Record<string, unknown>, 'character_name', locale)}:{' '}
-                {(h.objectives.daily_objectives || [])
-                  .map((o) => pickL(o as Record<string, unknown>, 'name', locale))
-                  .join(', ') || '—'}
+                {h.objectives.month_objective || h.objectives.theme || '—'}
               </li>
             ))}
           </ul>

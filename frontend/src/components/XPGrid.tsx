@@ -1,22 +1,35 @@
 import { useLocale } from '../lib/i18n'
 
-type Props = { filled: boolean[]; label?: string }
+type Props = {
+  filled: boolean[]
+  label?: string
+  /** Compact squares for week header */
+  size?: 'md' | 'sm'
+  hideLabel?: boolean
+}
 
-export function XPGrid({ filled, label }: Props) {
+export function XPGrid({ filled, label, size = 'md', hideLabel }: Props) {
   const { t } = useLocale()
+  const box = size === 'sm' ? 'h-5 w-5 border' : 'h-9 w-9 border-2'
   return (
-    <div>
-      <div className="mb-2 font-display text-xs tracking-widest text-[var(--color-gold)]">
-        {label || t('xpSquares')}
-      </div>
-      <div className="flex gap-2">
+    <div className={size === 'sm' ? 'flex items-center gap-2' : ''}>
+      {!hideLabel && (
+        <div
+          className={`font-display tracking-widest text-[var(--sheet-gold,var(--color-gold))] ${
+            size === 'sm' ? 'mb-0 text-[9px]' : 'mb-2 text-xs'
+          }`}
+        >
+          {label || t('xpSquares')}
+        </div>
+      )}
+      <div className={`flex ${size === 'sm' ? 'gap-1' : 'gap-2'}`}>
         {filled.map((on, i) => (
           <div
             key={i}
-            className={`h-9 w-9 border-2 border-[var(--color-gold)] transition-colors duration-150 ${
+            className={`${box} border-[var(--sheet-gold,var(--color-gold))] transition-colors duration-150 ${
               on
-                ? 'bg-[var(--color-gold)] shadow-[0_0_12px_oklch(0.75_0.12_85_/_0.45)]'
-                : 'bg-[var(--color-charcoal)]'
+                ? 'bg-[var(--sheet-gold,var(--color-gold))]'
+                : 'bg-black/40'
             }`}
             aria-label={
               on ? t('squareFilled', { n: i + 1 }) : t('squareEmpty', { n: i + 1 })

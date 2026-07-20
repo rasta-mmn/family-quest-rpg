@@ -61,10 +61,7 @@ export function Weekly() {
               )}
             />
             {h.weekly ? (
-              <TaskList
-                objectives={h.objectives.daily_objectives}
-                days={h.weekly.days}
-              />
+              <TaskList days={h.weekly.days} />
             ) : (
               <p className="opacity-60 text-sm">{t('noWeekly', { week })}</p>
             )}

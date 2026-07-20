@@ -1,15 +1,12 @@
 ---
 month: "2026-08"
-theme: organizacao
-daily_objectives:
-  - { id: obj1, name: "Mission Kappa", name_pt: "Missão Kapa", points: 30, real_meaning_redacted: true }
-  - { id: obj2, name: "Mission Lambda", name_pt: "Missão Lambda", points: 30, real_meaning_redacted: true }
-  - { id: obj3, name: "Mission Mu", name_pt: "Missão Mi", points: 30, real_meaning_redacted: true }
+theme: profissional
+month_objective: "Organize tasks and finish what starts"
 extras_allowed: true
 extras_points: 2.5
 ---
 
-# Swift Shade / Sombra Ligeira — Objectives / Objetivos — 2026-08
+# Heroi4 Objectives — 2026-08
 
-**EN:** 3 daily objectives (redacted).  
-**PT:** 3 objetivos diários (redactados).
+**EN:** Month objective + weekly day texts live in weekly/*.md.  
+**PT:** Objetivo do mês + textos diários ficam em weekly/*.md.

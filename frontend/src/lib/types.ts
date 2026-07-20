@@ -28,11 +28,18 @@ export type GameConfig = {
   points: PointsConfig
 }
 
+export type DayObjective = {
+  text: string
+  done: boolean
+}
+
+export type DayExtra = {
+  text: string
+}
+
 export type DayLog = {
-  obj1: boolean
-  obj2: boolean
-  obj3: boolean
-  extras: number
+  objectives: DayObjective[]
+  extras: DayExtra[]
 }
 
 export type WeeklyLog = {
@@ -51,6 +58,12 @@ export type WeeklyLog = {
   reward_status?: string
 }
 
+export type SheetColors = {
+  text: string
+  block: string
+  block_opacity: number
+}
+
 export type Profile = {
   id: string
   character_name: string
@@ -60,10 +73,12 @@ export type Profile = {
   xp_total: number
   xp_this_month: number
   months_completed: number
+  sex?: 'male' | 'female'
   photo?: string
   avatar?: string
   avatar_description?: string
   avatar_description_pt?: string
+  sheet_colors?: SheetColors
   stats?: Record<string, number>
 }
 
@@ -73,6 +88,13 @@ export type Objective = {
   name_pt?: string
   points: number
   real_meaning_redacted?: boolean
+}
+
+export type HeroObjectives = {
+  theme?: string
+  month_objective?: string
+  /** @deprecated kept for legacy YAML reads */
+  daily_objectives?: Objective[]
 }
 
 export type BossEntry = {
@@ -91,6 +113,12 @@ export type BossEntry = {
   completed?: boolean
 }
 
+export type ThemeSubarea = {
+  id: string
+  name: string
+  name_pt?: string
+}
+
 export type MonthSetup = {
   month: string
   month_number?: number
@@ -99,7 +127,7 @@ export type MonthSetup = {
   bosses: BossEntry[]
   objectives?: Record<
     string,
-    { theme: string; daily: string[]; daily_pt?: string[] }
+    { theme: string; month_objective?: string; daily?: string[]; daily_pt?: string[] }
   >
 }
 
@@ -110,6 +138,7 @@ export type BestiaryTheme = {
   environment?: string
   environment_pt?: string
   background?: string
+  subareas?: ThemeSubarea[]
   enemies: BossEntry[]
 }
 

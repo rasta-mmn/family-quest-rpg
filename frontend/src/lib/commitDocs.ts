@@ -14,7 +14,7 @@ import {
   buildWeeklyMd,
 } from './exportMarkdown'
 import { playerConfigYaml } from './heroMarkdown'
-import type { MonthSetup, Objective, PlayerConfig, Profile, WeeklyLog } from './types'
+import type { HeroObjectives, MonthSetup, PlayerConfig, Profile, WeeklyLog } from './types'
 import type { LevelUpResult } from './levelUp'
 import { loadLocalHeroes } from './localHeroes'
 
@@ -23,7 +23,7 @@ export async function commitPlayerSheet(opts: {
   characterName: string
   month: string
   theme: string
-  daily: Objective[]
+  monthObjective?: string
   weekly: WeeklyLog | null
   profile: Profile
 }): Promise<string[]> {
@@ -34,7 +34,7 @@ export async function commitPlayerSheet(opts: {
     characterName: opts.characterName,
     month: opts.month,
     theme: opts.theme,
-    daily: opts.daily,
+    monthObjective: opts.monthObjective,
   })
   await putDoc(
     `${opts.heroId}/objectives.md`,
@@ -93,7 +93,7 @@ export async function commitAllPlayerSheets(opts: {
     id: string
     local?: boolean
     profile: Profile
-    objectives: { daily_objectives: Objective[]; theme?: string }
+    objectives: HeroObjectives
     weekly: WeeklyLog | null
   }[]
 }): Promise<{ heroId: string; files: string[] }[]> {
@@ -106,8 +106,8 @@ export async function commitAllPlayerSheets(opts: {
       heroId: h.id,
       characterName: h.profile.character_name,
       month: opts.month,
-      theme: h.objectives.theme || 'treino',
-      daily: h.objectives.daily_objectives || [],
+      theme: h.objectives.theme || 'fisico',
+      monthObjective: h.objectives.month_objective,
       weekly: h.weekly,
       profile: h.profile,
     })

@@ -1,4 +1,4 @@
-import type { MonthSetup, Objective, Profile, WeeklyLog } from './types'
+import type { HeroObjectives, MonthSetup, Profile, WeeklyLog } from './types'
 
 const PLAYER_KEY = 'family-quest-player-edits'
 const ADMIN_KEY = 'family-quest-admin-edits'
@@ -6,7 +6,7 @@ const REMOVED_KEY = 'family-quest-removed-heroes'
 
 /** Player-owned fields (edited on character sheet). */
 export type PlayerHeroEdit = {
-  objectives?: { theme?: string; daily_objectives: Objective[] }
+  objectives?: HeroObjectives
   weekly?: WeeklyLog
   profile?: Partial<
     Pick<
@@ -14,6 +14,8 @@ export type PlayerHeroEdit = {
       | 'character_name'
       | 'character_name_pt'
       | 'photo'
+      | 'sex'
+      | 'sheet_colors'
       | 'avatar_description'
       | 'avatar_description_pt'
     >

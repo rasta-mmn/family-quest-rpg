@@ -1,23 +1,30 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { parseMarkdown } from '../lib/mdParser'
 import { fetchDoc } from '../lib/githubApi'
 import { weekFromLog } from '../lib/gameLogic'
-import { loadLocalHeroes, type AppearanceSlots, type LocalHeroRecord } from '../lib/localHeroes'
+import {
+  ensureTestLevelHeroes,
+  loadLocalHeroes,
+  type AppearanceSlots,
+  type LocalHeroRecord,
+} from '../lib/localHeroes'
 import { loadAdminEdits, loadPlayerEdits, loadRemovedHeroIds } from '../lib/editsStore'
+import { normalizeWeeklyLog } from '../lib/dayLog'
+import { resolveThemeId } from '../lib/themeAlias'
 import type {
   BestiaryTheme,
   ClassDef,
   GameConfig,
+  HeroObjectives,
   MonthSetup,
   Profile,
   WeeklyLog,
-  Objective,
 } from '../lib/types'
 
 export type HeroBundle = {
   id: string
   profile: Profile
-  objectives: { daily_objectives: Objective[]; theme?: string }
+  objectives: HeroObjectives
   skills: { id: string; name: string; description?: string }[]
   appearance: { class?: string; slots: AppearanceSlots } | null
   weekly: WeeklyLog | null
@@ -43,7 +50,7 @@ const EMPTY_SLOTS: AppearanceSlots = {
 }
 
 function localToBundle(h: LocalHeroRecord, points: GameConfig['points']): HeroBundle {
-  const weekly = h.weekly
+  const weekly = h.weekly ? normalizeWeeklyLog(h.weekly) : null
   return {
     id: h.id,
     profile: h.profile,
@@ -61,6 +68,7 @@ export function useGameData() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [tick, setTick] = useState(0)
+  const hydrated = useRef(false)
 
   const reload = useCallback(() => setTick((t) => t + 1), [])
 
@@ -68,7 +76,8 @@ export function useGameData() {
     let cancelled = false
     ;(async () => {
       try {
-        setLoading(true)
+        // Soft reload after first paint — keep sheet mounted (selected day stays).
+        if (!hydrated.current) setLoading(true)
         const configText = await fetchDoc('config/game-config.md')
         const { data: config } = parseMarkdown<GameConfig>(configText)
         const adminEditsEarly = loadAdminEdits()
@@ -85,6 +94,7 @@ export function useGameData() {
 
         const { data: month } = parseMarkdown<MonthSetup>(monthText)
         if (adminEditsEarly.month) Object.assign(month, adminEditsEarly.month)
+        month.theme = resolveThemeId(month.theme)
         const { data: bestiary } = parseMarkdown<{ themes: Record<string, BestiaryTheme> }>(
           bestiaryText,
         )
@@ -103,10 +113,7 @@ export function useGameData() {
                 fetchDoc(`${p.id}/weekly/${weekId}.md`).catch(() => null),
               ])
             const { data: profile } = parseMarkdown<Profile>(profileText)
-            const { data: objectives } = parseMarkdown<{
-              daily_objectives: Objective[]
-              theme?: string
-            }>(objText)
+            const { data: objectives } = parseMarkdown<HeroObjectives>(objText)
             const { data: skillsData } = parseMarkdown<{ skills: HeroBundle['skills'] }>(
               skillsText,
             )
@@ -124,7 +131,8 @@ export function useGameData() {
                 slots: { ...EMPTY_SLOTS, ...(app.slots || {}) },
               }
             }
-            const weekly = weeklyText ? parseMarkdown<WeeklyLog>(weeklyText).data : null
+            const weeklyRaw = weeklyText ? parseMarkdown<WeeklyLog>(weeklyText).data : null
+            const weekly = weeklyRaw ? normalizeWeeklyLog(weeklyRaw) : null
             const weekPoints = weekly ? weekFromLog(weekly, config.points) : 0
             return {
               id: p.id,
@@ -134,8 +142,9 @@ export function useGameData() {
                 avatar: profile.avatar || p.avatar,
               },
               objectives: {
-                daily_objectives: objectives.daily_objectives || [],
-                theme: objectives.theme,
+                theme: resolveThemeId(objectives.theme),
+                month_objective: objectives.month_objective || '',
+                daily_objectives: objectives.daily_objectives,
               },
               skills: skillsData.skills || [],
               appearance,
@@ -144,6 +153,18 @@ export function useGameData() {
             }
           }),
         )
+
+        const bossMeta = month.bosses?.[0]
+        ensureTestLevelHeroes({
+          month: monthId,
+          week: weekId,
+          boss: {
+            id: bossMeta?.id || 'boss',
+            name: bossMeta?.name || 'BOSS',
+            name_pt: bossMeta?.name_pt,
+            points: bossMeta?.points || 30,
+          },
+        })
 
         const repoIds = new Set(repoHeroes.map((h) => h.id))
         const localHeroes = loadLocalHeroes()
@@ -156,14 +177,15 @@ export function useGameData() {
         heroes = heroes.map((h) => {
           const edit = playerEdits[h.id]
           if (!edit) return h
-          const weekly = edit.weekly ?? h.weekly
+          const weekly = edit.weekly ? normalizeWeeklyLog(edit.weekly) : h.weekly
           return {
             ...h,
             profile: edit.profile ? { ...h.profile, ...edit.profile } : h.profile,
             objectives: edit.objectives
               ? {
-                  daily_objectives: edit.objectives.daily_objectives,
-                  theme: edit.objectives.theme ?? h.objectives.theme,
+                  theme: resolveThemeId(edit.objectives.theme ?? h.objectives.theme),
+                  month_objective:
+                    edit.objectives.month_objective ?? h.objectives.month_objective ?? '',
                 }
               : h.objectives,
             weekly,
@@ -171,14 +193,11 @@ export function useGameData() {
           }
         })
 
-        // Month rollup mirrors player-owned mission labels (for PDF / ADM export).
         month.objectives = month.objectives || {}
         for (const h of heroes) {
-          const daily = h.objectives.daily_objectives || []
           month.objectives[h.id] = {
             theme: h.objectives.theme || month.theme,
-            daily: daily.map((o) => o.name),
-            daily_pt: daily.map((o) => o.name_pt || o.name),
+            month_objective: h.objectives.month_objective || '',
           }
         }
 
@@ -191,6 +210,7 @@ export function useGameData() {
             heroes,
           })
           setError(null)
+          hydrated.current = true
           setLoading(false)
         }
       } catch (e) {

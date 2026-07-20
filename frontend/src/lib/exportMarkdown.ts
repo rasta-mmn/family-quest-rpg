@@ -1,27 +1,23 @@
 import { downloadMarkdown } from './githubApi'
+import { dayLogToYaml, WEEKDAYS } from './dayLog'
 import { downloadDataUrl, isDataUrl } from './photoUpload'
-import type { GameConfig, MonthSetup, Objective, Profile, WeeklyLog } from './types'
+import type { GameConfig, MonthSetup, Profile, SheetColors, WeeklyLog } from './types'
+
+function yamlEscape(s: string): string {
+  return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+}
 
 export function buildObjectivesMd(opts: {
   heroId: string
   characterName: string
   month: string
   theme: string
-  daily: Objective[]
+  monthObjective?: string
 }): string {
-  const objs = opts.daily
-    .slice(0, 3)
-    .map((o, i) => {
-      const id = o.id || `obj${i + 1}`
-      const pt = o.name_pt ? `, name_pt: "${o.name_pt}"` : ''
-      return `  - { id: ${id}, name: "${o.name}"${pt}, points: ${o.points || 30}, real_meaning_redacted: true }`
-    })
-    .join('\n')
   return `---
 month: "${opts.month}"
 theme: ${opts.theme}
-daily_objectives:
-${objs}
+month_objective: "${yamlEscape(opts.monthObjective || '')}"
 extras_allowed: true
 extras_points: 2.5
 ---
@@ -31,18 +27,16 @@ extras_points: 2.5
 }
 
 export function buildWeeklyMd(w: WeeklyLog, characterName: string): string {
-  const dayLines = Object.entries(w.days)
-    .map(
-      ([d, day]) =>
-        `  ${d}: { obj1: ${day.obj1}, obj2: ${day.obj2}, obj3: ${day.obj3}, extras: ${day.extras} }`,
-    )
-    .join('\n')
-  const namePt = w.boss.name_pt ? `, name_pt: "${w.boss.name_pt}"` : ''
+  const dayLines = WEEKDAYS.map((d) => {
+    const day = w.days[d] || { objectives: [], extras: [] }
+    return `  ${d}: ${dayLogToYaml(day)}`
+  }).join('\n')
+  const namePt = w.boss.name_pt ? `, name_pt: "${yamlEscape(w.boss.name_pt)}"` : ''
   return `---
 week: "${w.week}"
 player: ${w.player}
 month: "${w.month}"
-boss: { id: ${w.boss.id}, name: "${w.boss.name}"${namePt}, completed: ${w.boss.completed}, points: ${w.boss.points} }
+boss: { id: ${w.boss.id}, name: "${yamlEscape(w.boss.name)}"${namePt}, completed: ${w.boss.completed}, points: ${w.boss.points} }
 days:
 ${dayLines}
 total_points: ${w.total_points ?? 0}
@@ -53,24 +47,34 @@ reward_status: ${w.reward_status || 'pending'}
 `
 }
 
+function sheetColorsYaml(c?: SheetColors): string {
+  if (!c) return ''
+  return `sheet_colors:
+  text: "${c.text}"
+  block: "${c.block}"
+  block_opacity: ${c.block_opacity}
+`
+}
+
 export function buildProfilePatchMd(p: Profile): string {
   const photo = isDataUrl(p.photo)
     ? `docs/assets/photos/${p.id.toLowerCase()}.jpg`
     : p.photo || ''
+  const sex = p.sex === 'female' ? 'female' : p.sex === 'male' ? 'male' : ''
   return `---
 id: ${p.id}
-character_name: "${p.character_name}"
-character_name_pt: "${p.character_name_pt || p.character_name}"
+character_name: "${yamlEscape(p.character_name)}"
+character_name_pt: "${yamlEscape(p.character_name_pt || p.character_name)}"
 class: ${p.class}
 level: ${p.level}
 xp_total: ${p.xp_total}
 xp_this_month: ${p.xp_this_month}
 months_completed: ${p.months_completed}
-photo: "${photo}"
+${sex ? `sex: ${sex}\n` : ''}photo: "${photo}"
 avatar: "${p.avatar || ''}"
-avatar_description: "${p.avatar_description || ''}"
-avatar_description_pt: "${p.avatar_description_pt || ''}"
----
+avatar_description: "${yamlEscape(p.avatar_description || '')}"
+avatar_description_pt: "${yamlEscape(p.avatar_description_pt || '')}"
+${sheetColorsYaml(p.sheet_colors)}---
 
 # ${p.character_name} — Profile
 
@@ -98,9 +102,7 @@ export function buildMonthMdFromSetup(month: MonthSetup): string {
     .join('\n')
   const objYaml = Object.entries(month.objectives || {})
     .map(([hid, o]) => {
-      const daily = (o.daily || []).map((d) => `"${d}"`).join(', ')
-      const dailyPt = (o.daily_pt || []).map((d) => `"${d}"`).join(', ')
-      return `  ${hid}:\n    theme: ${o.theme}\n    daily: [${daily}]\n    daily_pt: [${dailyPt}]`
+      return `  ${hid}:\n    theme: ${o.theme}\n    month_objective: "${yamlEscape(o.month_objective || '')}"`
     })
     .join('\n')
   return `---
@@ -116,7 +118,7 @@ ${objYaml}
 
 # Month Setup / Setup do Mês — ${month.month}
 
-**ADM:** calendar + BOSS. **Player:** mission labels live in each HeroiN/objectives.md.
+**ADM:** calendar + BOSS. **Player:** daily labels live in each HeroiN/weekly/*.md.
 `
 }
 
@@ -125,7 +127,7 @@ export function downloadPlayerExports(opts: {
   characterName: string
   month: string
   theme: string
-  daily: Objective[]
+  monthObjective?: string
   weekly: WeeklyLog | null
   profile: Profile
 }): void {
@@ -136,7 +138,7 @@ export function downloadPlayerExports(opts: {
       characterName: opts.characterName,
       month: opts.month,
       theme: opts.theme,
-      daily: opts.daily,
+      monthObjective: opts.monthObjective,
     }),
   )
   if (opts.weekly) {

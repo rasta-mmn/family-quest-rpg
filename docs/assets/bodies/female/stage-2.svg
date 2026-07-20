@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 320" fill="none">
+  <ellipse cx="100" cy="300" rx="62" ry="8" fill="#000" opacity="0.15"/>
+  <!-- head -->
+  <circle cx="100" cy="54" r="24" fill="#E8B896" stroke="#5C4033" stroke-width="3"/>
+  <!-- eyes -->
+  <circle cx="92" cy="52" r="3" fill="#2D2A24"/>
+  <circle cx="108" cy="52" r="3" fill="#2D2A24"/>
+  <!-- smile -->
+  <path d="M90 62 Q100 70 110 62" stroke="#5C4033" stroke-width="2" fill="none"/>
+  <!-- body -->
+  <rect x="74.0" y="78" width="52" height="82" rx="12" fill="#E8B896" stroke="#5C4033" stroke-width="3"/>
+  <!-- arms -->
+  <rect x="56.0" y="90" width="16" height="66" rx="8" fill="#E8B896" stroke="#5C4033" stroke-width="3"/>
+  <rect x="128.0" y="90" width="16" height="66" rx="8" fill="#E8B896" stroke="#5C4033" stroke-width="3"/>
+  <!-- legs -->
+  <rect x="86" y="167" width="26.0" height="78" rx="8" fill="#E8B896" stroke="#5C4033" stroke-width="3"/>
+  <rect x="106" y="167" width="26.0" height="78" rx="8" fill="#E8B896" stroke="#5C4033" stroke-width="3"/>
+  <!-- muscle hint -->
+  <text x="100" y="310" text-anchor="middle" font-family="Georgia" font-size="12" fill="#A87900">Lv 2</text>
+</svg>

@@ -2,6 +2,7 @@
 id: Heroi3
 character_name: "Arcane Veil"
 character_name_pt: "Véu Arcano"
+sex: male
 class: mago
 level: 1
 xp_total: 0

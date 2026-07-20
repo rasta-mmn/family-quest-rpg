@@ -1,3 +1,4 @@
+import { resolveThemeId } from './themeAlias'
 import type { BossEntry, BestiaryTheme } from './types'
 
 /** Pick 4 bosses for a month theme (1 per week), from bestiary order. */
@@ -6,7 +7,7 @@ export function selectBosses(
   themeKey: string,
   weeks: string[] = [],
 ): BossEntry[] {
-  const theme = themes[themeKey]
+  const theme = themes[resolveThemeId(themeKey)] || themes[themeKey]
   const enemies = theme?.enemies?.slice(0, 4) ?? []
   return enemies.map((e, i) => ({
     ...e,

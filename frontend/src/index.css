@@ -51,6 +51,238 @@
     border: 1px solid color-mix(in oklch, var(--color-gold) 45%, transparent);
     box-shadow: inset 0 0 40px oklch(0.12 0.02 60 / 0.5);
   }
+  .sheet-root {
+    /* Solid readable grays — never use opacity on text inside the sheet */
+    --sheet-fg: #ececec;
+    --sheet-fg-muted: #c4c4c4;
+    --sheet-fg-dim: #a8a8a8;
+    position: relative;
+    overflow: hidden;
+    min-height: 70vh;
+    border: 1px solid color-mix(in oklab, var(--sheet-accent, #A87900) 45%, transparent);
+    color: var(--sheet-fg);
+    background-color: var(--sheet-deep, #1C1917);
+  }
+  .sheet-root :is(h1, h2, h3, h4, p, span, label, li, summary, legend) {
+    color: inherit;
+    opacity: 1;
+  }
+  .sheet-root :is(input, select, textarea, button) {
+    color: var(--sheet-fg);
+    opacity: 1;
+  }
+  .sheet-root :is(input, select, textarea) {
+    background-color: rgba(12, 12, 14, 0.72);
+    caret-color: var(--sheet-fg);
+  }
+  .sheet-root select option {
+    color: #111;
+    background: #f0f0f0;
+  }
+  .sheet-root .sheet-muted {
+    color: var(--sheet-fg-muted);
+  }
+  .sheet-root .sheet-dim {
+    color: var(--sheet-fg-dim);
+  }
+  .sheet-root .sheet-label {
+    color: var(--sheet-fg-muted);
+  }
+  .sheet-root .sheet-title {
+    color: var(--sheet-fg);
+  }
+  /* Keep muted classes solid (override Tailwind opacity utilities if any) */
+  .sheet-root .sheet-muted,
+  .sheet-root .sheet-dim,
+  .sheet-root .sheet-label,
+  .sheet-root .sheet-title {
+    opacity: 1 !important;
+  }
+  .sheet-root button:disabled {
+    opacity: 0.45;
+  }
+  .sheet-root ::placeholder {
+    color: var(--sheet-fg-dim);
+    opacity: 1;
+  }
+  .sheet-bg-theme {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 35%;
+    background-repeat: no-repeat;
+    z-index: 0;
+    transition: background-image 0.35s ease;
+  }
+  .sheet-bg-wash {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    /* leave sky/horizon open; deepen lower third for UI */
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in oklab, var(--sheet-deep, #1C1917) 15%, transparent) 28%,
+      color-mix(in oklab, var(--sheet-deep, #1C1917) 42%, transparent) 62%,
+      color-mix(in oklab, var(--sheet-deep, #1C1917) 68%, transparent) 100%
+    );
+  }
+  .sheet-content {
+    position: relative;
+    z-index: 2;
+  }
+  .sheet-panel {
+    /* alpha comes from --sheet-block (rgba); no heavy blur (was hiding transparency) */
+    background-color: var(--sheet-block, rgba(28, 25, 23, 0.1));
+    border-radius: 2px;
+  }
+  /* Top strip: photo + name — reads as sheet header, not a form */
+  .sheet-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--sheet-accent, #A87900) 35%, transparent);
+    background-color: var(--sheet-block, rgba(28, 25, 23, 0.1));
+  }
+  .sheet-identity-photo {
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .sheet-identity-photo img {
+    display: block;
+    height: 3.25rem;
+    width: 3.25rem;
+    border-radius: 9999px;
+    object-fit: cover;
+    border: 2px solid var(--sheet-gold, #C9A227);
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .sheet-identity-name {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0 !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-family: var(--font-decorative, Georgia, serif);
+    font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--sheet-gold, #C9A227) !important;
+    caret-color: var(--sheet-gold, #C9A227);
+    outline: none;
+    cursor: text;
+  }
+  .sheet-identity-name:focus {
+    outline: none;
+    box-shadow: none !important;
+  }
+  .sheet-identity-name::placeholder {
+    color: var(--sheet-fg-dim);
+  }
+  /* Epic: large body avatar + focus fields */
+  .sheet-epic {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: end;
+  }
+  @media (min-width: 640px) {
+    .sheet-epic {
+      grid-template-columns: minmax(7rem, 9.5rem) minmax(0, 1fr);
+      align-items: center;
+    }
+  }
+  .sheet-epic-body {
+    text-align: center;
+  }
+  .sheet-epic-body img {
+    margin-inline: auto;
+    height: 9.5rem;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+  }
+  @media (min-width: 768px) {
+    .sheet-epic-body img {
+      height: 11.5rem;
+    }
+  }
+  .sheet-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .sheet-week-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+  .sheet-week-head h2 {
+    min-width: 0;
+    flex: 1 1 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sheet-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    min-width: 0;
+  }
+  .sheet-day-tabs {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.25rem;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .sheet-day-tab {
+    min-width: 0;
+    padding-inline: 0.2rem;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sheet-lang-stable {
+    min-height: 3.25rem;
+    line-height: 1.25;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sheet-label-row {
+    display: block;
+    min-height: 1.1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  @media (min-width: 1024px) {
+    .sheet-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 0.85rem;
+      align-items: start;
+    }
+    .sheet-rail {
+      position: sticky;
+      top: 0.5rem;
+      width: 260px;
+    }
+  }
   .flourish {
     display: flex;
     align-items: center;

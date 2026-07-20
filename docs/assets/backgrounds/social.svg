@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14532D"/>
+      <stop offset="55%" stop-color="#15803D" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#14532D"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <rect width="800" height="600" fill="#86EFAC" opacity="0.06"/>
+
+  <!-- tavern table -->
+  <ellipse cx="400" cy="380" rx="260" ry="50" fill="#3F2A1A" stroke="#86EFAC" stroke-width="4"/>
+  <rect x="370" y="380" width="20" height="100" fill="#2D1F14"/>
+  <rect x="280" y="380" width="20" height="90" fill="#2D1F14"/>
+  <rect x="500" y="380" width="20" height="90" fill="#2D1F14"/>
+  <!-- mugs -->
+  <rect x="300" y="320" width="36" height="44" rx="6" fill="#86EFAC" opacity="0.5" stroke="#15803D" stroke-width="3"/>
+  <rect x="460" y="315" width="36" height="48" rx="6" fill="#BBF7D0" opacity="0.45" stroke="#15803D" stroke-width="3"/>
+  <!-- people silhouettes -->
+  <circle cx="220" cy="240" r="28" fill="#86EFAC" opacity="0.45"/>
+  <ellipse cx="220" cy="310" rx="40" ry="50" fill="#15803D" opacity="0.4"/>
+  <circle cx="580" cy="230" r="28" fill="#86EFAC" opacity="0.45"/>
+  <ellipse cx="580" cy="300" rx="40" ry="50" fill="#15803D" opacity="0.4"/>
+  <circle cx="400" cy="200" r="30" fill="#BBF7D0" opacity="0.4"/>
+  <ellipse cx="400" cy="275" rx="42" ry="52" fill="#166534" opacity="0.45"/>
+
+</svg>
