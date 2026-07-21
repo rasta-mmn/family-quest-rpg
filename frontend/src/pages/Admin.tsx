@@ -21,11 +21,24 @@ import {
   setGithubToken,
 } from '../lib/githubApi'
 import { commitAdminMonth, commitAllPlayerSheets, commitLevelUp } from '../lib/commitDocs'
+import {
+  applyBossDone,
+  familyGateThreshold,
+  familyPointsPool,
+  heroEligibleForLevelUp,
+  heroLevelUpPoints,
+  bossGatePerHero,
+} from '../lib/family'
+import {
+  getFamilySession,
+  setFamilyBossDone,
+  upsertLocalFamily,
+} from '../lib/familyStore'
 import { buildLevelUpPack, pickUpgrade } from '../lib/levelUp'
 import { parseMarkdown } from '../lib/mdParser'
 import type { Campaign, MonthSetup } from '../lib/types'
 
-type AdminTab = 'calendar' | 'campaign' | 'bestiary'
+type AdminTab = 'calendar' | 'campaign' | 'bestiary' | 'families'
 
 export function Admin() {
   const { data, error, loading, reload } = useGameData()
@@ -191,16 +204,42 @@ export function Admin() {
     }
   }
 
-  async function levelUpHero(heroId: string) {
-    setBusy(true)
-    setMsg('')
+  function familyBossDoneForHero(heroId: string): boolean {
+    const fam = data!.families.find((f) => f.hero_ids?.includes(heroId))
+    if (!fam) return Boolean(data!.familySession?.boss_done)
+    const sess =
+      getFamilySession(fam.id, data!.config.current_week) ||
+      (data!.activeFamily?.id === fam.id ? data!.familySession : null)
+    return Boolean(sess?.boss_done || fam.boss_outcome === 'victory')
+  }
+
+  async function levelUpHero(
+    heroId: string,
+    opts?: { monthOverride?: number; skipBossCheck?: boolean; silent?: boolean },
+  ) {
+    if (!opts?.silent) {
+      setBusy(true)
+      setMsg('')
+    }
     try {
+      if (!opts?.skipBossCheck && !familyBossDoneForHero(heroId)) {
+        throw new Error(t('levelUpNeedBoss'))
+      }
       const hero = data!.heroes.find((h) => h.id === heroId)
       if (!hero) throw new Error('Hero missing')
+      const familyWon = familyBossDoneForHero(heroId) || Boolean(opts?.skipBossCheck)
+      if (!heroEligibleForLevelUp(hero.weekly, familyWon, data!.config.points)) {
+        const pts = heroLevelUpPoints(hero.weekly, familyWon, data!.config.points)
+        const need = bossGatePerHero(data!.config.points)
+        throw new Error(`${t('levelUpNeed400')} (${Math.round(pts)} / ${need})`)
+      }
       const classDef = data!.classes[hero.profile.class]
       if (!classDef) throw new Error('Class missing')
-      const up = pickUpgrade(classDef, monthNumber)
-      if (!up) throw new Error(`No upgrade for month ${monthNumber}`)
+      const fam = data!.families.find((f) => f.hero_ids?.includes(heroId))
+      const clearedMonth =
+        opts?.monthOverride ?? Number(fam?.map_campaign_id) ?? monthNumber
+      const up = pickUpgrade(classDef, clearedMonth)
+      if (!up) throw new Error(`No upgrade for month ${clearedMonth}`)
 
       let rewards: Record<string, unknown>[] = []
       try {
@@ -222,7 +261,7 @@ export function Admin() {
         slots,
         rewards,
         classDef,
-        monthNumber,
+        monthNumber: clearedMonth,
         monthId: month,
         rewardLabel: rewardEn,
         rewardLabelPt: rewardPt,
@@ -233,14 +272,64 @@ export function Admin() {
 
       if (hasGithubToken()) {
         const files = await commitLevelUp(heroId, pack)
-        setMsg(`${t('levelUpOk')} ${heroId} → lv ${pack.newLevel} (${pack.upgrade.name}). ${files.join(', ')}`)
+        if (!opts?.silent) {
+          setMsg(
+            `${t('levelUpOk')} ${heroId} → lv ${pack.newLevel} (${pack.upgrade.name}). ${files.join(', ')}`,
+          )
+        }
       } else {
         downloadMarkdown(`${heroId}__profile.md`, pack.profileMd)
         downloadMarkdown(`${heroId}__skills.md`, pack.skillsMd)
         downloadMarkdown(`${heroId}__appearance.md`, pack.appearanceMd)
         downloadMarkdown(`${heroId}__rewards.md`, pack.rewardsMd)
-        setMsg(`${t('levelUpOk')} ${heroId} — ${t('download')} (no token)`)
+        if (!opts?.silent) {
+          setMsg(`${t('levelUpOk')} ${heroId} — ${t('download')} (no token)`)
+        }
       }
+      if (!opts?.silent) reload()
+      return pack.newLevel
+    } catch (e) {
+      if (!opts?.silent) setMsg(String(e))
+      throw e
+    } finally {
+      if (!opts?.silent) setBusy(false)
+    }
+  }
+
+  async function applyFamilyVictory(familyId: string) {
+    setBusy(true)
+    setMsg('')
+    try {
+      const f = data!.families.find((x) => x.id === familyId)
+      if (!f) throw new Error('Family missing')
+      const clearedMonth = Number(f.map_campaign_id) || monthNumber
+      setFamilyBossDone(f.id, data!.config.current_week, true)
+      let leveled = 0
+      let skipped = 0
+      for (const hid of f.hero_ids || []) {
+        const hero = data!.heroes.find((h) => h.id === hid)
+        if (!heroEligibleForLevelUp(hero?.weekly, true, data!.config.points)) {
+          skipped++
+          continue
+        }
+        try {
+          await levelUpHero(hid, {
+            monthOverride: clearedMonth,
+            skipBossCheck: true,
+            silent: true,
+          })
+          leveled++
+        } catch {
+          skipped++
+        }
+      }
+      const next = applyBossDone(f, true)
+      upsertLocalFamily(next)
+      const label = pickL(f as unknown as Record<string, unknown>, 'name', locale)
+      setMsg(
+        `${label}: victory → city ${next.map_campaign_id} · level-up ×${leveled}` +
+          (skipped ? ` · skip ×${skipped} (<400)` : ''),
+      )
       reload()
     } catch (e) {
       setMsg(String(e))
@@ -298,6 +387,7 @@ export function Admin() {
       <div className="mb-4 flex flex-wrap gap-2">
         {tabBtn('calendar', t('adminTabCalendar'))}
         {tabBtn('campaign', t('adminTabCampaign'))}
+        {tabBtn('families', t('adminFamilies'))}
         {tabBtn('bestiary', t('adminTabBestiary'))}
       </div>
 
@@ -334,6 +424,84 @@ export function Admin() {
           setMsg={setMsg}
           reload={reload}
         />
+      ) : tab === 'families' ? (
+        <div className="panel max-w-2xl space-y-4 p-4">
+          <p className="text-sm opacity-80">{t('createFamilyHelp')}</p>
+          {data.families.map((f) => {
+            const sess =
+              getFamilySession(f.id, data.config.current_week) ||
+              (data.activeFamily?.id === f.id ? data.familySession : null)
+            const bossDone = Boolean(sess?.boss_done)
+            const pool = familyPointsPool(f, data.mapWeekPoints)
+            const gate = familyGateThreshold(f, data.config.points)
+            const label = pickL(f as unknown as Record<string, unknown>, 'name', locale)
+            return (
+              <div
+                key={f.id}
+                className="space-y-2 border border-[var(--color-gold-dim)]/50 p-3"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="font-display text-sm text-[var(--color-gold)]">
+                    {label}{' '}
+                    <span className="opacity-60">
+                      ({f.id}) · {t('familyMapCity')} {f.map_campaign_id}
+                    </span>
+                  </h3>
+                  <span className="text-xs opacity-75">
+                    {t('familyPoolLabel')}: {Math.round(pool)} / {gate}
+                  </span>
+                </div>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={bossDone}
+                    onChange={(e) => {
+                      setFamilyBossDone(f.id, data.config.current_week, e.target.checked)
+                      reload()
+                    }}
+                  />
+                  {t('familyBossDone')} ({data.config.current_week})
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => void applyFamilyVictory(f.id)}
+                    className="border border-[var(--color-gold)] px-3 py-2 font-display text-[10px] tracking-widest text-[var(--color-gold)]"
+                  >
+                    {t('applyFamilyVictory')}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      setFamilyBossDone(f.id, data.config.current_week, false)
+                      upsertLocalFamily(applyBossDone(f, false))
+                      setMsg(`${label}: defeat`)
+                      reload()
+                    }}
+                    className="border border-[var(--color-gold-dim)] px-3 py-2 font-display text-[10px] tracking-widest text-[var(--color-gold)]"
+                  >
+                    {t('applyFamilyDefeat')}
+                  </button>
+                </div>
+                <ul className="text-xs opacity-80">
+                  {(f.hero_ids || []).map((hid) => {
+                    const h = data.heroes.find((x) => x.id === hid)
+                    return (
+                      <li key={hid}>
+                        {h
+                          ? pickL(h.profile as unknown as Record<string, unknown>, 'character_name', locale)
+                          : hid}{' '}
+                        · {Math.round(data.mapWeekPoints[hid] || 0)} pts
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )
+          })}
+        </div>
       ) : (
         <>
           <div className="panel grid max-w-2xl gap-4 p-4">
@@ -514,6 +682,10 @@ export function Admin() {
             <ul className="space-y-2">
               {data.heroes.map((h) => {
                 const up = pickUpgrade(data.classes[h.profile.class], monthNumber)
+                const won = familyBossDoneForHero(h.id)
+                const eligible = heroEligibleForLevelUp(h.weekly, won, data.config.points)
+                const pts = heroLevelUpPoints(h.weekly, won, data.config.points)
+                const need = bossGatePerHero(data.config.points)
                 return (
                   <li
                     key={h.id}
@@ -522,6 +694,9 @@ export function Admin() {
                     <span>
                       {pickL(h.profile as Record<string, unknown>, 'character_name', locale)} · lv{' '}
                       {h.profile.level}
+                      <span className="ml-2 opacity-70">
+                        {Math.round(pts)}/{need} pts
+                      </span>
                       {up && (
                         <span className="ml-2 opacity-70">
                           → {pickL(up as Record<string, unknown>, 'name', locale)}
@@ -530,9 +705,16 @@ export function Admin() {
                     </span>
                     <button
                       type="button"
-                      disabled={busy || !up}
+                      disabled={busy || !up || !won || !eligible}
                       onClick={() => void levelUpHero(h.id)}
                       className="border border-[var(--color-gold)] px-3 py-1 font-display text-[10px] tracking-widest text-[var(--color-gold)] disabled:opacity-40"
+                      title={
+                        !won
+                          ? t('levelUpNeedBoss')
+                          : !eligible
+                            ? t('levelUpNeed400')
+                            : undefined
+                      }
                     >
                       {t('applyLevelUp')}
                     </button>

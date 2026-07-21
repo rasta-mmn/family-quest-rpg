@@ -93,6 +93,7 @@ export type CreateHeroInput = {
   character_name: string
   class: string
   sex: 'male' | 'female'
+  family_id?: string
   real_name_redacted: string
   real_name_redacted_pt?: string
   theme: string
@@ -135,6 +136,7 @@ export function buildLocalHero(input: CreateHeroInput): LocalHeroRecord {
     character_name: name,
     character_name_pt: name,
     class: cls,
+    family_id: input.family_id,
     real_name_redacted: input.real_name_redacted.trim() || 'Player',
     real_name_redacted_pt: (input.real_name_redacted_pt || input.real_name_redacted).trim(),
     photo: photoPath,

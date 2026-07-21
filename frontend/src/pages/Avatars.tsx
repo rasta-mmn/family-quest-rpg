@@ -2,6 +2,7 @@ import { Link } from 'wouter'
 import { useState } from 'react'
 import { Layout } from '../components/Layout'
 import { ClassEvolutions } from '../components/ClassEvolutions'
+import { CityMapsLab } from '../components/CityMapsLab'
 import { assetUrl } from '../lib/githubApi'
 import { useGameData } from '../hooks/useGameData'
 import { useLocale } from '../lib/i18n'
@@ -171,6 +172,26 @@ export function Avatars() {
       <div className="panel p-3 md:p-4">
         <ClassEvolutions allClasses monthsCompleted={12} classId="guerreiro" sex={sex} />
       </div>
+
+      <CityMapsLab
+        points={
+          data?.config.points || {
+            per_task: 30,
+            per_extra: 2.5,
+            boss: 30,
+            weekly_target: 100,
+            monthly_xp: 400,
+            boss_gate_per_hero: 400,
+          }
+        }
+        crest={data?.activeFamily?.crest}
+        heroFaces={(data?.heroes || []).slice(0, 4).map((h) => ({
+          id: h.id,
+          name: h.profile.character_name,
+          avatar: h.profile.avatar,
+          photo: h.profile.photo,
+        }))}
+      />
     </Layout>
   )
 }

@@ -5,6 +5,7 @@ import { addLocalHero, buildLocalHero } from '../lib/localHeroes'
 import { downloadHeroPack } from '../lib/heroMarkdown'
 import { RANK_OPTIONS, rankById } from '../lib/hierarchy'
 import { fileToPhotoDataUrl } from '../lib/photoUpload'
+import { patchLocalFamily, upsertLocalFamily } from '../lib/familyStore'
 import { useGameData } from '../hooks/useGameData'
 import { pickL, useLocale } from '../lib/i18n'
 
@@ -24,6 +25,7 @@ export function CreateHero() {
   const [sex, setSex] = useState<'male' | 'female'>('male')
   const [rankId, setRankId] = useState('rank5')
   const [theme, setTheme] = useState('fisico')
+  const [familyId, setFamilyId] = useState('')
   const [monthObjective, setMonthObjective] = useState('')
   const [photoPreview, setPhotoPreview] = useState('')
   const [photoBusy, setPhotoBusy] = useState(false)
@@ -47,6 +49,8 @@ export function CreateHero() {
   const week = data.config.current_week
   const bossMeta = data.month.bosses?.find((b) => b.week === week) || data.month.bosses?.[0]
   const themeDef = data.themes[theme]
+  const families = data.families || []
+  const selectedFamily = familyId || data.activeFamily?.id || families[0]?.id || ''
 
   async function onPhoto(file: File | undefined) {
     if (!file) return
@@ -72,11 +76,16 @@ export function CreateHero() {
       setFormError(t('needBoss'))
       return
     }
+    if (!selectedFamily) {
+      setFormError(t('needFamilyName'))
+      return
+    }
     const rank = rankById(rankId)
     const hero = buildLocalHero({
       character_name: name,
       class: cls,
       sex,
+      family_id: selectedFamily,
       real_name_redacted: rank.en,
       real_name_redacted_pt: rank.pt,
       theme,
@@ -93,6 +102,17 @@ export function CreateHero() {
       },
     })
     addLocalHero(hero)
+    const fam = families.find((f) => f.id === selectedFamily)
+    if (fam) {
+      upsertLocalFamily({
+        ...fam,
+        hero_ids: [...new Set([...(fam.hero_ids || []), hero.id])],
+      })
+    } else {
+      patchLocalFamily(selectedFamily, {
+        hero_ids: [hero.id],
+      })
+    }
     if (alsoDownload) downloadHeroPack(hero, data!.config.current_month)
     reload()
     setLoc(`/player/${hero.id}`)
@@ -111,6 +131,20 @@ export function CreateHero() {
             className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-3 py-2"
             autoFocus
           />
+        </label>
+        <label className="block text-sm">
+          <span className="font-display text-xs text-[var(--color-gold)]">{t('familyField')}</span>
+          <select
+            value={selectedFamily}
+            onChange={(e) => setFamilyId(e.target.value)}
+            className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-3 py-2"
+          >
+            {families.map((f) => (
+              <option key={f.id} value={f.id}>
+                {pickL(f as unknown as Record<string, unknown>, 'name', locale) || f.id}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="block text-sm">
           <span className="font-display text-xs text-[var(--color-gold)]">{t('classField')}</span>

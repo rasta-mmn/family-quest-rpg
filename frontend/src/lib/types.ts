@@ -4,7 +4,33 @@ export type PointsConfig = {
   boss: number
   weekly_target: number
   monthly_xp: number
+  /** Map progress gate per hero; family threshold = this × N heroes. */
+  boss_gate_per_hero?: number
   weekly_reward_euros?: number
+}
+
+export type BossOutcome = 'victory' | 'defeat' | null
+
+export type FamilyConfig = {
+  id: string
+  name: string
+  name_pt?: string
+  crest: string
+  hero_ids: string[]
+  /** Adventure city (campaign id), independent of shared calendar. */
+  map_campaign_id: string
+  /** 0 = city start; higher = further along route (cache/display). */
+  map_stop?: number
+  boss_outcome?: BossOutcome
+  /** Optional cached pool; live UI prefers sum of hero week points. */
+  family_points_pool?: number
+}
+
+/** Family weekly session — BOSS activity boolean (UI later; Admin toggles now). */
+export type FamilyWeeklySession = {
+  week: string
+  family_id: string
+  boss_done: boolean
 }
 
 export type PlayerConfig = {
@@ -12,6 +38,7 @@ export type PlayerConfig = {
   character_name: string
   character_name_pt?: string
   class: string
+  family_id?: string
   real_name_redacted?: string
   real_name_redacted_pt?: string
   photo?: string
@@ -24,8 +51,18 @@ export type GameConfig = {
   journey_start?: string
   current_month: string
   current_week: string
+  families?: FamilyConfig[]
+  active_family?: string
   players: PlayerConfig[]
   points: PointsConfig
+}
+
+export type MapLandmark = {
+  id: string
+  name: string
+  name_pt?: string
+  x: number
+  y: number
 }
 
 export type DayObjective = {
@@ -131,6 +168,8 @@ export type CampaignBoss = {
   lore?: string
   lore_pt?: string
   points: number
+  /** Landmark id on city map (boss keep). */
+  landmark_id?: string
 }
 
 export type CampaignVassal = {
@@ -149,6 +188,7 @@ export type CampaignVassal = {
   lore?: string
   lore_pt?: string
   points: number
+  landmark_id?: string
 }
 
 /** Meteorological season id (Spain order) on Solstícia. */
@@ -176,6 +216,9 @@ export type Campaign = {
   /** When false/absent, lore (+ boss/vassal blurbs, month_objective) auto-sync from templates. */
   lore_custom?: boolean
   map?: string
+  /** Landmark id where the party spawns (city square / gate). */
+  map_city_start?: string
+  map_landmarks?: MapLandmark[]
   month_objective?: string
   month_objective_pt?: string
   boss: CampaignBoss

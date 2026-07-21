@@ -15,12 +15,22 @@ import {
   normalizeCampaign,
 } from '../lib/campaign'
 import { loadAdminEdits, loadPlayerEdits, loadRemovedHeroIds } from '../lib/editsStore'
+import { emptyFamily, weekPointsExcludingBoss } from '../lib/family'
+import {
+  getActiveFamilyId,
+  getFamilySession,
+  loadLocalFamilies,
+  mergeFamilies,
+  setActiveFamilyId,
+} from '../lib/familyStore'
 import { normalizeWeeklyLog } from '../lib/dayLog'
 import { resolveThemeId } from '../lib/themeAlias'
 import type {
   BestiaryTheme,
   Campaign,
   ClassDef,
+  FamilyConfig,
+  FamilyWeeklySession,
   GameConfig,
   HeroObjectives,
   MonthSetup,
@@ -46,6 +56,11 @@ export type GameData = {
   themes: Record<string, BestiaryTheme>
   classes: Record<string, ClassDef>
   heroes: HeroBundle[]
+  families: FamilyConfig[]
+  activeFamily: FamilyConfig | null
+  familySession: FamilyWeeklySession | null
+  /** Hero id → week points excluding BOSS activity (map pool). */
+  mapWeekPoints: Record<string, number>
 }
 
 const EMPTY_SLOTS: AppearanceSlots = {
@@ -238,14 +253,91 @@ export function useGameData() {
           }
         }
 
+        let families = mergeFamilies(config.families, loadLocalFamilies())
+        if (!families.length) {
+          const seed = emptyFamily('casa_inicial', {
+            name: 'Starting House',
+            name_pt: 'Casa Inicial',
+            hero_ids: heroes.map((h) => h.id),
+            map_campaign_id: campaignKey,
+          })
+          families = [seed]
+        }
+        // Attach heroes missing family_id to first family
+        const orphanIds = heroes
+          .filter((h) => {
+            const p = config.players?.find((x) => x.id === h.id)
+            return !p?.family_id && !families.some((f) => f.hero_ids?.includes(h.id))
+          })
+          .map((h) => h.id)
+        if (orphanIds.length && families[0]) {
+          families = families.map((f, i) =>
+            i === 0
+              ? { ...f, hero_ids: [...new Set([...(f.hero_ids || []), ...orphanIds])] }
+              : f,
+          )
+        }
+
+        let activeId =
+          getActiveFamilyId() || config.active_family || families[0]?.id || null
+        if (activeId && !families.some((f) => f.id === activeId)) {
+          activeId = families[0]?.id || null
+        }
+        if (activeId) setActiveFamilyId(activeId)
+        const activeFamily = families.find((f) => f.id === activeId) || null
+
+        // Load family weekly session (repo + local overlay)
+        let familySession: FamilyWeeklySession | null = activeFamily
+          ? getFamilySession(activeFamily.id, weekId)
+          : null
+        if (activeFamily && !familySession) {
+          try {
+            const sessText = await fetchDoc(
+              `config/families/${activeFamily.id}/weekly/${weekId}.md`,
+            )
+            familySession = parseMarkdown<FamilyWeeklySession>(sessText).data
+          } catch {
+            familySession = {
+              week: weekId,
+              family_id: activeFamily.id,
+              boss_done: false,
+            }
+          }
+        }
+
+        const mapWeekPoints: Record<string, number> = {}
+        for (const h of heroes) {
+          mapWeekPoints[h.id] = weekPointsExcludingBoss(h.weekly, config.points)
+        }
+
+        // Prefer campaign matching active family map position when available
+        let mapCampaign = campaign
+        if (activeFamily?.map_campaign_id && activeFamily.map_campaign_id !== campaignKey) {
+          try {
+            const altText = await fetchDoc(
+              `config/campaigns/${activeFamily.map_campaign_id}.md`,
+            )
+            mapCampaign = normalizeCampaign(
+              parseMarkdown<Campaign>(altText).data,
+              activeFamily.map_campaign_id,
+            )
+          } catch {
+            /* keep calendar campaign */
+          }
+        }
+
         if (!cancelled) {
           setData({
-            config,
+            config: { ...config, families, active_family: activeId || undefined },
             month,
-            campaign,
+            campaign: mapCampaign,
             themes: bestiary.themes || {},
             classes: classesFile.classes || {},
             heroes,
+            families,
+            activeFamily,
+            familySession,
+            mapWeekPoints,
           })
           setError(null)
           hydrated.current = true

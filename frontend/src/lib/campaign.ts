@@ -1,4 +1,5 @@
 import { applyGeneratedLore } from './campaignLore'
+import { defaultLandmarks } from './family'
 import type { BossEntry, Campaign, CampaignVassal, MonthSetup } from './types'
 
 export function campaignIdFromMonthNumber(n: number): string {
@@ -33,6 +34,8 @@ export function campaignDominantTheme(campaign: Campaign): string {
   return creatureTheme(campaign.boss, campaign.theme || 'fisico')
 }
 
+const DEFAULT_VASSAL_LANDMARKS = ['road_camp', 'mid_ruins', 'mid_ruins', 'boss_keep']
+
 export function emptyVassal(weekIndex: number, theme = 'fisico'): CampaignVassal {
   return {
     id: `vassal_${weekIndex}`,
@@ -47,6 +50,7 @@ export function emptyVassal(weekIndex: number, theme = 'fisico'): CampaignVassal
     lore: '',
     lore_pt: '',
     points: 30,
+    landmark_id: DEFAULT_VASSAL_LANDMARKS[weekIndex - 1] || 'mid_ruins',
   }
 }
 
@@ -100,13 +104,21 @@ export function normalizeCampaign(raw: Campaign, id?: string): Campaign {
     }
   })
   const loreCustom = isLoreCustomFlag(raw.lore_custom)
+  const landmarks =
+    raw.map_landmarks?.length ? raw.map_landmarks : base.map_landmarks
   const merged: Campaign = {
     ...base,
     ...raw,
     id: campId,
     theme: boss.theme,
     lore_custom: loreCustom,
-    boss,
+    map: raw.map || base.map,
+    map_city_start: raw.map_city_start || base.map_city_start,
+    map_landmarks: landmarks,
+    boss: {
+      ...boss,
+      landmark_id: rawBoss.landmark_id || boss.landmark_id || 'boss_keep',
+    },
     vassals,
   }
   return loreCustom ? merged : applyGeneratedLore(merged)
@@ -135,7 +147,9 @@ export function emptyCampaign(id = '01'): Campaign {
     lore: '',
     lore_pt: '',
     lore_custom: false,
-    map: 'docs/assets/backgrounds/fisico.jpg',
+    map: 'docs/assets/maps/01-termopolis.png',
+    map_city_start: 'city_square',
+    map_landmarks: defaultLandmarks(),
     month_objective: '',
     month_objective_pt: '',
     boss: {
@@ -148,6 +162,7 @@ export function emptyCampaign(id = '01'): Campaign {
       lore: '',
       lore_pt: '',
       points: 50,
+      landmark_id: 'boss_keep',
     },
     // Default 3 vassals (4-week month). 5-week months use a 4th slot.
     vassals: [1, 2, 3].map((i) => emptyVassal(i)),
@@ -232,7 +247,15 @@ export function buildCampaignMd(c: Campaign): string {
     objective_pt: "${yamlEscape(v.objective_pt || v.objective || '')}"
     lore: "${yamlEscape(v.lore || '')}"
     lore_pt: "${yamlEscape(v.lore_pt || v.lore || '')}"
+    landmark_id: ${v.landmark_id || 'mid_ruins'}
     points: ${v.points ?? 30}`,
+    )
+    .join('\n')
+
+  const landmarksYaml = (c.map_landmarks || defaultLandmarks())
+    .map(
+      (l) =>
+        `  - { id: ${l.id}, name: "${yamlEscape(l.name)}", name_pt: "${yamlEscape(l.name_pt || l.name)}", x: ${l.x}, y: ${l.y} }`,
     )
     .join('\n')
 
@@ -253,6 +276,9 @@ lore: "${yamlEscape(c.lore || '')}"
 lore_pt: "${yamlEscape(c.lore_pt || c.lore || '')}"
 lore_custom: ${c.lore_custom ? 'true' : 'false'}
 map: "${yamlEscape(c.map || '')}"
+map_city_start: ${c.map_city_start || 'city_square'}
+map_landmarks:
+${landmarksYaml}
 month_objective: "${yamlEscape(c.month_objective || '')}"
 month_objective_pt: "${yamlEscape(c.month_objective_pt || c.month_objective || '')}"
 boss:
@@ -262,6 +288,7 @@ boss:
   theme: ${creatureTheme(c.boss, theme)}
   avatar: "${yamlEscape(creatureArt(c.boss))}"
   photo: "${yamlEscape(c.boss.photo || '')}"
+  landmark_id: ${c.boss.landmark_id || 'boss_keep'}
   lore: "${yamlEscape(c.boss.lore || '')}"
   lore_pt: "${yamlEscape(c.boss.lore_pt || c.boss.lore || '')}"
   points: ${c.boss.points ?? 50}

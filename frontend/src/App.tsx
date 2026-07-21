@@ -6,6 +6,7 @@ import { Leaderboard } from './pages/Leaderboard'
 import { Admin } from './pages/Admin'
 import { Heroes } from './pages/Heroes'
 import { CreateHero } from './pages/CreateHero'
+import { CreateFamily } from './pages/CreateFamily'
 import { Avatars } from './pages/Avatars'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/" component={Home} />
         <Route path="/heroes" component={Heroes} />
         <Route path="/create" component={CreateHero} />
+        <Route path="/create-family" component={CreateFamily} />
         <Route path="/player/:id" component={Player} />
         <Route path="/avatars" component={Avatars} />
         <Route path="/weekly" component={Weekly} />

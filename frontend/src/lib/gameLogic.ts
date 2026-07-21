@@ -7,6 +7,7 @@ const DEFAULT_POINTS: PointsConfig = {
   boss: 30,
   weekly_target: 100,
   monthly_xp: 400,
+  boss_gate_per_hero: 400,
 }
 
 /** Weekly score: base + extras + boss (mechanics.md). */
