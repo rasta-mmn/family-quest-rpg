@@ -2,492 +2,492 @@
 roster:
 - id: lich
   role: boss
-  name: "Bone Lich"
-  name_pt: "Lich dos Ossos"
+  name: "Eternal Blanket Lord"
+  name_pt: "Senhor Cobertor-Eterno"
   type: lich
   image: "docs/assets/bestiary/lich/boss.png"
   avatars:
   - "docs/assets/bestiary/lich/boss-avatar.png"
   - "docs/assets/bestiary/lich/boss-dark.png"
-  lore: "Crowned in frost and bone — drains warmth from the living."
-  lore_pt: "Coroado de gelo e osso — drena o calor dos vivos."
+  lore: "Wraps heroes in one more minute under the covers — warmth never leaves the bed."
+  lore_pt: "Enrola heróis no 'só mais um minutinho' debaixo do cobertor — o calor nunca sai da cama."
   vassals:
   - id: bone_skeleton
     role: vassal
-    name: "Bone Skeleton"
-    name_pt: "Esqueleto de Osso"
+    name: "Sofa Skeleton"
+    name_pt: "Esqueleto do Sofá"
     type: morto_vivo
     image: "docs/assets/bestiary/lich/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/lich/vassal-01-alt.png"
     - "docs/assets/bestiary/lich/vassal-01-dark.png"
-    lore: "Rattles forward with a rusted blade."
-    lore_pt: "Avança chocalhando com lâmina enferrujada."
+    lore: "Sunk into the cushions — remote in one hand, chores forgotten."
+    lore_pt: "Afundado nas almofadas — comando numa mão, tarefas esquecidas."
   - id: crypt_wight
     role: vassal
-    name: "Crypt Wight"
-    name_pt: "Wight da Cripta"
+    name: "Five-More-Minutes Ghost"
+    name_pt: "Fantasma dos Cinco Minutinhos"
     type: morto_vivo
     image: "docs/assets/bestiary/lich/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/lich/vassal-02-alt.png"
     - "docs/assets/bestiary/lich/vassal-02-dark.png"
-    lore: "Guards tombs that should stay shut."
-    lore_pt: "Guarda túmulos que deveriam ficar fechados."
+    lore: "Whispers 'just five more…' every time the alarm rings."
+    lore_pt: "Sussurra 'só mais cinco…' sempre que o alarme toca."
   - id: soul_thrall
     role: vassal
-    name: "Soul Thrall"
-    name_pt: "Servo da Alma"
+    name: "Snooze Servant"
+    name_pt: "Servo do Soneca"
     type: morto_vivo
     image: "docs/assets/bestiary/lich/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/lich/vassal-03-alt.png"
     - "docs/assets/bestiary/lich/vassal-03-dark.png"
-    lore: "A bound spirit that echoes the lich will."
-    lore_pt: "Espirito preso que ecoa a vontade do lich."
+    lore: "Hits snooze for the whole party."
+    lore_pt: "Carrega no soneca pela família inteira."
 - id: dragon
   role: boss
-  name: "Crimson Wyrm"
-  name_pt: "Serpe Carmesim"
+  name: "Hot-Screen Dragon"
+  name_pt: "Dragão do Ecrã Quente"
   type: dragao
   image: "docs/assets/bestiary/dragon/boss.png"
   avatars:
   - "docs/assets/bestiary/dragon/boss-avatar.png"
   - "docs/assets/bestiary/dragon/boss-dark.png"
-  lore: "Hoards fire and fear beneath cracked mountains."
-  lore_pt: "Acumula fogo e medo sob montanhas rachadas."
+  lore: "Hoards episodes and glowing screens — 'just one more' never ends."
+  lore_pt: "Acumula episódios e ecrãs acesos — o 'só mais um' nunca acaba."
   vassals:
   - id: fire_cultist
     role: vassal
-    name: "Fire Cultist"
-    name_pt: "Cultista do Fogo"
+    name: "One-More-Episode Cultist"
+    name_pt: "Cultista do Mais Um Episódio"
     type: mago_mau
     image: "docs/assets/bestiary/dragon/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/dragon/vassal-01-alt.png"
     - "docs/assets/bestiary/dragon/vassal-01-dark.png"
-    lore: "Chants until the scales glow."
-    lore_pt: "Canta até as escamas brilharem."
+    lore: "Chants until the next episode autoplays."
+    lore_pt: "Canta até o próximo episódio começar sozinho."
   - id: ash_drake
     role: vassal
-    name: "Ash Drake"
-    name_pt: "Dragãozinho de Cinza"
+    name: "Tantrum Hatchling"
+    name_pt: "Filhote do Piti"
     type: dragao
     image: "docs/assets/bestiary/dragon/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/dragon/vassal-02-alt.png"
     - "docs/assets/bestiary/dragon/vassal-02-dark.png"
-    lore: "Small wings, hot temper."
-    lore_pt: "Asas pequenas, temperamento quente."
+    lore: "Small wings, big meltdown when Wi‑Fi dips."
+    lore_pt: "Asas pequenas, piti enorme quando a net falha."
   - id: scale_acolyte
     role: vassal
-    name: "Scale Acolyte"
-    name_pt: "Acólito das Escamas"
+    name: "Notification Acolyte"
+    name_pt: "Acólito da Notificação"
     type: mago_mau
     image: "docs/assets/bestiary/dragon/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/dragon/vassal-03-alt.png"
     - "docs/assets/bestiary/dragon/vassal-03-dark.png"
-    lore: "Wears stolen dragon scales as prayer."
-    lore_pt: "Usa escamas roubadas como oração."
+    lore: "Bows to every ping and buzz."
+    lore_pt: "Faz vénia a cada bip e vibração."
 - id: mad_king
   role: boss
-  name: "Mad King"
-  name_pt: "Rei Louco"
+  name: "King of Mess"
+  name_pt: "Rei da Bagunça"
   type: rei_mau
   image: "docs/assets/bestiary/mad_king/boss.png"
   avatars:
   - "docs/assets/bestiary/mad_king/boss-avatar.png"
   - "docs/assets/bestiary/mad_king/boss-dark.png"
-  lore: "Issues decrees that only madness obeys."
-  lore_pt: "Emite decretos que só a loucura obedece."
+  lore: "Issues decrees nobody follows — chores scatter, socks rebel."
+  lore_pt: "Manda ordens que ninguém segue — tarefas fogem, meias revoltam-se."
   vassals:
   - id: templar_zealot
     role: vassal
-    name: "Templar Zealot"
-    name_pt: "Templário Zelote"
+    name: "I-Said-So Zealot"
+    name_pt: "Zelote do Eu-Mando"
     type: rei_mau
     image: "docs/assets/bestiary/mad_king/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/mad_king/vassal-01-alt.png"
     - "docs/assets/bestiary/mad_king/vassal-01-dark.png"
-    lore: "Shield first, mercy never."
-    lore_pt: "Escudo primeiro, misericórdia nunca."
+    lore: "Shield of stubborn 'because I said so'."
+    lore_pt: "Escudo do teimoso 'porque eu mando'."
   - id: court_mage
     role: vassal
-    name: "Court Mage"
-    name_pt: "Mago da Corte"
+    name: "Royal Excuse Mage"
+    name_pt: "Mago das Desculpas Reais"
     type: mago_mau
     image: "docs/assets/bestiary/mad_king/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/mad_king/vassal-02-alt.png"
     - "docs/assets/bestiary/mad_king/vassal-02-dark.png"
-    lore: "Turns royal whims into hexes."
-    lore_pt: "Transforma caprichos reais em maldições."
+    lore: "Turns 'I forgot' into a royal speech."
+    lore_pt: "Transforma 'esqueci-me' em discurso real."
   - id: crown_guard
     role: vassal
-    name: "Crown Guard"
-    name_pt: "Guarda da Coroa"
+    name: "Door-Slam Guard"
+    name_pt: "Guarda do Porta-Batida"
     type: rei_mau
     image: "docs/assets/bestiary/mad_king/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/mad_king/vassal-03-alt.png"
     - "docs/assets/bestiary/mad_king/vassal-03-dark.png"
-    lore: "Halberd polished on dissenters."
-    lore_pt: "Alabarda polida em dissidentes."
+    lore: "Halberd polished on slammed bedroom doors."
+    lore_pt: "Alabarda polida em portas de quarto batidas."
 - id: elemental
   role: boss
-  name: "Storm Elemental"
-  name_pt: "Elemental da Tempestade"
+  name: "Rush Hour Storm"
+  name_pt: "Tempestade da Pressa"
   type: elemental
   image: "docs/assets/bestiary/elemental/boss.png"
   avatars:
   - "docs/assets/bestiary/elemental/boss-avatar.png"
   - "docs/assets/bestiary/elemental/boss-dark.png"
-  lore: "A walking thunderhead with a temper."
-  lore_pt: "Uma tempestade ambulante de mau génio."
+  lore: "A walking hurry with no socks on — chaos before leaving the house."
+  lore_pt: "Uma pressa ambulante sem meias — caos antes de sair de casa."
   vassals:
   - id: spark_wisp
     role: vassal
-    name: "Spark Wisp"
-    name_pt: "Fogo-Fátuo da Faísca"
+    name: "Impatience Spark"
+    name_pt: "Faísca da Impaciência"
     type: elemental
     image: "docs/assets/bestiary/elemental/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/elemental/vassal-01-alt.png"
     - "docs/assets/bestiary/elemental/vassal-01-dark.png"
-    lore: "Zips, snaps, vanishes."
-    lore_pt: "Zune, estala, some."
+    lore: "Zips, snaps, won't wait in line."
+    lore_pt: "Zune, estala, não aguenta filas."
   - id: stone_shard
     role: vassal
-    name: "Stone Shard"
-    name_pt: "Lasca de Pedra"
+    name: "Stubborn Pebble"
+    name_pt: "Pedra do Pé-de-Burro"
     type: elemental
     image: "docs/assets/bestiary/elemental/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/elemental/vassal-02-alt.png"
     - "docs/assets/bestiary/elemental/vassal-02-dark.png"
-    lore: "Earth fragment that refuses to settle."
-    lore_pt: "Fragmento de terra que se recusa a assentar."
+    lore: "Refuses to move — 'I'm not ready'."
+    lore_pt: "Recusa mexer-se — 'ainda não estou pronto'."
   - id: tide_sprite
     role: vassal
-    name: "Tide Sprite"
-    name_pt: "Duende da Maré"
+    name: "Overwhelm Wave"
+    name_pt: "Onda do Stress"
     type: elemental
     image: "docs/assets/bestiary/elemental/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/elemental/vassal-03-alt.png"
     - "docs/assets/bestiary/elemental/vassal-03-dark.png"
-    lore: "Pulls heroes off balance with every wave."
-    lore_pt: "Desequilibra heróis a cada onda."
+    lore: "Knocks heroes off balance with too many tasks at once."
+    lore_pt: "Desequilibra heróis com demasiadas tarefas de uma vez."
 - id: beast
   role: boss
-  name: "Dire Beast"
-  name_pt: "Besta Dire"
+  name: "Hangry Beast"
+  name_pt: "Besta da Fome-Raiva"
   type: besta
   image: "docs/assets/bestiary/beast/boss.png"
   avatars:
   - "docs/assets/bestiary/beast/boss-avatar.png"
   - "docs/assets/bestiary/beast/boss-dark.png"
-  lore: "Claws carved from hunger itself."
-  lore_pt: "Garras talhadas da própria fome."
+  lore: "Claws carved from skipped meals and stolen snacks."
+  lore_pt: "Garras talhadas de refeições saltadas e lanches roubados."
   vassals:
   - id: claw_pup
     role: vassal
-    name: "Claw Pup"
-    name_pt: "Filhote de Garra"
+    name: "Snack Pup"
+    name_pt: "Filhote do Petisco"
     type: besta
     image: "docs/assets/bestiary/beast/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/beast/vassal-01-alt.png"
     - "docs/assets/bestiary/beast/vassal-01-dark.png"
-    lore: "Small, loud, all teeth."
-    lore_pt: "Pequeno, barulhento, só dentes."
+    lore: "Small, loud, all crumbs."
+    lore_pt: "Pequeno, barulhento, só migalhas."
   - id: horn_brute
     role: vassal
-    name: "Horn Brute"
-    name_pt: "Bruto de Chifre"
+    name: "Charge-First Brute"
+    name_pt: "Bruto do Empurrão"
     type: besta
     image: "docs/assets/bestiary/beast/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/beast/vassal-02-alt.png"
     - "docs/assets/bestiary/beast/vassal-02-dark.png"
-    lore: "Charges first, thinks never."
-    lore_pt: "Investe primeiro, nunca pensa."
+    lore: "Charges the fridge first, thinks never."
+    lore_pt: "Investe no frigorífico primeiro, nunca pensa."
   - id: shell_crab
     role: vassal
-    name: "Shell Crab"
-    name_pt: "Caranguejo de Concha"
+    name: "Junk-Food Pinch"
+    name_pt: "Caranguejo do Aperto-Doce"
     type: besta
     image: "docs/assets/bestiary/beast/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/beast/vassal-03-alt.png"
     - "docs/assets/bestiary/beast/vassal-03-dark.png"
-    lore: "Armor that pinches back."
-    lore_pt: "Armadura que belisca de volta."
+    lore: "Armor that pinches the fruit bowl empty."
+    lore_pt: "Armadura que belisca a fruteira até ficar vazia."
 - id: demon
   role: boss
-  name: "Infernal Demon"
-  name_pt: "Demônio Infernal"
+  name: "Grumpy Infernal"
+  name_pt: "Demónio do Mau Humor"
   type: demonio
   image: "docs/assets/bestiary/demon/boss.png"
   avatars:
   - "docs/assets/bestiary/demon/boss-avatar.png"
   - "docs/assets/bestiary/demon/boss-dark.png"
-  lore: "Bargains in ash and broken promises."
-  lore_pt: "Negocia em cinza e promessas partidas."
+  lore: "Bargains in sighs, slammed doors, and broken patience."
+  lore_pt: "Negocia em suspiros, portas batidas e paciência partida."
   vassals:
   - id: imp_ember
     role: vassal
-    name: "Ember Imp"
-    name_pt: "Diabrete de Brasa"
+    name: "Snappy Imp"
+    name_pt: "Diabrete da Resposta Grossa"
     type: demonio
     image: "docs/assets/bestiary/demon/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/demon/vassal-01-alt.png"
     - "docs/assets/bestiary/demon/vassal-01-dark.png"
-    lore: "Tiny horns, big smirk."
-    lore_pt: "Chifres minúsculos, sorriso enorme."
+    lore: "Tiny horns, huge eye-roll."
+    lore_pt: "Chifres minúsculos, revirar de olhos enorme."
   - id: brimstone_hound
     role: vassal
-    name: "Brimstone Hound"
-    name_pt: "Cão de Enxofre"
+    name: "Huff-and-Puff Hound"
+    name_pt: "Cão do Bufar"
     type: demonio
     image: "docs/assets/bestiary/demon/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/demon/vassal-02-alt.png"
     - "docs/assets/bestiary/demon/vassal-02-dark.png"
-    lore: "Tracks fear by scent."
-    lore_pt: "Fareja o medo."
+    lore: "Tracks annoyance by scent."
+    lore_pt: "Fareja o mau humor."
   - id: horned_thrall
     role: vassal
-    name: "Horned Thrall"
-    name_pt: "Servo Cornudo"
+    name: "Sulky Thrall"
+    name_pt: "Servo do Amua"
     type: demonio
     image: "docs/assets/bestiary/demon/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/demon/vassal-03-alt.png"
     - "docs/assets/bestiary/demon/vassal-03-dark.png"
-    lore: "Bound by a seal that still burns."
-    lore_pt: "Preso por um selo que ainda queima."
+    lore: "Bound by a pout that still burns."
+    lore_pt: "Preso por um beiço que ainda queima."
 - id: specter
   role: boss
-  name: "Wailing Specter"
-  name_pt: "Espectro Uivante"
+  name: "Later Specter"
+  name_pt: "Espectro do Depois-Eu-Faço"
   type: morto_vivo
   image: "docs/assets/bestiary/specter/boss.png"
   avatars:
   - "docs/assets/bestiary/specter/boss-avatar.png"
   - "docs/assets/bestiary/specter/boss-dark.png"
-  lore: "Sings unfinished goodbyes through fog."
-  lore_pt: "Canta adeuses inacabados através da névoa."
+  lore: "Sings unfinished to-dos through fog — tomorrow never comes."
+  lore_pt: "Canta tarefas inacabadas na névoa — o amanhã nunca chega."
   vassals:
   - id: mist_shade
     role: vassal
-    name: "Mist Shade"
-    name_pt: "Sombra da Névoa"
+    name: "Maybe-Later Mist"
+    name_pt: "Névoa do Talvez-Depois"
     type: morto_vivo
     image: "docs/assets/bestiary/specter/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/specter/vassal-01-alt.png"
     - "docs/assets/bestiary/specter/vassal-01-dark.png"
-    lore: "Half-seen, fully chilling."
-    lore_pt: "Meio vista, totalmente gelada."
+    lore: "Half-seen, fully delaying."
+    lore_pt: "Meio vista, totalmente a adiar."
   - id: chain_ghost
     role: vassal
-    name: "Chain Ghost"
-    name_pt: "Fantasma das Correntes"
+    name: "Excuse Chains"
+    name_pt: "Correntes das Desculpas"
     type: morto_vivo
     image: "docs/assets/bestiary/specter/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/specter/vassal-02-alt.png"
     - "docs/assets/bestiary/specter/vassal-02-dark.png"
-    lore: "Drags iron regrets behind it."
-    lore_pt: "Arrasta arrependimentos de ferro."
+    lore: "Drags a trail of 'but I was busy'."
+    lore_pt: "Arrasta um rasto de 'mas eu estava ocupado'."
   - id: echo_wraith
     role: vassal
-    name: "Echo Wraith"
-    name_pt: "Espectro do Eco"
+    name: "Worry Echo"
+    name_pt: "Eco da Preocupação"
     type: morto_vivo
     image: "docs/assets/bestiary/specter/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/specter/vassal-03-alt.png"
     - "docs/assets/bestiary/specter/vassal-03-dark.png"
-    lore: "Repeats your worst thought louder."
-    lore_pt: "Repete o teu pior pensamento mais alto."
+    lore: "Repeats your worst 'what if' louder."
+    lore_pt: "Repete o teu pior 'e se…' mais alto."
 - id: golem
   role: boss
-  name: "Ruin Golem"
-  name_pt: "Golem das Ruínas"
+  name: "Stubborn Wall"
+  name_pt: "Muralha da Teimosia"
   type: monstro
   image: "docs/assets/bestiary/golem/boss.png"
   avatars:
   - "docs/assets/bestiary/golem/boss-avatar.png"
   - "docs/assets/bestiary/golem/boss-dark.png"
-  lore: "Built from fallen walls and stubborn rock."
-  lore_pt: "Feito de muros caídos e pedra teimosa."
+  lore: "Built from 'no', folded arms, and won't-budge rock."
+  lore_pt: "Feito de 'não', braços cruzados e pedra que não mexe."
   vassals:
   - id: rubble_chunk
     role: vassal
-    name: "Rubble Chunk"
-    name_pt: "Pedaço de Entulho"
+    name: "Don't-Wanna Rubble"
+    name_pt: "Entulho do Não-Quero"
     type: monstro
     image: "docs/assets/bestiary/golem/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/golem/vassal-01-alt.png"
     - "docs/assets/bestiary/golem/vassal-01-dark.png"
-    lore: "Walks like a landslide."
-    lore_pt: "Anda como um deslizamento."
+    lore: "Walks like a landslide of refusals."
+    lore_pt: "Anda como um deslizamento de recusas."
   - id: rune_core
     role: vassal
-    name: "Rune Core"
-    name_pt: "Núcleo de Runas"
+    name: "Always-Did-It-This-Way Core"
+    name_pt: "Núcleo do Sempre-Foi-Assim"
     type: monstro
     image: "docs/assets/bestiary/golem/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/golem/vassal-02-alt.png"
     - "docs/assets/bestiary/golem/vassal-02-dark.png"
-    lore: "Heart of stone, lit with glyphs."
-    lore_pt: "Coração de pedra, aceso com glifos."
+    lore: "Heart of stone, lit with old habits."
+    lore_pt: "Coração de pedra, aceso com velhos hábitos."
   - id: iron_fist
     role: vassal
-    name: "Iron Fist"
-    name_pt: "Punho de Ferro"
+    name: "Tug-of-War Fist"
+    name_pt: "Punho do Cabo-de-Guerra"
     type: monstro
     image: "docs/assets/bestiary/golem/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/golem/vassal-03-alt.png"
     - "docs/assets/bestiary/golem/vassal-03-dark.png"
-    lore: "One purpose: smash."
-    lore_pt: "Um propósito: esmagar."
+    lore: "One purpose: refuse to compromise."
+    lore_pt: "Um propósito: não ceder."
 - id: evil_mage
   role: boss
-  name: "Void Mage"
-  name_pt: "Mago do Vazio"
+  name: "Infinite Scroll Witch"
+  name_pt: "Bruxa do Scroll Infinito"
   type: mago_mau
   image: "docs/assets/bestiary/evil_mage/boss.png"
   avatars:
   - "docs/assets/bestiary/evil_mage/boss-avatar.png"
   - "docs/assets/bestiary/evil_mage/boss-dark.png"
-  lore: "Reads tomes that erase the reader first."
-  lore_pt: "Lê tomos que apagam primeiro o leitor."
+  lore: "Reads feeds that erase bedtime first."
+  lore_pt: "Lê feeds que apagam primeiro a hora de dormir."
   vassals:
   - id: apprentice_shade
     role: vassal
-    name: "Apprentice Shade"
-    name_pt: "Aprendiz Sombra"
+    name: "One-More-Video Apprentice"
+    name_pt: "Aprendiz do Mais Um Vídeo"
     type: mago_mau
     image: "docs/assets/bestiary/evil_mage/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/evil_mage/vassal-01-alt.png"
     - "docs/assets/bestiary/evil_mage/vassal-01-dark.png"
-    lore: "Still learning which hexes explode."
-    lore_pt: "Ainda a aprender quais hexes explodem."
+    lore: "Still learning which short will explode into ten."
+    lore_pt: "Ainda a aprender qual short explode em dez."
   - id: tome_familiar
     role: vassal
-    name: "Tome Familiar"
-    name_pt: "Familiar do Tomo"
+    name: "Notification Tome"
+    name_pt: "Tomo das Notificações"
     type: mago_mau
     image: "docs/assets/bestiary/evil_mage/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/evil_mage/vassal-02-alt.png"
     - "docs/assets/bestiary/evil_mage/vassal-02-dark.png"
-    lore: "A book with teeth and opinions."
-    lore_pt: "Um livro com dentes e opiniões."
+    lore: "A book with badges and opinions."
+    lore_pt: "Um livro com badges e opiniões."
   - id: hex_puppet
     role: vassal
-    name: "Hex Puppet"
-    name_pt: "Marioneta do Hex"
+    name: "FOMO Puppet"
+    name_pt: "Marioneta do FOMO"
     type: mago_mau
     image: "docs/assets/bestiary/evil_mage/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/evil_mage/vassal-03-alt.png"
     - "docs/assets/bestiary/evil_mage/vassal-03-dark.png"
-    lore: "Strings of violet curse-thread."
-    lore_pt: "Fios de maldição violeta."
+    lore: "Strings of 'everyone else is watching'."
+    lore_pt: "Fios de 'toda a gente está a ver'."
 - id: forest_spirit
   role: boss
-  name: "Thorn Spirit"
-  name_pt: "Espírito do Espinho"
+  name: "Living Clutter Spirit"
+  name_pt: "Espírito da Trapalhada"
   type: espirito
   image: "docs/assets/bestiary/forest_spirit/boss.png"
   avatars:
   - "docs/assets/bestiary/forest_spirit/boss-avatar.png"
   - "docs/assets/bestiary/forest_spirit/boss-dark.png"
-  lore: "Roots remember every axe wound."
-  lore_pt: "As raízes lembram cada ferida de machado."
+  lore: "Roots remember every sock left on the floor."
+  lore_pt: "As raízes lembram cada meia deixada no chão."
   vassals:
   - id: moss_sprite
     role: vassal
-    name: "Moss Sprite"
-    name_pt: "Duende do Musgo"
+    name: "Dirty-Sock Sprite"
+    name_pt: "Duende da Meia Suja"
     type: espirito
     image: "docs/assets/bestiary/forest_spirit/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/forest_spirit/vassal-01-alt.png"
     - "docs/assets/bestiary/forest_spirit/vassal-01-dark.png"
-    lore: "Soft steps, sharp thorns."
-    lore_pt: "Passos suaves, espinhos afiados."
+    lore: "Soft steps, sharp smell."
+    lore_pt: "Passos suaves, cheiro afiado."
   - id: vine_wisp
     role: vassal
-    name: "Vine Wisp"
-    name_pt: "Fogo-Fátuo de Vinha"
+    name: "Clutter Vine"
+    name_pt: "Cipó da Bagunça"
     type: espirito
     image: "docs/assets/bestiary/forest_spirit/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/forest_spirit/vassal-02-alt.png"
     - "docs/assets/bestiary/forest_spirit/vassal-02-dark.png"
-    lore: "Coils around ankles mid-step."
-    lore_pt: "Enrola-se nos tornozelos a meio do passo."
+    lore: "Coils around ankles mid-tidy."
+    lore_pt: "Enrola-se nos tornozelos a meio da arrumação."
   - id: root_guardian
     role: vassal
-    name: "Root Guardian"
-    name_pt: "Guardião das Raízes"
+    name: "Leave-It-There Guardian"
+    name_pt: "Guardião do Deixo-Aí"
     type: espirito
     image: "docs/assets/bestiary/forest_spirit/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/forest_spirit/vassal-03-alt.png"
     - "docs/assets/bestiary/forest_spirit/vassal-03-dark.png"
-    lore: "Ancient bark, patient rage."
-    lore_pt: "Casca antiga, raiva paciente."
+    lore: "Ancient pile, patient mess."
+    lore_pt: "Pilha antiga, bagunça paciente."
 - id: yokai
   role: boss
-  name: "Masked Yokai"
-  name_pt: "Yokai Mascarado"
+  name: "Excuse Mask"
+  name_pt: "Máscara das Desculpas"
   type: yokai
   image: "docs/assets/bestiary/yokai/boss.png"
   avatars:
   - "docs/assets/bestiary/yokai/boss-avatar.png"
   - "docs/assets/bestiary/yokai/boss-dark.png"
-  lore: "Smiles with a mask that never blinks."
-  lore_pt: "Sorri com uma máscara que nunca pisca."
+  lore: "Smiles with a fib that never blinks."
+  lore_pt: "Sorri com uma desculpa que nunca pisca."
   vassals:
   - id: fox_trickster
     role: vassal
-    name: "Fox Trickster"
-    name_pt: "Raposa Trapaceira"
+    name: "White-Lie Fox"
+    name_pt: "Raposa das Desculpinhas"
     type: yokai
     image: "docs/assets/bestiary/yokai/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/yokai/vassal-01-alt.png"
     - "docs/assets/bestiary/yokai/vassal-01-dark.png"
-    lore: "Three tails of mischief."
-    lore_pt: "Três caudas de travessura."
+    lore: "Three tails of 'I already did it'."
+    lore_pt: "Três caudas de 'já fiz isso'."
   - id: lantern_spirit
     role: vassal
-    name: "Lantern Spirit"
-    name_pt: "Espírito da Lanterna"
+    name: "Off-Task Lantern"
+    name_pt: "Lanterna do Desvio"
     type: yokai
     image: "docs/assets/bestiary/yokai/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/yokai/vassal-02-alt.png"
     - "docs/assets/bestiary/yokai/vassal-02-dark.png"
-    lore: "Leads wanderers off the path."
-    lore_pt: "Leva andarilhos para fora do caminho."
+    lore: "Leads homework heroes toward the snack shelf."
+    lore_pt: "Leva heróis dos TPCs até à prateleira dos snacks."
   - id: paper_oni
     role: vassal
-    name: "Paper Oni"
-    name_pt: "Oni de Papel"
+    name: "Crumpled-Homework Oni"
+    name_pt: "Oni do TPC Amassado"
     type: yokai
     image: "docs/assets/bestiary/yokai/vassal-03.png"
     avatars:
@@ -497,54 +497,55 @@ roster:
     lore_pt: "Raiva dobrada, cantos afiados."
 - id: cockatrice
   role: boss
-  name: "Cockatrice"
-  name_pt: "Cocatriz"
+  name: "Stuck Stare"
+  name_pt: "Olhar do Empacado"
   type: monstro
   image: "docs/assets/bestiary/cockatrice/boss.png"
   avatars:
   - "docs/assets/bestiary/cockatrice/boss-avatar.png"
   - "docs/assets/bestiary/cockatrice/boss-dark.png"
-  lore: "A glance that turns courage to stone."
-  lore_pt: "Um olhar que transforma coragem em pedra."
+  lore: "A glance that turns 'I'll start' into stone."
+  lore_pt: "Um olhar que transforma 'já começo' em pedra."
   vassals:
   - id: basilisk_chick
     role: vassal
-    name: "Basilisk Chick"
-    name_pt: "Pintainho Basilisco"
+    name: "Just-One-Minute Chick"
+    name_pt: "Pintainho do Só-Mais-Um-Minuto"
     type: monstro
     image: "docs/assets/bestiary/cockatrice/vassal-01.png"
     avatars:
     - "docs/assets/bestiary/cockatrice/vassal-01-alt.png"
     - "docs/assets/bestiary/cockatrice/vassal-01-dark.png"
-    lore: "Tiny stare, growing danger."
-    lore_pt: "Olhar minúsculo, perigo crescente."
+    lore: "Tiny stare, growing delay."
+    lore_pt: "Olhar minúsculo, atraso crescente."
   - id: stone_gaze_imp
     role: vassal
-    name: "Stone-Gaze Imp"
-    name_pt: "Diabrete do Olhar de Pedra"
+    name: "Freeze Imp"
+    name_pt: "Diabrete do Congela"
     type: monstro
     image: "docs/assets/bestiary/cockatrice/vassal-02.png"
     avatars:
     - "docs/assets/bestiary/cockatrice/vassal-02-alt.png"
     - "docs/assets/bestiary/cockatrice/vassal-02-dark.png"
-    lore: "Practices petrify on beetles."
-    lore_pt: "Treina petrificar em escaravelhos."
+    lore: "Practices freeze on open homework tabs."
+    lore_pt: "Treina congelar em abas de TPC abertas."
   - id: plume_harpy
     role: vassal
-    name: "Plume Harpy"
-    name_pt: "Harpia de Penas"
+    name: "Drama Harpy"
+    name_pt: "Harpia do Drama"
     type: monstro
     image: "docs/assets/bestiary/cockatrice/vassal-03.png"
     avatars:
     - "docs/assets/bestiary/cockatrice/vassal-03-alt.png"
     - "docs/assets/bestiary/cockatrice/vassal-03-dark.png"
-    lore: "Screeches the hunt into motion."
-    lore_pt: "Guinchando, põe a caça em movimento."
+    lore: "Screeches the whine into motion."
+    lore_pt: "Guinchando, põe o choramingo em movimento."
 ---
 
 # Bestiary Roster
 
-12 BOSS + 3 vassals. Painted `.png` preferred when present; SVG fallback.
+12 BOSS + 3 vassals. Nomes = hábitos / rotinas a derrotar (preguiça, tédio, raiva…).
+Painted `.png` preferred when present; SVG fallback.
 Active display: `image` → main png. Selectable extras: `avatars` (exactly 2 per boss/vassal: alt/avatar + dark) — never delete.
 Admin → Bestiário / Campanha → Escolher avatar.
 Regen SVG silhouettes: `node docs/assets/bestiary/generate-bestiary.mjs`

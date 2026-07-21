@@ -12,6 +12,8 @@ import {
   applyCampaignToMonth,
   campaignIdFromMonthNumber,
   emptyCampaign,
+  mergeCampaignDraft,
+  monthNumberFromMonthId,
   normalizeCampaign,
 } from '../lib/campaign'
 import { loadAdminEdits, loadPlayerEdits, loadRemovedHeroIds } from '../lib/editsStore'
@@ -116,12 +118,23 @@ export function useGameData() {
         ])
 
         const { data: month } = parseMarkdown<MonthSetup>(monthText)
-        if (adminEditsEarly.month) Object.assign(month, adminEditsEarly.month)
+        if (adminEditsEarly.month) {
+          // Keep weeks/theme/bosses from Admin, but never trust stale campaign/month_number
+          // (old saves linked August → Termópolis "01").
+          const {
+            campaign: _staleCamp,
+            month_number: _staleNum,
+            month: _staleMonthId,
+            ...monthPatch
+          } = adminEditsEarly.month
+          Object.assign(month, monthPatch)
+        }
+        // Calendar id wins: 2026-08 → month_number 8 → campaign 08 (Forjália + bestiary).
+        month.month = monthId
+        month.month_number = monthNumberFromMonthId(monthId)
         month.theme = resolveThemeId(month.theme)
 
-        const campaignKey =
-          month.campaign ||
-          campaignIdFromMonthNumber(month.month_number || 1)
+        const campaignKey = campaignIdFromMonthNumber(month.month_number)
         month.campaign = campaignKey
         let campaign: Campaign | null = null
         try {
@@ -132,15 +145,7 @@ export function useGameData() {
         }
         const draftCamp = adminEditsEarly.campaigns?.[campaignKey]
         if (draftCamp && campaign) {
-          campaign = normalizeCampaign(
-            {
-              ...campaign,
-              ...draftCamp,
-              boss: { ...campaign.boss, ...draftCamp.boss },
-              vassals: draftCamp.vassals?.length ? draftCamp.vassals : campaign.vassals,
-            },
-            campaignKey,
-          )
+          campaign = mergeCampaignDraft(campaign, draftCamp, campaignKey)
         }
         if (campaign) {
           Object.assign(month, applyCampaignToMonth(month, campaign))
@@ -310,21 +315,10 @@ export function useGameData() {
           mapWeekPoints[h.id] = weekPointsExcludingBoss(h.weekly, config.points)
         }
 
-        // Prefer campaign matching active family map position when available
-        let mapCampaign = campaign
-        if (activeFamily?.map_campaign_id && activeFamily.map_campaign_id !== campaignKey) {
-          try {
-            const altText = await fetchDoc(
-              `config/campaigns/${activeFamily.map_campaign_id}.md`,
-            )
-            mapCampaign = normalizeCampaign(
-              parseMarkdown<Campaign>(altText).data,
-              activeFamily.map_campaign_id,
-            )
-          } catch {
-            /* keep calendar campaign */
-          }
-        }
+        // Chronicle map = calendar month campaign (+ Admin draft).
+        // Do not swap to family.map_campaign_id art — that hid Admin map edits
+        // when the house was still on an older city (e.g. "01" while month is "08").
+        const mapCampaign = campaign
 
         if (!cancelled) {
           setData({

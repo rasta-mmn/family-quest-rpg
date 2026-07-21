@@ -33,7 +33,9 @@ Illuminated Manuscript × Dark Fantasy Game UI (references: Pillars of Eternity,
 Background: deep warm charcoal (almost dark brown, like an old book cover leather) — `oklch(0.16 0.015 60)`. Panels: darkened parchment `oklch(0.28 0.02 75)` with subtle texture. Gold `oklch(0.75 0.12 85)` is the Signature Color — reserved for XP, titles, and achievements. Class accents: Warrior iron-red, Bard emerald-green, Mage arcane-blue, Rogue shadow-purple. Emotionally: tavern coziness + arcane library reverence.
 
 ### Layout Paradigm
-Codex structure: narrow left sidebar as "book spine" (navigation with class icons), main content as grimoire page with ornamented header. Dashboard uses asymmetric grid: week's BOSS large on the left (2/3), hero column on the right as stacked sheets. Never centered-symmetric.
+**Chronicle (map stage):** full-bleed city map as the world; floating HUD on the edges (status chips, house strength, party portraits along the bottom). Lore, BOSS, XP mirror, and house switcher live in an on-demand grimoire drawer — never a scrolling dashboard over the map. Keep the center of the map readable.
+
+**Other pages (codex):** compact icon nav rail (left on desktop, bottom dock on mobile); main content as grimoire panels with ornamented headers. Asymmetric layouts preferred over centered-symmetric SaaS grids.
 
 ### Signature Elements
 1. **Carved XP squares** — grid of squares that fill with liquid gold (exact mirror of the printed PDF)

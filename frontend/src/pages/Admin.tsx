@@ -11,7 +11,7 @@ import {
 } from '../lib/campaign'
 import { useGameData } from '../hooks/useGameData'
 import { pickL, useLocale } from '../lib/i18n'
-import { patchAdminEdits } from '../lib/editsStore'
+import { loadAdminEdits, patchAdminEdits } from '../lib/editsStore'
 import { downloadAdminExports } from '../lib/exportMarkdown'
 import {
   downloadMarkdown,
@@ -60,6 +60,7 @@ export function Admin() {
   const [weeksHit, setWeeksHit] = useState(4)
   const [rewardEn, setRewardEn] = useState('Legendary Reward')
   const [rewardPt, setRewardPt] = useState('Recompensa Lendária')
+  const [calendarDirty, setCalendarDirty] = useState(false)
 
   useEffect(() => {
     setToken(getGithubToken())
@@ -75,6 +76,7 @@ export function Admin() {
         campaignIdFromMonthNumber(data.month.month_number || 1),
     )
     setCurrentWeek(data.config.current_week)
+    setCalendarDirty(false)
     setReady(true)
   }, [data, ready])
 
@@ -103,24 +105,30 @@ export function Admin() {
     }
   }
 
-  async function resolveCampaign(): Promise<Campaign> {
-    const id = campaignId || campaignIdFromMonthNumber(monthNumber)
-    if (data!.campaign?.id === id) return normalizeCampaign(data!.campaign, id)
+  async function resolveCampaign(id?: string): Promise<Campaign> {
+    const campId = id || campaignId || campaignIdFromMonthNumber(monthNumber)
+    // Prefer in-memory draft for this id (Admin Campaign tab saves here).
+    const draft = loadAdminEdits().campaigns?.[campId]
+    if (draft) return normalizeCampaign(draft, campId)
+    if (data!.campaign?.id === campId) return normalizeCampaign(data!.campaign, campId)
     try {
-      const raw = await fetchDoc(`config/campaigns/${id}.md`)
-      return normalizeCampaign(parseMarkdown<Campaign>(raw).data, id)
+      const raw = await fetchDoc(`config/campaigns/${campId}.md`)
+      return normalizeCampaign(parseMarkdown<Campaign>(raw).data, campId)
     } catch {
-      return emptyCampaign(id)
+      return emptyCampaign(campId)
     }
   }
 
   async function buildMonthSetup(): Promise<MonthSetup> {
-    const camp = await resolveCampaign()
+    // Keep month_number ↔ campaign id aligned (Aug → "08").
+    const linkedId = campaignIdFromMonthNumber(monthNumber)
+    if (campaignId !== linkedId) setCampaignId(linkedId)
+    const camp = await resolveCampaign(linkedId)
     const theme = campaignDominantTheme(camp)
     const base: MonthSetup = {
       month,
       month_number: monthNumber,
-      campaign: camp.id,
+      campaign: linkedId,
       weeks: weekList,
       theme,
       bosses: [],
@@ -149,6 +157,7 @@ export function Admin() {
         bosses: setup.bosses,
       },
     })
+    setCalendarDirty(false)
     setMsg(t('savedLocal'))
     reload()
   }
@@ -509,7 +518,10 @@ export function Admin() {
               <span className="font-display text-xs text-[var(--color-gold)]">{t('monthField')}</span>
               <input
                 value={month}
-                onChange={(e) => setMonth(e.target.value)}
+                onChange={(e) => {
+                  setCalendarDirty(true)
+                  setMonth(e.target.value)
+                }}
                 className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-3 py-2"
               />
             </label>
@@ -517,7 +529,10 @@ export function Admin() {
               <span className="font-display text-xs text-[var(--color-gold)]">{t('currentWeek')}</span>
               <input
                 value={currentWeek}
-                onChange={(e) => setCurrentWeek(e.target.value)}
+                onChange={(e) => {
+                  setCalendarDirty(true)
+                  setCurrentWeek(e.target.value)
+                }}
                 className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-3 py-2"
               />
             </label>
@@ -530,6 +545,7 @@ export function Admin() {
                 value={monthNumber}
                 onChange={(e) => {
                   const n = Number(e.target.value)
+                  setCalendarDirty(true)
                   setMonthNumber(n)
                   setCampaignId(campaignIdFromMonthNumber(n))
                 }}
@@ -541,6 +557,7 @@ export function Admin() {
               <select
                 value={campaignId}
                 onChange={(e) => {
+                  setCalendarDirty(true)
                   setCampaignId(e.target.value)
                   setMonthNumber(Number(e.target.value) || monthNumber)
                 }}
@@ -560,7 +577,10 @@ export function Admin() {
               <span className="font-display text-xs text-[var(--color-gold)]">{t('weeksComma')}</span>
               <input
                 value={weeksRaw}
-                onChange={(e) => setWeeksRaw(e.target.value)}
+                onChange={(e) => {
+                  setCalendarDirty(true)
+                  setWeeksRaw(e.target.value)
+                }}
                 className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-3 py-2"
               />
             </label>
@@ -612,10 +632,10 @@ export function Admin() {
               </ul>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 pb-20">
               <button
                 type="button"
-                disabled={busy}
+                disabled={busy || !calendarDirty}
                 onClick={() => void saveAdmin()}
                 className="border border-[var(--color-gold)] bg-[var(--color-parchment-deep)] px-4 py-3 font-display text-xs tracking-widest text-[var(--color-gold)] hover:bg-[var(--color-parchment)] disabled:opacity-50"
               >
@@ -723,6 +743,17 @@ export function Admin() {
               })}
             </ul>
           </div>
+
+          <button
+            type="button"
+            disabled={busy || !calendarDirty}
+            onClick={() => void saveAdmin()}
+            className="admin-save-fab"
+            title={calendarDirty ? t('saveAdmin') : t('saveAdminClean')}
+          >
+            <span className="font-display text-[10px] tracking-widest">{t('saveAdminFloat')}</span>
+            {calendarDirty ? <span className="admin-save-fab-dot" aria-hidden /> : null}
+          </button>
         </>
       )}
 

@@ -1,10 +1,87 @@
 import { applyGeneratedLore } from './campaignLore'
-import { defaultLandmarks } from './family'
+import { bindLandmarkIds, defaultLandmarks } from './family'
 import type { BossEntry, Campaign, CampaignVassal, MonthSetup } from './types'
 
 export function campaignIdFromMonthNumber(n: number): string {
   const clamped = Math.min(12, Math.max(1, Math.round(n) || 1))
   return String(clamped).padStart(2, '0')
+}
+
+/** Painted city maps — Admin can swap art when season/lore don't match. */
+export const CITY_MAP_CATALOG: {
+  id: string
+  slug: string
+  file: string
+  city: string
+  season: 'inverno' | 'primavera' | 'verao' | 'outono'
+}[] = [
+  { id: '01', slug: 'termopolis', file: 'docs/assets/maps/01-termopolis.png', city: 'Termópolis', season: 'inverno' },
+  { id: '02', slug: 'luzilia', file: 'docs/assets/maps/02-luzilia.png', city: 'Luzília', season: 'inverno' },
+  { id: '03', slug: 'verdeia', file: 'docs/assets/maps/03-verdeia.png', city: 'Verdéia', season: 'primavera' },
+  { id: '04', slug: 'coparia', file: 'docs/assets/maps/04-coparia.png', city: 'Copária', season: 'primavera' },
+  { id: '05', slug: 'rioporto', file: 'docs/assets/maps/05-rioporto.png', city: 'Rioporto', season: 'primavera' },
+  { id: '06', slug: 'solaria', file: 'docs/assets/maps/06-solaria.png', city: 'Solária', season: 'verao' },
+  { id: '07', slug: 'cinzar', file: 'docs/assets/maps/07-cinzar.png', city: 'Cinzar', season: 'verao' },
+  { id: '08', slug: 'forjalia', file: 'docs/assets/maps/08-forjalia.png', city: 'Forjália', season: 'verao' },
+  { id: '09', slug: 'douralia', file: 'docs/assets/maps/09-douralia.png', city: 'Dourália', season: 'outono' },
+  { id: '10', slug: 'sombralia', file: 'docs/assets/maps/10-sombralia.png', city: 'Sombrália', season: 'outono' },
+  { id: '11', slug: 'pantanil', file: 'docs/assets/maps/11-pantanil.png', city: 'Pantanil', season: 'outono' },
+  { id: '12', slug: 'nevalia', file: 'docs/assets/maps/12-nevalia.png', city: 'Nevália', season: 'inverno' },
+]
+
+export function mapFileForCampaignId(id: string): string {
+  return (
+    CITY_MAP_CATALOG.find((c) => c.id === id)?.file ||
+    'docs/assets/maps/01-termopolis.png'
+  )
+}
+
+export function cityMetaForCampaignId(id: string) {
+  return CITY_MAP_CATALOG.find((c) => c.id === (id || '01').padStart(2, '0'))
+}
+
+/** Spain meteo seasons → kid display names (month 1–12). */
+export function seasonMetaForMonth(monthNumber: number): {
+  season: 'inverno' | 'primavera' | 'verao' | 'outono'
+  season_name: string
+  season_name_pt: string
+} {
+  const n = Math.min(12, Math.max(1, Math.round(monthNumber) || 1))
+  if (n === 12 || n <= 2) {
+    return { season: 'inverno', season_name: 'Ice Night', season_name_pt: 'Noite de Gelo' }
+  }
+  if (n <= 5) {
+    return { season: 'primavera', season_name: 'Living Green', season_name_pt: 'Verde Vivo' }
+  }
+  if (n <= 8) {
+    return { season: 'verao', season_name: 'Fire Sun', season_name_pt: 'Sol de Fogo' }
+  }
+  return { season: 'outono', season_name: 'Golden Leaves', season_name_pt: 'Folhas de Ouro' }
+}
+
+/** True when map path is the painted art for this campaign id (e.g. …/08-forjalia.png). */
+export function mapMatchesCampaignId(mapPath: string | undefined, campaignId: string): boolean {
+  if (!mapPath) return false
+  const m = /(?:^|\/)maps\/(\d{2})-/.exec(mapPath)
+  if (!m) return false
+  return m[1] === (campaignId || '01').padStart(2, '0')
+}
+
+/** Pick map art: Admin draft > file > catalog default for this city. */
+export function resolveCampaignMap(
+  campaignId: string,
+  fileMap?: string,
+  draftMap?: string,
+): string {
+  const id = (campaignId || '01').padStart(2, '0')
+  return draftMap || fileMap || mapFileForCampaignId(id)
+}
+
+/** `2026-08` → 8. Used so Admin stale month_number cannot point August at Termópolis. */
+export function monthNumberFromMonthId(monthId: string): number {
+  const m = /^(\d{4})-(\d{2})$/.exec((monthId || '').trim())
+  if (!m) return 1
+  return Math.min(12, Math.max(1, Number(m[2]) || 1))
 }
 
 /** Vassal slots = calendar weeks − 1 (last week is Month BOSS). */
@@ -34,7 +111,8 @@ export function campaignDominantTheme(campaign: Campaign): string {
   return creatureTheme(campaign.boss, campaign.theme || 'fisico')
 }
 
-const DEFAULT_VASSAL_LANDMARKS = ['road_camp', 'mid_ruins', 'mid_ruins', 'boss_keep']
+/** Unique stop ids — must match defaultLandmarks() (not start, not boss_keep). */
+const DEFAULT_VASSAL_LANDMARKS = ['stop_1', 'stop_2', 'stop_3', 'stop_4']
 
 export function emptyVassal(weekIndex: number, theme = 'fisico'): CampaignVassal {
   return {
@@ -81,10 +159,104 @@ function coalesceArt(
   return raw?.avatar || raw?.image || fallback
 }
 
+/** Prefer bestiary PNG/SVG over legacy campaign placeholder SVGs when merging drafts. */
+export function preferCreatureArt(draftArt: string | undefined, fileArt: string | undefined): string {
+  const d = draftArt || ''
+  const f = fileArt || ''
+  const draftIsLegacyCamp = /\/campaigns\/\d{2}\//.test(d)
+  const fileIsBestiary = /\/bestiary\//.test(f)
+  if (fileIsBestiary && (!d || draftIsLegacyCamp)) return f
+  return d || f
+}
+
+/** Merge Admin draft onto repo campaign without losing bestiary art from file. */
+export function mergeCampaignDraft(file: Campaign, draft: Campaign, id: string): Campaign {
+  const boss = {
+    ...file.boss,
+    ...draft.boss,
+    avatar: preferCreatureArt(
+      coalesceArt(draft.boss),
+      coalesceArt(file.boss),
+    ),
+  }
+  const fileV = [...(file.vassals || [])].sort((a, b) => a.week_index - b.week_index)
+  const draftV = [...(draft.vassals || [])].sort((a, b) => a.week_index - b.week_index)
+  const vassals = (draftV.length ? draftV : fileV).map((v, i) => {
+    const fromFile = fileV[i] || fileV.find((x) => x.week_index === v.week_index)
+    return {
+      ...fromFile,
+      ...v,
+      avatar: preferCreatureArt(coalesceArt(v), coalesceArt(fromFile)),
+    }
+  })
+  return normalizeCampaign(
+    {
+      ...file,
+      ...draft,
+      id,
+      boss,
+      vassals,
+      map: resolveCampaignMap(id, file.map, draft.map),
+      map_city_start: draft.map_city_start || file.map_city_start,
+      map_landmarks: draft.map_landmarks?.length ? draft.map_landmarks : file.map_landmarks,
+    },
+    id,
+  )
+}
+
+/**
+ * Family is on city map A; Admin configured month roster on campaign B.
+ * Keep city art + landmarks; put month BOSS/vassals (bestiary avatars) on the path.
+ */
+export function mapCampaignWithMonthRoster(
+  cityCampaign: Campaign,
+  monthCampaign: Campaign,
+  weeks: string[],
+): Campaign {
+  const city = bindLandmarkIds(cityCampaign)
+  const slots = vassalSlotsForWeeks(weeks)
+  const monthVassals = resizeVassals(
+    monthCampaign.vassals,
+    slots,
+    campaignDominantTheme(monthCampaign),
+  )
+  const startId = city.map_city_start || city.map_landmarks?.[0]?.id || 'city_square'
+  const bossKeep =
+    city.boss.landmark_id ||
+    city.map_landmarks?.find((l) => l.id === 'boss_keep')?.id ||
+    city.map_landmarks?.[city.map_landmarks.length - 1]?.id ||
+    'boss_keep'
+  const stops = (city.map_landmarks || []).filter(
+    (l) => l.id !== startId && l.id !== bossKeep,
+  )
+  const vassals = monthVassals.map((v, i) => ({
+    ...v,
+    landmark_id: stops[i]?.id || stops[stops.length - 1]?.id || v.landmark_id,
+  }))
+  return bindLandmarkIds({
+    ...city,
+    title: monthCampaign.title || city.title,
+    title_pt: monthCampaign.title_pt || city.title_pt,
+    lore: monthCampaign.lore || city.lore,
+    lore_pt: monthCampaign.lore_pt || city.lore_pt,
+    month_objective: monthCampaign.month_objective || city.month_objective,
+    month_objective_pt: monthCampaign.month_objective_pt || city.month_objective_pt,
+    theme: campaignDominantTheme(monthCampaign),
+    boss: {
+      ...monthCampaign.boss,
+      landmark_id: bossKeep,
+    },
+    vassals,
+  })
+}
+
 /** Normalize legacy campaign YAML (theme only at root) → per-creature themes. */
 export function normalizeCampaign(raw: Campaign, id?: string): Campaign {
-  const campId = id || raw.id || '01'
+  const campId = (id || raw.id || '01').padStart(2, '0')
+  const monthNum = Number(campId) || raw.month_number || 1
   const base = emptyCampaign(campId)
+  const season = seasonMetaForMonth(monthNum)
+  const cityMeta = cityMetaForCampaignId(campId)
   const fallback = raw.theme || base.theme
   const rawBoss = raw.boss || {}
   const boss = {
@@ -110,9 +282,16 @@ export function normalizeCampaign(raw: Campaign, id?: string): Campaign {
     ...base,
     ...raw,
     id: campId,
+    month_number: monthNum,
     theme: boss.theme,
     lore_custom: loreCustom,
-    map: raw.map || base.map,
+    // Month number owns season (Admin cannot desync Sol de Fogo onto a winter city).
+    season: season.season,
+    season_name: season.season_name,
+    season_name_pt: season.season_name_pt,
+    city: raw.city || cityMeta?.city || base.city,
+    city_pt: raw.city_pt || raw.city || cityMeta?.city || base.city_pt,
+    map: resolveCampaignMap(campId, raw.map),
     map_city_start: raw.map_city_start || base.map_city_start,
     map_landmarks: landmarks,
     boss: {
@@ -121,7 +300,8 @@ export function normalizeCampaign(raw: Campaign, id?: string): Campaign {
     },
     vassals,
   }
-  return loreCustom ? merged : applyGeneratedLore(merged)
+  const withRoute = bindLandmarkIds(merged)
+  return loreCustom ? withRoute : applyGeneratedLore(withRoute)
 }
 
 /** Only explicit true / "true" locks custom lore (avoids Boolean("false") === true). */
@@ -131,23 +311,26 @@ export function isLoreCustomFlag(v: unknown): boolean {
 
 export function emptyCampaign(id = '01'): Campaign {
   const n = Number(id) || 1
+  const campId = campaignIdFromMonthNumber(n)
+  const season = seasonMetaForMonth(n)
+  const cityMeta = cityMetaForCampaignId(campId)
   return {
-    id: campaignIdFromMonthNumber(n),
+    id: campId,
     month_number: n,
     theme: 'fisico',
     world: 'Solstice',
     world_pt: 'Solstícia',
-    season: 'inverno',
-    season_name: 'Ice Night',
-    season_name_pt: 'Noite de Gelo',
-    city: '',
-    city_pt: '',
+    season: season.season,
+    season_name: season.season_name,
+    season_name_pt: season.season_name_pt,
+    city: cityMeta?.city || '',
+    city_pt: cityMeta?.city || '',
     title: 'New Campaign',
     title_pt: 'Nova Campanha',
     lore: '',
     lore_pt: '',
     lore_custom: false,
-    map: 'docs/assets/maps/01-termopolis.png',
+    map: mapFileForCampaignId(campId),
     map_city_start: 'city_square',
     map_landmarks: defaultLandmarks(),
     month_objective: '',

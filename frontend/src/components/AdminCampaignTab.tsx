@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
+import { AdminCampaignMapEditor } from './AdminCampaignMapEditor'
 import { BestiaryRosterPicker } from './BestiaryRosterPicker'
 import {
   applyCampaignToMonth,
   buildCampaignMd,
   campaignDominantTheme,
   campaignIdFromMonthNumber,
+  CITY_MAP_CATALOG,
   creatureArt,
   emptyCampaign,
   emptyVassal,
   isLoreCustomFlag,
+  mergeCampaignDraft,
   normalizeCampaign,
+  seasonMetaForMonth,
   vassalSlotsForWeeks,
 } from '../lib/campaign'
 import { applyGeneratedLore } from '../lib/campaignLore'
@@ -43,6 +47,7 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
   )
   const [loadingCamp, setLoadingCamp] = useState(false)
   const [loreFlash, setLoreFlash] = useState(false)
+  const [dirty, setDirty] = useState(false)
   const [picker, setPicker] = useState<null | { mode: 'boss' | 'vassal'; vassalIndex?: number }>(
     null,
   )
@@ -58,22 +63,15 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
       try {
         const raw = await fetchDoc(`config/campaigns/${campId}.md`)
         if (cancelled) return
-        const parsed = parseMarkdown<Campaign>(raw).data
+        const parsed = normalizeCampaign(parseMarkdown<Campaign>(raw).data, campId)
         const draft = loadAdminEdits().campaigns?.[campId]
-        const merged = draft
-          ? {
-              ...emptyCampaign(campId),
-              ...parsed,
-              ...draft,
-              boss: { ...(parsed.boss || {}), ...(draft.boss || {}) },
-              vassals: draft.vassals?.length ? draft.vassals : parsed.vassals,
-            }
-          : { ...emptyCampaign(campId), ...parsed }
-        setCamp(normalizeCampaign(merged, campId))
+        setCamp(draft ? mergeCampaignDraft(parsed, draft, campId) : parsed)
+        setDirty(false)
       } catch {
         if (!cancelled) {
           const draft = loadAdminEdits().campaigns?.[campId]
           setCamp(draft ? normalizeCampaign(draft, campId) : emptyCampaign(campId))
+          setDirty(false)
         }
       } finally {
         if (!cancelled) setLoadingCamp(false)
@@ -102,11 +100,42 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
       : applyGeneratedLore({ ...c, id: campId, lore_custom: false })
   }
 
+  function markDirty() {
+    setDirty(true)
+  }
+
   function patchMeta(p: Partial<Campaign>) {
+    markDirty()
     setCamp((c) => withLoreSync({ ...c, ...p, id: campId }))
   }
 
+  /** Map art / landmarks — local only until Save. */
+  function patchMap(p: Partial<Campaign>) {
+    markDirty()
+    setCamp((c) => ({ ...c, ...p, id: campId }))
+  }
+
+  /** Write campaign draft to localStorage (only from Save / Commit / Download). */
+  function persistDraft(next: Campaign) {
+    const normalized = normalizeCampaign(
+      { ...next, id: campId, month_number: Number(campId) || next.month_number },
+      campId,
+    )
+    const applied = applyCampaignToMonth(data.month, normalized)
+    patchAdminEdits({
+      campaigns: { [campId]: normalized },
+      month: {
+        campaign: campId,
+        month_number: normalized.month_number,
+        theme: applied.theme,
+        bosses: applied.bosses,
+      },
+    })
+    return normalized
+  }
+
   function patchBoss(p: Partial<Campaign['boss']>) {
+    markDirty()
     setCamp((c) => {
       const boss = { ...c.boss, ...p }
       const next = {
@@ -121,6 +150,7 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
   }
 
   function patchVassal(index: number, p: Partial<CampaignVassal>) {
+    markDirty()
     setCamp((c) => {
       const vassals = [...(c.vassals || [])]
       while (vassals.length <= index) vassals.push(emptyVassal(vassals.length + 1))
@@ -131,8 +161,51 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
     })
   }
 
+  function applyRosterPick(
+    mode: 'boss' | 'vassal',
+    pick: {
+      id: string
+      name: string
+      name_pt?: string
+      avatar: string
+      lore?: string
+      lore_pt?: string
+    },
+    vassalIndex?: number,
+  ) {
+    const creatureId = pick.id.replace(/_avatar_\d+$/, '')
+    const patch = {
+      id: creatureId,
+      name: pick.name,
+      name_pt: pick.name_pt || pick.name,
+      avatar: pick.avatar,
+      image: pick.avatar,
+      lore: pick.lore,
+      lore_pt: pick.lore_pt,
+    }
+    markDirty()
+    if (mode === 'boss') {
+      const boss = { ...camp.boss, ...patch }
+      setCamp(
+        withLoreSync({
+          ...camp,
+          id: campId,
+          boss,
+          theme: boss.theme || camp.theme,
+        }),
+      )
+    } else {
+      const vassals = [...(camp.vassals || [])]
+      const i = vassalIndex ?? 0
+      while (vassals.length <= i) vassals.push(emptyVassal(vassals.length + 1))
+      vassals[i] = { ...vassals[i], ...patch }
+      setCamp(withLoreSync({ ...camp, id: campId, vassals }))
+    }
+  }
+
   /** Always force template regen — clears lore_custom and rewrites all derived fields. */
   function regenerateLore() {
+    markDirty()
     setCamp((c) => {
       const next = applyGeneratedLore({
         ...c,
@@ -143,26 +216,14 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
       return { ...next, lore_custom: false }
     })
     setLoreFlash(true)
-    setMsg(t('loreRegenerated'))
+    setMsg(t('loreRegenerated') + ' — ' + t('saveAdminHint'))
     window.setTimeout(() => setLoreFlash(false), 2500)
   }
 
   function saveLocal() {
-    const next = normalizeCampaign(
-      { ...camp, id: campId, month_number: Number(campId) || camp.month_number },
-      campId,
-    )
-    const applied = applyCampaignToMonth(data.month, next)
-    patchAdminEdits({
-      campaigns: { [campId]: next },
-      month: {
-        campaign: campId,
-        month_number: next.month_number,
-        theme: applied.theme,
-        bosses: applied.bosses,
-      },
-    })
+    const next = persistDraft(camp)
     setCamp(next)
+    setDirty(false)
     setMsg(t('savedLocal'))
     reload()
   }
@@ -199,7 +260,7 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
   if (loadingCamp) return <p className="opacity-70">{t('loadingAdmin')}</p>
 
   return (
-    <div className="max-w-2xl space-y-4">
+    <div className="max-w-3xl space-y-4">
       <p className="text-sm opacity-70">{t('campaignTabHelp')}</p>
 
       <label className="block text-sm">
@@ -209,14 +270,11 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
           onChange={(e) => setCampId(e.target.value)}
           className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-3 py-2"
         >
-          {Array.from({ length: 12 }, (_, i) => {
-            const id = String(i + 1).padStart(2, '0')
-            return (
-              <option key={id} value={id}>
-                {id} — {t('journeyMonth')} {i + 1}
-              </option>
-            )
-          })}
+          {CITY_MAP_CATALOG.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.id} — {m.city} ({m.season})
+            </option>
+          ))}
         </select>
       </label>
 
@@ -238,50 +296,17 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
             className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
           />
         </label>
-        <label className="block text-sm">
-          {t('campaignSeason')}
-          <select
-            value={camp.season || 'inverno'}
-            onChange={(e) => {
-              const season = e.target.value
-              const names: Record<string, { en: string; pt: string }> = {
-                primavera: { en: 'Living Green', pt: 'Verde Vivo' },
-                verao: { en: 'Fire Sun', pt: 'Sol de Fogo' },
-                outono: { en: 'Golden Leaves', pt: 'Folhas de Ouro' },
-                inverno: { en: 'Ice Night', pt: 'Noite de Gelo' },
-              }
-              const n = names[season]
-              patchMeta(
-                n
-                  ? { season, season_name: n.en, season_name_pt: n.pt }
-                  : { season },
-              )
-            }}
-            className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
-          >
-            <option value="primavera">{t('seasonPrimavera')}</option>
-            <option value="verao">{t('seasonVerao')}</option>
-            <option value="outono">{t('seasonOutono')}</option>
-            <option value="inverno">{t('seasonInverno')}</option>
-          </select>
-        </label>
-        <p className="text-xs opacity-70">{t('campaignSeasonHelp')}</p>
-        <label className="block text-sm">
-          {t('campaignSeasonName')} EN
-          <input
-            value={camp.season_name || ''}
-            onChange={(e) => patchMeta({ season_name: e.target.value })}
-            className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
-          />
-        </label>
-        <label className="block text-sm">
-          {t('campaignSeasonName')} PT
-          <input
-            value={camp.season_name_pt || ''}
-            onChange={(e) => patchMeta({ season_name_pt: e.target.value })}
-            className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
-          />
-        </label>
+        <div className="space-y-1 text-sm">
+          <p className="font-display text-xs text-[var(--color-gold)]">{t('campaignSeason')}</p>
+          <p className="opacity-90">
+            {camp.season_name_pt || camp.season_name || camp.season}{' '}
+            <span className="opacity-60">
+              ({seasonMetaForMonth(Number(campId) || 1).season})
+            </span>
+          </p>
+          <p className="text-xs opacity-70">{t('campaignSeasonHelp')}</p>
+          <p className="text-xs opacity-60">{t('campaignSeasonLocked')}</p>
+        </div>
         <label className="block text-sm">
           {t('campaignCity')} EN
           <input
@@ -302,7 +327,10 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
           {t('campaignTitle')} EN
           <input
             value={camp.title}
-            onChange={(e) => setCamp((c) => ({ ...c, title: e.target.value }))}
+            onChange={(e) => {
+              markDirty()
+              setCamp((c) => ({ ...c, title: e.target.value }))
+            }}
             className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
           />
         </label>
@@ -310,7 +338,10 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
           {t('campaignTitle')} PT
           <input
             value={camp.title_pt || ''}
-            onChange={(e) => setCamp((c) => ({ ...c, title_pt: e.target.value }))}
+            onChange={(e) => {
+              markDirty()
+              setCamp((c) => ({ ...c, title_pt: e.target.value }))
+            }}
             className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
           />
         </label>
@@ -341,6 +372,7 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
               checked={isLoreCustomFlag(camp.lore_custom)}
               onChange={(e) => {
                 const on = e.target.checked
+                markDirty()
                 setCamp((c) =>
                   on
                     ? { ...c, id: campId, lore_custom: true }
@@ -359,7 +391,10 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
                 {t('campaignLore')} EN
                 <textarea
                   value={camp.lore || ''}
-                  onChange={(e) => setCamp((c) => ({ ...c, lore: e.target.value }))}
+                  onChange={(e) => {
+                    markDirty()
+                    setCamp((c) => ({ ...c, lore: e.target.value }))
+                  }}
                   rows={6}
                   className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
                 />
@@ -368,7 +403,10 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
                 {t('campaignLore')} PT
                 <textarea
                   value={camp.lore_pt || ''}
-                  onChange={(e) => setCamp((c) => ({ ...c, lore_pt: e.target.value }))}
+                  onChange={(e) => {
+                    markDirty()
+                    setCamp((c) => ({ ...c, lore_pt: e.target.value }))
+                  }}
                   rows={6}
                   className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1"
                 />
@@ -395,11 +433,11 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
           {t('monthObjectiveField')} EN
           <input
             value={camp.month_objective || ''}
-            onChange={(e) =>
-              isLoreCustomFlag(camp.lore_custom)
-                ? setCamp((c) => ({ ...c, month_objective: e.target.value }))
-                : undefined
-            }
+            onChange={(e) => {
+              if (!isLoreCustomFlag(camp.lore_custom)) return
+              markDirty()
+              setCamp((c) => ({ ...c, month_objective: e.target.value }))
+            }}
             readOnly={!isLoreCustomFlag(camp.lore_custom)}
             className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1 read-only:opacity-70"
           />
@@ -408,16 +446,18 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
           {t('monthObjectiveField')} PT
           <input
             value={camp.month_objective_pt || ''}
-            onChange={(e) =>
-              isLoreCustomFlag(camp.lore_custom)
-                ? setCamp((c) => ({ ...c, month_objective_pt: e.target.value }))
-                : undefined
-            }
+            onChange={(e) => {
+              if (!isLoreCustomFlag(camp.lore_custom)) return
+              markDirty()
+              setCamp((c) => ({ ...c, month_objective_pt: e.target.value }))
+            }}
             readOnly={!isLoreCustomFlag(camp.lore_custom)}
             className="mt-1 w-full border border-[var(--color-gold-dim)] bg-[var(--color-charcoal)] px-2 py-1 read-only:opacity-70"
           />
         </label>
       </div>
+
+      <AdminCampaignMapEditor camp={camp} onChange={patchMap} />
 
       <div className="panel space-y-3 p-4">
         <h3 className="font-display text-xs text-[var(--color-gold)]">{t('monthBoss')}</h3>
@@ -646,35 +686,19 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
           onClose={() => setPicker(null)}
           onPick={(pick) => {
             if (picker.mode === 'boss') {
-              patchBoss({
-                id: pick.id,
-                name: pick.name,
-                name_pt: pick.name_pt,
-                avatar: pick.avatar,
-                image: pick.avatar,
-                lore: pick.lore,
-                lore_pt: pick.lore_pt,
-              })
+              applyRosterPick('boss', pick)
             } else if (picker.vassalIndex != null) {
-              patchVassal(picker.vassalIndex, {
-                id: pick.id,
-                name: pick.name,
-                name_pt: pick.name_pt,
-                avatar: pick.avatar,
-                image: pick.avatar,
-                lore: pick.lore,
-                lore_pt: pick.lore_pt,
-              })
+              applyRosterPick('vassal', pick, picker.vassalIndex)
             }
             setPicker(null)
           }}
         />
       )}
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 pb-20">
         <button
           type="button"
-          disabled={busy}
+          disabled={busy || !dirty}
           onClick={saveLocal}
           className="border border-[var(--color-gold)] bg-[var(--color-parchment-deep)] px-4 py-3 font-display text-xs tracking-widest text-[var(--color-gold)] disabled:opacity-50"
         >
@@ -697,6 +721,17 @@ export function AdminCampaignTab({ data, busy, setBusy, setMsg, reload }: Props)
           {t('download')} campaign-{campId}.md
         </button>
       </div>
+
+      <button
+        type="button"
+        disabled={busy || !dirty}
+        onClick={saveLocal}
+        className="admin-save-fab"
+        title={dirty ? t('saveAdmin') : t('saveAdminClean')}
+      >
+        <span className="font-display text-[10px] tracking-widest">{t('saveAdminFloat')}</span>
+        {dirty ? <span className="admin-save-fab-dot" aria-hidden /> : null}
+      </button>
     </div>
   )
 }

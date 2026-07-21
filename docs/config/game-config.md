@@ -1,9 +1,9 @@
 ---
 game_name: "Family Quest RPG"
 admin_pin: "Migmol@882025"
-journey_start: "2026-08-01"
-current_month: "2026-08"
-current_week: "2026-W32"
+journey_start: "2026-07-01"
+current_month: "2026-07"
+current_week: "2026-W30"
 active_family: casa_inicial
 families:
   - id: casa_inicial
@@ -11,7 +11,7 @@ families:
     name_pt: "Casa Inicial"
     crest: "docs/assets/crests/casa_inicial.svg"
     hero_ids: [Heroi1, Heroi2, Heroi3, Heroi4]
-    map_campaign_id: "01"
+    map_campaign_id: "07"
     map_stop: 0
     boss_outcome: null
     family_points_pool: 0

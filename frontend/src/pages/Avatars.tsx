@@ -174,6 +174,8 @@ export function Avatars() {
       </div>
 
       <CityMapsLab
+        initialCityId={data?.month.campaign || data?.campaign?.id || '01'}
+        weekCount={data?.month.weeks?.length}
         points={
           data?.config.points || {
             per_task: 30,

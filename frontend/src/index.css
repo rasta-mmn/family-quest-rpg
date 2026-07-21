@@ -4,6 +4,8 @@
   --font-display: "Cinzel", serif;
   --font-decorative: "Cinzel Decorative", serif;
   --font-body: "Crimson Pro", serif;
+  /* Literacy / early readers — story text only (titles stay Cinzel) */
+  --font-read: "Lexend", "Atkinson Hyperlegible", system-ui, sans-serif;
   --color-gold: oklch(0.75 0.12 85);
   --color-gold-dim: oklch(0.55 0.1 85);
   --color-ink: oklch(0.92 0.02 75);
@@ -35,6 +37,16 @@
     font-family: var(--font-display);
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+  .font-decorative {
+    font-family: var(--font-decorative);
+  }
+  .font-read {
+    font-family: var(--font-read);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    line-height: 1.65;
   }
   a {
     color: var(--color-gold);
@@ -327,5 +339,413 @@
   .xp-fill {
     transform-origin: left;
     animation: gold-fill 600ms ease-out both;
+  }
+
+  /* Travel bounce — no box/contour; soft ground shadow only via filter */
+  @keyframes carriage-travel {
+    0% {
+      transform: translate(0, 0) rotate(-1.2deg);
+    }
+    25% {
+      transform: translate(1px, -2px) rotate(0.6deg);
+    }
+    50% {
+      transform: translate(0, -3px) rotate(-0.8deg);
+    }
+    75% {
+      transform: translate(-1px, -1px) rotate(1deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(-1.2deg);
+    }
+  }
+  .carriage-bob {
+    display: block;
+    background: transparent;
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    animation: carriage-travel 0.55s ease-in-out infinite;
+    filter: drop-shadow(0 6px 4px rgb(0 0 0 / 0.35));
+  }
+  .carriage-marker {
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+  .carriage-marker:hover .carriage-bob,
+  .carriage-marker:focus-visible .carriage-bob {
+    animation-duration: 0.35s;
+    filter: drop-shadow(0 7px 5px rgb(0 0 0 / 0.4));
+  }
+  .carriage-zoom {
+    z-index: 40;
+  }
+
+  /* Admin: floating save while scrolling long campaign forms */
+  .admin-save-fab {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right, 0px));
+    bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid var(--color-gold);
+    background: color-mix(in oklch, var(--color-parchment-deep) 92%, transparent);
+    color: var(--color-gold);
+    padding: 0.85rem 1.15rem;
+    box-shadow: 0 8px 28px oklch(0.1 0.02 60 / 0.55);
+    backdrop-filter: blur(8px);
+  }
+  .admin-save-fab:hover:not(:disabled) {
+    background: color-mix(in oklch, var(--color-parchment) 92%, transparent);
+  }
+  .admin-save-fab:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .admin-save-fab-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--color-gold);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-gold) 25%, transparent);
+  }
+  @media (min-width: 768px) {
+    .admin-save-fab {
+      bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+      right: max(1.5rem, env(safe-area-inset-right, 0px));
+    }
+  }
+
+  /* Map stage + floating HUD */
+  .map-shell {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    padding:
+      env(safe-area-inset-top, 0)
+      env(safe-area-inset-right, 0)
+      env(safe-area-inset-bottom, 0)
+      env(safe-area-inset-left, 0);
+  }
+  .map-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    background: var(--color-charcoal);
+  }
+  /* Lab / embedded: 16:9 widescreen host shared by map + lore cine */
+  .map-cine-host {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: min(70vh, 52rem);
+    overflow: hidden;
+    background: var(--color-charcoal);
+  }
+  .hud-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .hud-layer > * {
+    pointer-events: auto;
+  }
+  .hud-panel {
+    background: color-mix(in oklch, var(--color-parchment) 78%, transparent);
+    border: 1px solid color-mix(in oklch, var(--color-gold) 40%, transparent);
+    box-shadow:
+      0 4px 24px oklch(0.1 0.02 60 / 0.45),
+      inset 0 0 24px oklch(0.12 0.02 60 / 0.35);
+    backdrop-filter: blur(6px);
+  }
+  .nav-rail {
+    z-index: 20;
+  }
+  .chronicle-drawer {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+  }
+  /* Same box as map (parent .map-stage / .map-cine-host) — not viewport-fixed */
+  .lore-cine {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .lore-cine-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center center;
+    transform-origin: center center;
+    animation: lore-kenburns 14s ease-out forwards;
+  }
+  .lore-cine-bg-plain {
+    background:
+      radial-gradient(ellipse at 30% 20%, oklch(0.28 0.04 60) 0%, transparent 55%),
+      var(--color-charcoal);
+    animation: none;
+  }
+  .lore-cine-wash {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      oklch(0.12 0.02 60 / 0.55) 0%,
+      oklch(0.12 0.02 60 / 0.35) 40%,
+      oklch(0.1 0.02 60 / 0.88) 100%
+    );
+  }
+  .lore-cine-stage {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: min(56rem, 100%);
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1.25rem;
+    padding: 1.5rem 1.25rem 2rem;
+    cursor: default;
+  }
+  .lore-cine-foe {
+    align-self: center;
+    height: min(42vh, 16rem);
+    width: auto;
+    max-width: 80%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 24px oklch(0.1 0.02 60 / 0.7));
+    animation: lore-foe-in 700ms ease-out both;
+  }
+  .lore-cine-copy {
+    border: 1px solid color-mix(in oklch, var(--color-gold) 40%, transparent);
+    background: color-mix(in oklch, var(--color-parchment) 82%, transparent);
+    padding: 1rem 1.1rem;
+    box-shadow: inset 0 0 28px oklch(0.12 0.02 60 / 0.35);
+    animation: lore-copy-in 450ms ease-out both;
+  }
+  /* Fixed reading window — never grows, never scrolls */
+  .lore-cine-flow {
+    position: relative;
+  }
+  .lore-cine-flow-box {
+    position: relative;
+    height: 7.5rem;
+    overflow: hidden;
+  }
+  .lore-cine-flow-text {
+    margin: 0;
+    font-family: var(--font-read);
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.65;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-ink);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .lore-cine-flow-exit {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: 0;
+    animation: lore-flow-exit 420ms ease-out forwards;
+    pointer-events: none;
+  }
+  .lore-cine-flow-measure {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+    height: auto;
+    overflow: visible;
+    font-family: var(--font-read);
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.65;
+    letter-spacing: 0.02em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .lore-cine-caret {
+    display: inline-block;
+    width: 0.55ch;
+    height: 1em;
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    background: var(--color-gold);
+    animation: lore-blink 0.9s step-end infinite;
+  }
+  .lore-cine-next {
+    margin-top: 0.65rem;
+    border: 1px solid color-mix(in oklch, var(--color-gold) 45%, transparent);
+    background: color-mix(in oklch, var(--color-parchment-deep) 80%, transparent);
+    padding: 0.4rem 0.85rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+  }
+  .lore-cine-next:hover {
+    border-color: var(--color-gold);
+  }
+  .lore-cine-party {
+    display: flex;
+    gap: 0.35rem;
+    animation: lore-copy-in 600ms ease-out both;
+  }
+  .lore-cine-skip {
+    align-self: flex-end;
+    border: 1px solid color-mix(in oklch, var(--color-gold) 45%, transparent);
+    background: color-mix(in oklch, var(--color-parchment-deep) 80%, transparent);
+    padding: 0.45rem 0.85rem;
+  }
+  .lore-cine-skip:hover {
+    border-color: var(--color-gold);
+  }
+  @keyframes lore-flow-exit {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-1.15rem);
+    }
+  }
+  /* Map HUD: future video cinematic entry */
+  .cine-play-fab {
+    position: absolute;
+    right: max(0.75rem, env(safe-area-inset-right, 0px));
+    bottom: max(5.25rem, calc(4.75rem + env(safe-area-inset-bottom, 0px)));
+    z-index: 12;
+    min-width: 5rem;
+    border: 1px solid color-mix(in oklch, var(--color-gold) 55%, transparent);
+    background: color-mix(in oklch, var(--color-parchment-deep) 88%, transparent);
+    padding: 0.75rem 1.15rem;
+    font-family: var(--font-display), serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--color-gold);
+    box-shadow: 0 4px 18px oklch(0.1 0.02 60 / 0.45);
+  }
+  .cine-play-fab:hover {
+    border-color: var(--color-gold);
+    background: color-mix(in oklch, var(--color-parchment) 90%, transparent);
+  }
+  @media (min-width: 768px) {
+    .cine-play-fab {
+      bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    }
+  }
+  .cine-play-slot {
+    position: absolute;
+    inset: 0;
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: oklch(0.1 0.02 60 / 0.72);
+    cursor: pointer;
+  }
+  .cine-play-slot-panel {
+    width: min(52rem, 100%);
+    overflow: hidden;
+    border: 1px solid color-mix(in oklch, var(--color-gold) 45%, transparent);
+    background: color-mix(in oklch, var(--color-parchment) 88%, transparent);
+    box-shadow: 0 8px 32px oklch(0.1 0.02 60 / 0.55);
+    cursor: default;
+  }
+  .cine-play-slot-stage {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        oklch(0.18 0.02 60 / 0.35) 0 12px,
+        oklch(0.14 0.02 60 / 0.45) 12px 24px
+      ),
+      var(--color-charcoal);
+  }
+  .cine-play-slot-frame {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed color-mix(in oklch, var(--color-gold) 45%, transparent);
+    margin: 0.75rem;
+    padding: 1rem;
+    color: var(--color-parchment);
+  }
+  @keyframes lore-kenburns {
+    from {
+      transform: scale(1.04);
+    }
+    to {
+      transform: scale(1.12);
+    }
+  }
+  @keyframes lore-foe-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  @keyframes lore-copy-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes lore-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  .codex-shell {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  }
+  @media (min-width: 768px) {
+    .codex-shell {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      padding-left: calc(4.25rem + env(safe-area-inset-left, 0px));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .xp-fill,
+  .bestiary-avatar,
+  .carriage-bob,
+  .lore-cine-bg,
+  .lore-cine-foe,
+  .lore-cine-copy,
+  .lore-cine-party,
+  .lore-cine-caret {
+    animation: none !important;
   }
 }
